@@ -27,7 +27,9 @@ public interface InputInterface {
      *
      * @return Boolean true if the value is contained in the raw parameters
      */
-    boolean hasParameterOption(final Object values);
+    boolean hasParameterOption(final String values);
+
+    boolean hasParameterOption(final List<String> values);
 
     /**
      * Returns the value of a raw option (not parsed).
@@ -35,14 +37,18 @@ public interface InputInterface {
      * This method is to be used to introspect the input parameters
      * before they have been validated. It must be used carefully.
      *
-     * @param values The value(s) to look for in the raw parameters
+     * @param value The value(s) to look for in the raw parameters
      * @param defaultValue The default value to return if no result is found
      *
      * @return The option value
      */
-    Object getParameterOption(final Object values, final Object defaultValue);
-    
-    Object getParameterOption(final Object values);
+    Object getParameterOption(final String value, final Object defaultValue);
+
+    Object getParameterOption(final List<String> values, final Object defaultValue);
+
+    Object getParameterOption(final String value);
+
+    Object getParameterOption(final List<String> values);
 
     /**
      * Binds the current Input instance with the given arguments and options.
@@ -54,9 +60,7 @@ public interface InputInterface {
     /**
      * Validates if arguments given are correct.
      *
-     * Throws an exception when not enough arguments are given.
-     *
-     * @throws Exception
+     * @throws Exception When not enough arguments are given.
      */
     void validate() throws Exception;
 
@@ -72,7 +76,7 @@ public interface InputInterface {
      *
      * @param name The name of the argument
      *
-     * @return mixed
+     * @return
      */
     Object getArgument(final String name) throws Exception;
 
@@ -91,7 +95,7 @@ public interface InputInterface {
      *
      * @param name The InputArgument name
      *
-     * @return Boolean true if the InputArgument object exists, false otherwise
+     * @return True if the InputArgument object exists, false otherwise
      */
     boolean hasArgument(final String name);
     
@@ -100,14 +104,14 @@ public interface InputInterface {
      *
      * @param position The InputArgument position
      *
-     * @return Boolean true if the InputArgument object exists, false otherwise
+     * @return True if the InputArgument object exists, false otherwise
      */
     boolean hasArgument(final int position);
 
     /**
      * Returns all the given options merged with the default values.
      *
-     * @return array
+     * @return
      */
     Map<String, Object> getOptions();
 
@@ -118,7 +122,7 @@ public interface InputInterface {
      *
      * @return mixed
      */
-    Object getOption(final String name) throws Exception;
+    Object getOption(final String name);
 
     /**
      * Sets an option value by name.
@@ -135,14 +139,14 @@ public interface InputInterface {
      *
      * @param name The InputOption name
      *
-     * @return Boolean True if the InputOption object exists, false otherwise
+     * @return True if the InputOption object exists, false otherwise
      */
     boolean hasOption(final String name);
 
     /**
      * Is this input means interactive?
      *
-     * @return Boolean
+     * @return
      */
     boolean isInteractive();
 

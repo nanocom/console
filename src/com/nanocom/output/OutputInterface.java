@@ -4,6 +4,8 @@ import com.nanocom.formatter.OutputFormatterInterface;
 import java.util.List;
 
 /**
+ * OutputInterface is the interface implemented by all Output classes.
+ * 
  * @author Arnaud Kleinpeter <arnaud.kleinpeter at gmail dot com>
  */
 public interface OutputInterface {
@@ -27,13 +29,29 @@ public interface OutputInterface {
      */
     void write(final List<String> messages, final boolean newline, final int type) throws Exception;
 
+    void write(final String message, final boolean newline, final int type) throws Exception;
+
+    void write(final List<String> messages, final boolean newline) throws Exception;
+
+    void write(final String message, final boolean newline) throws Exception;
+
+    void write(final List<String> messages) throws Exception;
+
+    void write(final String message) throws Exception;
+
     /**
      * Writes a message to the output and adds a newline at the end.
      *
      * @param messages The message as an array of lines of a single string
      * @param type     The type of output
      */
-    void writeln(final List<String> mesages, int type) throws Exception;
+    void writeln(final List<String> messages, int type);
+
+    void writeln(final String message, int type);
+
+    void writeln(final List<String> messages);
+
+    void writeln(final String message);
 
     /**
      * Sets the verbosity of the output.

@@ -14,6 +14,8 @@ public interface HelperInterface {
      */
     void setHelperSet(final HelperSet helperSet);
 
+    void setHelperSet();
+
     /**
      * Gets the helper set associated with this helper.
      *
@@ -27,4 +29,5 @@ public interface HelperInterface {
      * @return The canonical name
      */
     String getName();
+
 }

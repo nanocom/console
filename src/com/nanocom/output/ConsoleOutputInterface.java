@@ -13,6 +13,9 @@ public interface ConsoleOutputInterface extends OutputInterface {
      */
     public OutputInterface getErrorOutput();
 
+    /**
+     * @param error 
+     */
     public void setErrorOutput(final OutputInterface error);
 
 }
