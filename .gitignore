@@ -1,6 +1,9 @@
 *.class
 
-# Package Files #
+# Package files #
 *.jar
 *.war
 *.ear
+
+# Private files #
+nbproject/private
