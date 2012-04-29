@@ -7,3 +7,5 @@
 
 # Private files #
 nbproject/private
+/dist/
+/build/
