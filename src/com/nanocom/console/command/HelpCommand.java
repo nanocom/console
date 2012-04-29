@@ -14,7 +14,11 @@ import java.util.Arrays;
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-public class HelpCommand /*extends Command*/ {
+public class HelpCommand extends Command {
+
+    public HelpCommand() throws Exception {
+        super("help");
+    }
 
 //    private Command command;
 //

@@ -17,7 +17,7 @@ import java.util.*;
  */
 public class ArgvInput extends Input {
 
-    private ArrayList<String> tokens;
+    protected ArrayList<String> tokens;
     private LinkedList<String> parsed;
 
     /**

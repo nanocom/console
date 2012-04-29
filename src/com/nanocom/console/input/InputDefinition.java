@@ -3,13 +3,13 @@ package com.nanocom.console.input;
 import java.util.*;
 
 /**
- * A InputDefinition represents a set of valid command line arguments and options.
+ * An InputDefinition represents a set of valid command line arguments and options.
  *
  * Usage:
  *
- *     InputDefinition definition = new InputDefinition(new ArrayList<Object>(
- *       new InputArgument("name", InputArgument::REQUIRED),
- *       new InputOption("foo", "f", InputOption::VALUE_REQUIRED),
+ *     InputDefinition definition = new InputDefinition(Arrays.asList((Object)
+ *       new InputArgument("name", InputArgument.REQUIRED),
+ *       new InputOption("foo", "f", InputOption.VALUE_REQUIRED),
  *     ));
  * 
  * @author Arnaud Kleinpeter <arnaud.kleinpeter at gmail dot com>
@@ -366,7 +366,7 @@ public class InputDefinition {
             } else {
                 sb.append(shortcut + "--" + option.getName());
             }
-            sb.append("]");
+            sb.append("] ");
         }
 
         for (InputArgument argument : arguments.values()) {

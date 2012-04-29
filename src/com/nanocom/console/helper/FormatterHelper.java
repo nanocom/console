@@ -9,7 +9,7 @@ import java.util.List;
  * 
  * @author Arnaud Kleinpeter <arnaud.kleinpeter at gmail dot com>
  */
-public class FormatterHelper /*extends Helper*/ {
+public class FormatterHelper extends Helper {
 
 //    /**
 //     * Formats a message within a section.
@@ -85,15 +85,15 @@ public class FormatterHelper /*extends Helper*/ {
 //    private int strlen(final String string) {
 //        return string.length(); // TODO check that encoding is managed
 //    }
-//
-//    /**
-//     * Returns the helper's canonical name.
-//     *
-//     * @return string The canonical name of the helper
-//     */
-//    @Override
-//    public String getName() {
-//        return "formatter";
-//    }
+
+    /**
+     * Returns the helper's canonical name.
+     *
+     * @return string The canonical name of the helper
+     */
+    @Override
+    public String getName() {
+        return "formatter";
+    }
 
 }

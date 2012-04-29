@@ -2,11 +2,12 @@ package com.nanocom.console;
 
 import com.nanocom.console.command.Command;
 import com.nanocom.console.command.HelpCommand;
+import com.nanocom.console.command.ListCommand;
+import com.nanocom.console.helper.DialogHelper;
+import com.nanocom.console.helper.FormatterHelper;
+import com.nanocom.console.helper.Helper;
 import com.nanocom.console.helper.HelperSet;
-import com.nanocom.console.input.ArgvInput;
-import com.nanocom.console.input.ArrayInput;
-import com.nanocom.console.input.InputDefinition;
-import com.nanocom.console.input.InputInterface;
+import com.nanocom.console.input.*;
 import com.nanocom.console.output.ConsoleOutput;
 import com.nanocom.console.output.ConsoleOutputInterface;
 import com.nanocom.console.output.OutputInterface;
@@ -32,46 +33,46 @@ import java.util.Map.Entry;
  */
 public final class Application {
 
-//    private Map<String, Command> commands;
-//    private boolean              wantHelps = false;
-//    private Command              runningCommand;
-//    private String               name;
-//    private String               version;
-//    private boolean              catchExceptions;
-//    private boolean              autoExit;
-//    private InputDefinition      definition;
-//    private HelperSet            helperSet;
-//
-//    /**
-//     * @param name    The name of the application
-//     * @param version The version of the application
-//     */
-//    public Application(final String name, final String version) {
-//        init(name, version);
-//    }
-//    
-//    public Application(final String name) {
-//        init(name, "UNKNOWN");
-//    }
-//    
-//    public Application() {
-//        init("UNKNOWN", "UNKNOWN");
-//    }
-//    
-//    private void init(final String name, String version) {
-//        this.name = name;
-//        this.version = version;
-//        catchExceptions = true;
-//        autoExit = true;
-//        commands = new HashMap<String, Command>();
-//        helperSet = getDefaultHelperSet();
-//        definition = getDefaultInputDefinition();
-//
-//        for (Command command : getDefaultCommands()) {
-//            add(command);
-//        }
-//    }
-//
+    private Map<String, Command> commands;
+    private boolean              wantHelps = false;
+    private Command              runningCommand;
+    private String               name;
+    private String               version;
+    private boolean              catchExceptions;
+    private boolean              autoExit;
+    private InputDefinition      definition;
+    private HelperSet            helperSet;
+
+    /**
+     * @param name    The name of the application
+     * @param version The version of the application
+     */
+    public Application(final String name, final String version) throws Exception {
+        init(name, version);
+    }
+    
+    public Application(final String name) throws Exception {
+        init(name, "UNKNOWN");
+    }
+    
+    public Application() throws Exception {
+        init("UNKNOWN", "UNKNOWN");
+    }
+    
+    private void init(final String name, String version) throws Exception {
+        this.name = name;
+        this.version = version;
+        catchExceptions = true;
+        autoExit = true;
+        commands = new HashMap<String, Command>();
+        helperSet = getDefaultHelperSet();
+        definition = getDefaultInputDefinition();
+
+        for (Command command : getDefaultCommands()) {
+            add(command);
+        }
+    }
+
 //    /**
 //     * Runs the current application.
 //     *
@@ -204,25 +205,25 @@ public final class Application {
 //    public void setHelperSet(HelperSet helperSet) {
 //        this.helperSet = helperSet;
 //    }
-//
-//    /**
-//     * Get the helper set associated with the command.
-//     *
-//     * @return The HelperSet instance associated with this command
-//     */
-//    public HelperSet getHelperSet() {
-//        return helperSet;
-//    }
-//
-//    /**
-//     * Gets the InputDefinition related to this Application.
-//     *
-//     * @return The InputDefinition instance
-//     */
-//    public InputDefinition getDefinition() {
-//        return definition;
-//    }
-//
+
+    /**
+     * Get the helper set associated with the command.
+     *
+     * @return The HelperSet instance associated with this command
+     */
+    public HelperSet getHelperSet() {
+        return helperSet;
+    }
+
+    /**
+     * Gets the InputDefinition related to this Application.
+     *
+     * @return The InputDefinition instance
+     */
+    public InputDefinition getDefinition() {
+        return definition;
+    }
+
 //    /**
 //     * Gets the help message.
 //     *
@@ -347,28 +348,28 @@ public final class Application {
 //            add(command);
 //        }
 //    }
-//
-//    /**
-//     * Adds a command object.
-//     *
-//     * If a command with the same name already exists, it will be overridden.
-//     *
-//     * @param command A Command object
-//     *
-//     * @return The registered command
-//     */
-//    public Command add(Command command) {
-//        command.setApplication(this);
-//
-//        commands.put(command.getName(), command);
-//
-//        for (String alias : command.getAliases()) {
-//            commands.put(alias, command);
-//        }
-//
-//        return command;
-//    }
-//
+
+    /**
+     * Adds a command object.
+     *
+     * If a command with the same name already exists, it will be overridden.
+     *
+     * @param command A Command object
+     *
+     * @return The registered command
+     */
+    public Command add(Command command) {
+        command.setApplication(this);
+
+        commands.put(command.getName(), command);
+
+        for (String alias : command.getAliases()) {
+            commands.put(alias, command);
+        }
+
+        return command;
+    }
+
 //    /**
 //     * Returns a registered command by name or alias.
 //     *
@@ -824,47 +825,46 @@ public final class Application {
 //    {
 //        return input.getFirstArgument('command');
 //    }
-//
-//    /**
-//     * Gets the default input definition.
-//     *
-//     * @return InputDefinition An InputDefinition instance
-//     */
-//    protected InputDefinition getDefaultInputDefinition() {
-//        return new InputDefinition(/*array(
-//            new InputArgument('command', InputArgument::REQUIRED, 'The command to execute'),
-//
-//            new InputOption('--help',           '-h', InputOption::VALUE_NONE, 'Display this help message.'),
-//            new InputOption('--quiet',          '-q', InputOption::VALUE_NONE, 'Do not output any message.'),
-//            new InputOption('--verbose',        '-v', InputOption::VALUE_NONE, 'Increase verbosity of messages.'),
-//            new InputOption('--version',        '-V', InputOption::VALUE_NONE, 'Display this application version.'),
-//            new InputOption('--ansi',           '',   InputOption::VALUE_NONE, 'Force ANSI output.'),
-//            new InputOption('--no-ansi',        '',   InputOption::VALUE_NONE, 'Disable ANSI output.'),
-//            new InputOption('--no-interaction', '-n', InputOption::VALUE_NONE, 'Do not ask any interactive question.'),
-//        )*/);
-//    }
-//
-//    /**
-//     * Gets the default commands that should always be available.
-//     *
-//     * @return List<Command> An array of default Command instances
-//     */
-//    protected List<Command> getDefaultCommands() {
-//        return new ArrayList<Command>(new HelpCommand(), new ListCommand());
-//    }
-//
-//    /**
-//     * Gets the default helper set with the helpers that should always be available.
-//     *
-//     * @return HelperSet A HelperSet instance
-//     */
-//    protected HelperSet getDefaultHelperSet() {
-//        return new HelperSet(/*array(
-//            new FormatterHelper(),
-//            new DialogHelper(),
-//        )*/);
-//    }
-//
+
+    /**
+     * Gets the default input definition.
+     *
+     * @return InputDefinition An InputDefinition instance
+     */
+    protected InputDefinition getDefaultInputDefinition() throws Exception {
+        return new InputDefinition(Arrays.asList((Object)
+            new InputArgument("command", InputArgument.REQUIRED, "The command to execute"),
+            new InputOption("--help",           "-h", InputOption.VALUE_NONE, "Display this help message."),
+            new InputOption("--quiet",          "-q", InputOption.VALUE_NONE, "Do not output any message."),
+            new InputOption("--verbose",        "-v", InputOption.VALUE_NONE, "Increase verbosity of messages."),
+            new InputOption("--version",        "-V", InputOption.VALUE_NONE, "Display this application version."),
+            new InputOption("--ansi",           "",   InputOption.VALUE_NONE, "Force ANSI output."),
+            new InputOption("--no-ansi",        "",   InputOption.VALUE_NONE, "Disable ANSI output."),
+            new InputOption("--no-interaction", "-n", InputOption.VALUE_NONE, "Do not ask any interactive question.")
+        ));
+    }
+
+    /**
+     * Gets the default commands that should always be available.
+     *
+     * @return List<Command> An array of default Command instances
+     */
+    protected List<Command> getDefaultCommands() throws Exception {
+        return Arrays.asList((Command) new HelpCommand(), new ListCommand());
+    }
+
+    /**
+     * Gets the default helper set with the helpers that should always be available.
+     *
+     * @return HelperSet A HelperSet instance
+     */
+    protected HelperSet getDefaultHelperSet() {
+        return new HelperSet(Arrays.asList((Helper)
+            new FormatterHelper(),
+            new DialogHelper()
+        ));
+    }
+
 //    /**
 //     * Sorts commands in alphabetical order.
 //     *

@@ -17,8 +17,8 @@ import java.io.PrintStream;
  */
 public class StreamOutput extends Output {
 
-//    private PrintStream stream;
-//
+    private PrintStream stream;
+
 //   /**
 //    * Constructor.
 //    *
@@ -42,16 +42,16 @@ public class StreamOutput extends Output {
 //
 //        super(verbosity, decorated, formatter);
 //    }
-//
-//    /**
-//     * Gets the stream attached to this StreamOutput instance.
-//     *
-//     * @return A stream resource
-//     */
-//    public void getStream() {
-//        return stream;
-//    }
-//
+
+    /**
+     * Gets the stream attached to this StreamOutput instance.
+     *
+     * @return A stream resource
+     */
+    public PrintStream getStream() {
+        return stream;
+    }
+
 //    /**
 //     * Writes a message to the output.
 //     *

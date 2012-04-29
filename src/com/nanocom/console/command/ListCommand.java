@@ -12,7 +12,11 @@ import java.util.Arrays;
  * 
  * @author Arnaud Kleinpeter <arnaud.kleinpeter at gmail dot com>
  */
-public class ListCommand /*extends Command*/ {
+public class ListCommand extends Command {
+
+    public ListCommand() throws Exception {
+        super("list");
+    }
 
 //    /**
 //     * {@inheritDoc}

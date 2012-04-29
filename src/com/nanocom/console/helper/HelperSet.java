@@ -2,6 +2,7 @@ package com.nanocom.console.helper;
 
 import com.nanocom.console.command.Command;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -22,6 +23,13 @@ public class HelperSet {
         this.helpers = new HashMap<String, HelperInterface>();
         for (Entry<String, Helper> helper : helpers.entrySet()) {
             set(helper.getValue(), helper.getKey());
+        }
+    }
+
+    public HelperSet(List<Helper> helpers) {
+        this.helpers = new HashMap<String, HelperInterface>();
+        for (Helper helper : helpers) {
+            set(helper, null);
         }
     }
 

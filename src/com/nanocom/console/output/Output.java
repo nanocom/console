@@ -16,9 +16,9 @@ import java.util.List;
  */
 public abstract class Output /*implements OutputInterface*/ {
 
-//    private Integer verbosity;
-//    private OutputFormatterInterface formatter;
-//
+    private Integer verbosity;
+    private OutputFormatterInterface formatter;
+
 //    /**
 //     * @param verbosity The verbosity level (VERBOSITY_QUIET, VERBOSITY_NORMAL, VERBOSITY_VERBOSE)
 //     * @param decorated Whether to decorate messages or not (null for auto-guessing)
@@ -53,37 +53,37 @@ public abstract class Output /*implements OutputInterface*/ {
 //    public OutputFormatterInterface getFormatter() {
 //        return formatter;
 //    }
-//
-//    /**
-//     * Sets the decorated flag.
-//     *
-//     * @param decorated Whether to decorate the messages or not
-//     */
-//    @Override
-//    public void setDecorated(final boolean decorated) {
-//        formatter.setDecorated(decorated);
-//    }
-//
-//    /**
-//     * Gets the decorated flag.
-//     *
-//     * @return True if the output will decorate messages, false otherwise
-//     */
-//    @Override
-//    public boolean isDecorated() {
-//        return formatter.isDecorated();
-//    }
-//
-//    /**
-//     * Sets the verbosity of the output.
-//     *
-//     * @param level The level of verbosity
-//     */
-//    @Override
-//    public void setVerbosity(int level) {
-//        verbosity = level;
-//    }
-//
+
+    /**
+     * Sets the decorated flag.
+     *
+     * @param decorated Whether to decorate the messages or not
+     */
+    // @Override
+    public void setDecorated(final boolean decorated) {
+        formatter.setDecorated(decorated);
+    }
+
+    /**
+     * Gets the decorated flag.
+     *
+     * @return True if the output will decorate messages, false otherwise
+     */
+    // @Override
+    public boolean isDecorated() {
+        return formatter.isDecorated();
+    }
+
+    /**
+     * Sets the verbosity of the output.
+     *
+     * @param level The level of verbosity
+     */
+    // @Override
+    public void setVerbosity(int level) {
+        verbosity = level;
+    }
+
 //    /**
 //     * Gets the current verbosity of the output.
 //     *

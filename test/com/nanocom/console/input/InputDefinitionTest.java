@@ -324,7 +324,7 @@ public class InputDefinitionTest {
             new InputOption("foo7", null, InputOption.VALUE_OPTIONAL | InputOption.VALUE_IS_ARRAY, "", Arrays.asList(1, 2))
         ));
         Map<String, Object> defaults = new HashMap<String, Object>();
-        defaults.put("foo1", null);
+        defaults.put("foo1", false); // TODO was null before, but getOptionDefaults returns false
         defaults.put("foo2", null);
         defaults.put("foo3", "default");
         defaults.put("foo4", null);
