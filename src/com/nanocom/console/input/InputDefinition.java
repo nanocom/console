@@ -41,21 +41,21 @@ public class InputDefinition {
      * @param definition The definition array
      */
     public final void setDefinition(final List<Object> definition) throws Exception {
-        arguments = new HashMap<String, InputArgument>();
-        options = new HashMap<String, InputOption>();
+        List<InputArgument> locArguments = new ArrayList<InputArgument>();
+        List<InputOption> locOptions = new ArrayList<InputOption>();
 
         for (Object item : definition) {
             if (item instanceof InputOption) {
-                options.put(((InputOption)item).getName(), (InputOption)item);
+                locOptions.add((InputOption) item);
             } else if (item instanceof InputArgument) {
-                arguments.put(((InputArgument)item).getName(), (InputArgument)item);
+                locArguments.add((InputArgument) item);
             } else {
                 throw new Exception("The definition list must contain only InputArgument or InputOption instances.");
             }
         }
 
-        setArguments(arguments);
-        setOptions(options);
+        setArguments(locArguments);
+        setOptions(locOptions);
     }
 
     /**
@@ -63,7 +63,7 @@ public class InputDefinition {
      *
      * @param arguments An array of InputArgument objects
      */
-    public void setArguments(final Map<String, InputArgument> arguments) throws Exception {
+    public void setArguments(final List<InputArgument> arguments) throws Exception {
         this.arguments     = new HashMap<String, InputArgument>();
         requiredCount      = 0;
         hasOptional        = false;
@@ -76,9 +76,9 @@ public class InputDefinition {
      *
      * @param arguments An array of InputArgument objects
      */
-    public void addArguments(final Map<String, InputArgument> arguments) throws Exception {
+    public void addArguments(final List<InputArgument> arguments) throws Exception {
         if (null != arguments) {
-            for (InputArgument argument : arguments.values()) {
+            for (InputArgument argument : arguments) {
                 addArgument(argument);
             }
         }
@@ -93,7 +93,7 @@ public class InputDefinition {
      */
     public void addArgument(final InputArgument argument) throws Exception {
         if (arguments.containsKey(argument.getName())) {
-            throw new Exception("An argument with name " + argument.getName() + " already exist.");
+            throw new Exception("An argument with name \"" + argument.getName() + "\" already exist.");
         }
 
         if (hasAnArrayArgument) {
@@ -225,7 +225,7 @@ public class InputDefinition {
      *
      * @param options An array of InputOption objects
      */
-    public void setOptions(final Map<String, InputOption> options) throws Exception {
+    public void setOptions(final List<InputOption> options) throws Exception {
         this.options = new HashMap<String, InputOption>();
         shortcuts = new HashMap<String, String>();
         addOptions(options);
@@ -236,8 +236,8 @@ public class InputDefinition {
      *
      * @param options An array of InputOption objects
      */
-    public void addOptions(final Map<String, InputOption> options) throws Exception {
-        for (InputOption option : options.values()) {
+    public void addOptions(final List<InputOption> options) throws Exception {
+        for (InputOption option : options) {
             addOption(option);
         }
     }
@@ -251,7 +251,7 @@ public class InputDefinition {
      */
     public void addOption(final InputOption option) throws Exception {
         if (options.containsKey(option.getName()) && !option.equals(options.get(option.getName()))) {
-            throw new Exception("An option named " + option.getName() + " already exist.");
+            throw new Exception("An option named \"" + option.getName() + "\" already exist.");
         } else if (
                 shortcuts.containsKey(option.getShortcut())
                 && !option.equals(options.get(shortcuts.get(option.getShortcut())))
@@ -273,7 +273,7 @@ public class InputDefinition {
      */
     public InputOption getOption(final String name) throws Exception {
         if (!hasOption(name)) {
-            throw new Exception("The \"" + name + "\" option does not exist.");
+            throw new Exception("The \"--" + name + "\" option does not exist.");
         }
 
         return options.get(name);
@@ -342,7 +342,7 @@ public class InputDefinition {
      */
     private String shortcutToName(final String shortcut) throws Exception {
         if (!shortcuts.containsKey(shortcut)) {
-            throw new Exception("The " + shortcut + " option does not exist.");
+            throw new Exception("The \"-" + shortcut + "\" option does not exist.");
         }
 
         return shortcuts.get(shortcut);
@@ -377,7 +377,7 @@ public class InputDefinition {
             }
 
             if (argument.isArray()) {
-                sb.append("... [" + argument.getName() + "N]");
+                sb.append(" ... [" + argument.getName() + "N]");
             }
         }
 

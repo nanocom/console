@@ -1,6 +1,7 @@
 package com.nanocom.console.input;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Represents a command line option.
@@ -21,8 +22,6 @@ public class InputOption {
     private String  description;
 
     /**
-     * Constructor.
-     *
      * @param name         The option name
      * @param shortcut     The shortcut (can be null)
      * @param mode         The option mode: One of the VALUE_* constants
@@ -84,7 +83,7 @@ public class InputOption {
             throw new Exception("Impossible to have an option mode VALUE_IS_ARRAY if the option does not accept a value.");
         }
 
-        this.setdefaultValue(defaultValue);
+        setDefaultValue(defaultValue);
     }
 
     /**
@@ -148,17 +147,16 @@ public class InputOption {
      *
      * @throws Exception When incorrect defaultValue value is given
      */
-    public void setdefaultValue(Object defaultValue) throws Exception
-    {
+    public void setDefaultValue(Object defaultValue) throws Exception {
         if (VALUE_NONE == (VALUE_NONE & mode) && null != defaultValue) {
-            throw new Exception("Cannot set a defaultValue value when using Option::VALUE_NONE mode.");
+            throw new Exception("Cannot set a default value when using Option.VALUE_NONE mode.");
         }
 
         if (isArray()) {
             if (null == defaultValue) {
                 defaultValue = new ArrayList<Object>();
-            } else if (!(defaultValue instanceof ArrayList)) {
-                throw new Exception("A defaultValue value for an array option must be an array.");
+            } else if (!(defaultValue instanceof List)) {
+                throw new Exception("A default value for an array option must be an array.");
             }
         }
 
@@ -185,14 +183,13 @@ public class InputOption {
 
     /**
      * Checks whether the given option equals this one
-     * TODO Check that this method works as expected
      *
      * @param option Option to compare
      * @return
      */
     public boolean equals(InputOption option) {
-        return option.getName().equals(getName())
-            && option.getShortcut().equals(getShortcut())
+        return (option.getName() == null ? getName() == null : option.getName().equals(getName()))
+            && (option.getShortcut() == null ? getShortcut() == null : option.getShortcut().equals(getShortcut()))
             && option.getDefaultValue() == getDefaultValue()
             && option.isArray() == isArray()
             && option.isValueRequired() == isValueRequired()
