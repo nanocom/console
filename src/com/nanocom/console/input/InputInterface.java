@@ -27,9 +27,11 @@ public interface InputInterface {
      *
      * @return Boolean true if the value is contained in the raw parameters
      */
-    boolean hasParameterOption(final String values);
+    boolean hasParameterOption(final String value);
 
     boolean hasParameterOption(final List<String> values);
+
+    boolean hasParameterOption(final Map<String, String> values);
 
     /**
      * Returns the value of a raw option (not parsed).
@@ -122,7 +124,7 @@ public interface InputInterface {
      *
      * @return mixed
      */
-    Object getOption(final String name);
+    Object getOption(final String name) throws Exception;
 
     /**
      * Sets an option value by name.
