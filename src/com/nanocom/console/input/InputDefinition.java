@@ -484,6 +484,7 @@ public class InputDefinition {
         throw new Exception("Not implemented yet.");
     }
 
+    @SuppressWarnings("unchecked")
     private String formatDefaultValue(final Object defaultValue) {
         if (defaultValue instanceof ArrayList) {
             return String.format("array('%s')",

@@ -26,12 +26,12 @@ public class Shell {
 
     /**
      * If there is no readline support for the current PHP executable
-     * an Exception exception is thrown.
+     * an exception is thrown.
      *
      * @param application An application instance
      */
     public void Shell(Application application) throws Exception {
-        hasReadline = true; // function_exists("readline");
+        hasReadline = false; // function_exists("readline");
         this.application = application;
         history = System.getenv("HOME") + "/.history_" + application.getName();
         output = new ConsoleOutput();
@@ -49,7 +49,7 @@ public class Shell {
         if (hasReadline) {
             // TODO
             // readline_read_history(history);
-            // readline_completion_void(array(this, "autocompleter"));
+            // readline_completion_function(array(this, "autocompleter"));
         }
 
         /*output.writeln(this.getHeader());

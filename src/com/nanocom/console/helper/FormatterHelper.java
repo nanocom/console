@@ -9,7 +9,9 @@ package com.nanocom.console.helper;
 
 import com.nanocom.console.Util;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * The Formatter class provides helpers to format messages.
@@ -53,13 +55,13 @@ public class FormatterHelper extends Helper {
         }
 
         // TODO Implement this part
-        /*messages = large ? Arrays.asList(str_repeat(" ", len)) : new ArrayList<String>();
+        messages = large ? Arrays.asList(StringUtils.repeat(" ", len)) : new ArrayList<String>();
         for (String line : lines) {
-            messages.add(line + str_repeat(" ", len - strlen(line));
+            messages.add(line + StringUtils.repeat(" ", len - strlen(line)));
         }
         if (large) {
-            messages.add(str_repeat(" ", len);
-        }*/
+            messages.add(StringUtils.repeat(" ", len));
+        }
 
         for (String message : messages) {
             message = String.format("<%s>%s</%s>", style, message, style);

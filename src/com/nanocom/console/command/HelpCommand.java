@@ -67,8 +67,7 @@ public class HelpCommand extends Command {
     @Override
     protected int execute(InputInterface input, OutputInterface output) throws Exception {
         if (null == command) {
-            // TODO
-            // command = getApplication().get((String) input.getArgument("command_name"));
+            command = getApplication().get((String) input.getArgument("command_name"));
         }
 
         if (null != input.getOption("xml")) {

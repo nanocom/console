@@ -3,7 +3,7 @@ package com.nanocom.console;
 import java.util.List;
 
 /**
- * Utility class imitating PHP functions.
+ * Utility class imitating some PHP functions.
  * 
  * @author Arnaud Kleinpeter <arnaud.kleinpeter at gmail dot com>
  */

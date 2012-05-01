@@ -49,11 +49,18 @@ public final class Application {
     private boolean              autoExit;
     private InputDefinition      definition;
     private HelperSet            helperSet;
+    private String[]             args;
 
     /**
      * @param name    The name of the application
      * @param version The version of the application
+     * @param argv    The arguments given by the main function
      */
+    public Application(final String name, final String version, String[] args) throws Exception {
+        init(name, version);
+        this.args = args;
+    }
+
     public Application(final String name, final String version) throws Exception {
         init(name, version);
     }
@@ -92,7 +99,7 @@ public final class Application {
      */
     public int run(InputInterface input, OutputInterface output) throws Exception {
         if (null == input) {
-            input = new ArgvInput();
+            input = new ArgvInput(args);
         }
 
         if (null == output) {
@@ -128,6 +135,10 @@ public final class Application {
         }
 
         return statusCode;
+    }
+
+    public int run() throws Exception {
+        return run(null, null);
     }
 
     /**
@@ -489,10 +500,9 @@ public final class Application {
         String namespace = "";
         String searchName = name;
         int pos = name.indexOf(":");
-        
+
         // TODO
-        return new Command();
-        /*if (-1 < pos) {
+        if (-1 < pos) {
             namespace = findNamespace(name.substring(0, pos));
             searchName = namespace + name.substring(pos);
         }
@@ -537,10 +547,10 @@ public final class Application {
         }
 
         if (count(aliases[searchName]) > 1) {
-            throw new Exception(sprintf('Command "%s" is ambiguous (%s).', name, this.getAbbreviationSuggestions(aliases[searchName])));
+            throw new Exception(String.format("Command \"%s\" is ambiguous (%s).", name, this.getAbbreviationSuggestions(aliases[searchName])));
         }
 
-        return get(aliases[searchName][0]);*/
+        return get(aliases[searchName][0]);
     }
 
     /**
