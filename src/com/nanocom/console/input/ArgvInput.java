@@ -1,3 +1,10 @@
+/*
+ * This file is part of the Console package.
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 package com.nanocom.console.input;
 
 import java.util.*;
@@ -101,7 +108,7 @@ public class ArgvInput extends Input {
         int nameLength = name.length();
         for (int i = 0; i < nameLength; i++) {
             if (!definition.hasShortcut(name.substring(i, i + 1))) {
-                throw new Exception("The \"" + name.substring(i, i + 1) + "\" option does not exist.");
+                throw new Exception("The \"-" + name.substring(i, i + 1) + "\" option does not exist.");
             }
 
             InputOption option = definition.getOptionForShortcut(name.substring(i, i + 1));
@@ -175,7 +182,7 @@ public class ArgvInput extends Input {
      */
     private void addShortOption(final String shortcut, final Object value) throws Exception {
         if (!definition.hasShortcut(shortcut)) {
-            throw new Exception("The \"" + shortcut + "\" option does not exist.");
+            throw new Exception("The \"-" + shortcut + "\" option does not exist.");
         }
 
         addLongOption(definition.getOptionForShortcut(shortcut).getName(), value);
@@ -192,7 +199,7 @@ public class ArgvInput extends Input {
     @SuppressWarnings("unchecked")
     private void addLongOption(final String name, Object value) throws Exception {
         if (!definition.hasOption(name)) {
-            throw new Exception("The \"" + name + "\" option does not exist.");
+            throw new Exception("The \"--" + name + "\" option does not exist.");
         }
 
         InputOption option = definition.getOption(name);
@@ -209,7 +216,7 @@ public class ArgvInput extends Input {
 
         if (null == value) {
             if (option.isValueRequired()) {
-                throw new Exception("The \"" + name + "\" option requires a value.");
+                throw new Exception("The \"--" + name + "\" option requires a value.");
             }
 
             value = option.isValueOptional() ? option.getDefaultValue() : true;

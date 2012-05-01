@@ -1,3 +1,10 @@
+/*
+ * This file is part of the Console package.
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 package com.nanocom.console.output;
 
 /**
@@ -8,14 +15,8 @@ package com.nanocom.console.output;
  */
 public interface ConsoleOutputInterface extends OutputInterface {
 
-    /**
-     * @return OutputInterface
-     */
     public OutputInterface getErrorOutput();
 
-    /**
-     * @param error 
-     */
     public void setErrorOutput(final OutputInterface error);
 
 }

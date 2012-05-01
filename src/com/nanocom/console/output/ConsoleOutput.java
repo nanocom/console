@@ -1,105 +1,70 @@
+/*
+ * This file is part of the Console package.
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 package com.nanocom.console.output;
 
 import com.nanocom.console.formatter.OutputFormatterInterface;
-import java.util.List;
 
 /**
  * @author Arnaud Kleinpeter <arnaud.kleinpeter at gmail dot com>
  */
-public class ConsoleOutput implements ConsoleOutputInterface {
+public class ConsoleOutput extends StreamOutput implements ConsoleOutputInterface {
 
-    @Override
-    public OutputInterface getErrorOutput() {
-        throw new UnsupportedOperationException("Not supported yet.");
+    private OutputInterface stderr;
+
+    /**
+     * @param verbosity The verbosity level
+     * @param decorated Whether to decorate messages or not (null for auto-guessing)
+     * @param formatter Output formatter instance
+     */
+    public ConsoleOutput(final int verbosity, final Boolean decorated, final OutputFormatterInterface formatter) throws Exception {
+        super(System.out, verbosity, decorated, formatter);
+
+        stderr = new StreamOutput(System.err, verbosity, decorated, formatter);
+    }
+ 
+    public ConsoleOutput(final int verbosity, final Boolean decorated) throws Exception {
+        this(verbosity, decorated, null);
+    }
+
+    public ConsoleOutput(final int verbosity) throws Exception {
+        this(verbosity, null);
+    }
+ 
+    public ConsoleOutput() throws Exception {
+        this(OutputInterface.VERBOSITY_NORMAL);
     }
 
     @Override
-    public void setErrorOutput(OutputInterface error) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public void write(final List<String> messages, final boolean newline, final int type) throws Exception {
-        for (String message : messages) {
-            write(message, newline, type);
-        }
-    }
-
-    @Override
-    public void write(final String message, final boolean newline, final int type) throws Exception {
-        System.out.print(message);
-    }
-
-    @Override
-    public void write(final List<String> messages, final boolean newline) throws Exception {
-        write(messages, newline, 0);
-    }
-
-    @Override
-    public void write(final String message, final boolean newline) throws Exception {
-        write(message, newline, 0);
-    }
-
-    @Override
-    public void write(final List<String> messages) throws Exception {
-        write(messages, false);
-    }
-
-    @Override
-    public void write(final String message) throws Exception {
-        write(message, false);
-    }
-
-    @Override
-    public void writeln(final List<String> messages, int type) {
-        for (String message : messages) {
-            writeln(message, type);
-        }
-    }
-
-    @Override
-    public void writeln(final String message, int type) {
-        System.out.println(message);
-    }
-
-    @Override
-    public void writeln(final List<String> messages) {
-        writeln(messages, 0);
-    }
-
-    @Override
-    public void writeln(final String message) {
-        writeln(message, 0);
-    }
-
-    @Override
-    public void setVerbosity(int level) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public int getVerbosity() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public void setDecorated(boolean decorated) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public boolean isDecorated() {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public void setDecorated(final boolean decorated) {
+        super.setDecorated(decorated);
+        stderr.setDecorated(decorated);
     }
 
     @Override
     public void setFormatter(OutputFormatterInterface formatter) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        super.setFormatter(formatter);
+        stderr.setFormatter(formatter);
     }
 
     @Override
-    public OutputFormatterInterface getFormatter() {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public void setVerbosity(final int level) {
+        super.setVerbosity(level);
+        stderr.setVerbosity(level);
+    }
+
+    @Override
+    public OutputInterface getErrorOutput() {
+        return stderr;
+    }
+
+    @Override
+    public void setErrorOutput(OutputInterface error) {
+        stderr = error;
     }
 
 }

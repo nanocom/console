@@ -1,3 +1,10 @@
+/*
+ * This file is part of the Console package.
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 package com.nanocom.console.formatter;
 
 import com.nanocom.console.Util;
@@ -113,7 +120,8 @@ public final class OutputFormatterStyle implements OutputFormatterStyleInterface
             foregroundNamesList.addAll(foregroundNames);
             throw new Exception(
                 "Invalid foreground color specified: \"" + color
-                + "\". Expected one of (" + Util.implode(", ", (String[]) foregroundNamesList.toArray()) + ")"
+                + "\". Expected one of (" + Util.implode(", ",
+                    (String[]) foregroundNamesList.toArray()) + ")"
             );
         }
 

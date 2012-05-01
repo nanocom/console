@@ -7,32 +7,34 @@
 
 package com.nanocom.console.tester;
 
-import com.nanocom.console.command.Command;
+import com.nanocom.console.Application;
 import com.nanocom.console.input.ArrayInput;
 import com.nanocom.console.input.InputInterface;
 import com.nanocom.console.output.OutputInterface;
 import com.nanocom.console.output.StreamOutput;
-import java.util.HashMap;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintStream;
 import java.util.Map;
 
 /**
  * @author Arnaud Kleinpeter <arnaud.kleinpeter at gmail dot com>
  */
-public class CommandTester {
+public class ApplicationTester {
 
-    private Command command;
+    private Application application;
     private InputInterface input;
-    private StreamOutput output;
+    private OutputInterface output;
 
     /**
-     * @param command A Command instance to test.
+     * @param application An Application instance to test.
      */
-    public CommandTester(Command command) {
-        this.command = command;
+    public ApplicationTester(Application application) {
+        this.application = application;
     }
 
     /**
-     * Executes the command.
+     * Executes the application.
      *
      * Available options:
      *
@@ -45,43 +47,45 @@ public class CommandTester {
      *
      * @return The command exit code
      */
-    public int execute(Map<String, String> input, Map<String, Object> options) throws Exception {
+    public int run(final Map<String, String> input, final Map<String, Object> options) throws Exception {
         this.input = new ArrayInput(input);
         if (options.containsKey("interactive")) {
             this.input.setInteractive((Boolean) options.get("interactive"));
         }
 
-        output = new StreamOutput();
-        // StreamOutput output = new StreamOutput(fopen("php://memory", "w", false));
+        // TODO Make a memory stream
+        // this.output = new StreamOutput(fopen("php://memory", "w", false));
+        output = new StreamOutput(new PrintStream(new OutputStream() {
+
+            @Override
+            public void write(int i) throws IOException {
+                
+            }
+        }));
         if (options.containsKey("decorated")) {
             output.setDecorated((Boolean) options.get("decorated"));
         }
-
         if (options.containsKey("verbosity")) {
             output.setVerbosity((Integer) options.get("verbosity"));
         }
 
-        return command.run(this.input, (OutputInterface) output);
-    }
-
-    public int execute(Map<String, String> input) throws Exception {
-        return execute(input, new HashMap<String, Object>());
+        return application.run(this.input, this.output);
     }
 
     /**
-     * Gets the display returned by the last execution of the command.
+     * Gets the display returned by the last execution of the application.
      *
      * @return The display
      */
     public String getDisplay() {
-        // rewind(output.getStream());
+        // TODO rewind(this.output.getStream());
 
-        // TODO return stream_get_contents(output.getStream());
+        // TODO return stream_get_contents(this.output.getStream());
         return "";
     }
 
     /**
-     * Gets the input instance used by the last execution of the command.
+     * Gets the input instance used by the last execution of the application.
      *
      * @return The current input instance
      */
@@ -90,12 +94,12 @@ public class CommandTester {
     }
 
     /**
-     * Gets the output instance used by the last execution of the command.
+     * Gets the output instance used by the last execution of the application.
      *
      * @return The current output instance
      */
     public OutputInterface getOutput() {
-        return (OutputInterface) output;
+        return output;
     }
 
 }

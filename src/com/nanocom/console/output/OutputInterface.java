@@ -1,3 +1,10 @@
+/*
+ * This file is part of the Console package.
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 package com.nanocom.console.output;
 
 import com.nanocom.console.formatter.OutputFormatterInterface;
@@ -45,13 +52,13 @@ public interface OutputInterface {
      * @param messages The message as an array of lines of a single string
      * @param type     The type of output
      */
-    void writeln(final List<String> messages, int type);
+    void writeln(final List<String> messages, int type) throws Exception;
 
-    void writeln(final String message, int type);
+    void writeln(final String message, int type) throws Exception;
 
-    void writeln(final List<String> messages);
+    void writeln(final List<String> messages) throws Exception;
 
-    void writeln(final String message);
+    void writeln(final String message) throws Exception;
 
     /**
      * Sets the verbosity of the output.
@@ -77,7 +84,7 @@ public interface OutputInterface {
     /**
      * Gets the decorated flag.
      *
-     * @return true if the output will decorate messages, false otherwise
+     * @return True if the output will decorate messages, false otherwise
      */
     boolean isDecorated();
 
@@ -91,7 +98,7 @@ public interface OutputInterface {
     /**
      * Returns current output formatter instance.
      *
-     * @return OutputFormatterInterface
+     * @return
      */
     OutputFormatterInterface getFormatter();
 

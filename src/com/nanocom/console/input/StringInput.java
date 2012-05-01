@@ -1,3 +1,10 @@
+/*
+ * This file is part of the Console package.
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 package com.nanocom.console.input;
 
 import java.util.ArrayList;
@@ -7,18 +14,18 @@ import java.util.ArrayList;
  *
  * Usage:
  *
- *     $input = new StringInput('foo --bar="foobar"');
+ *     StringInput input = new StringInput("foo --bar=\"foobar\"");
  * 
  * @author Arnaud Kleinpeter <arnaud.kleinpeter at gmail dot com>
  */
-class StringInput extends ArgvInput {
+public class StringInput extends ArgvInput {
 
     private final static String REGEX_STRING = "([^ ]+?)(?: |(?<!\\\\)\"|(?<!\\\\)\'|$)";
     private final static String REGEX_QUOTED_STRING = "(?:\"([^\"\\\\]*(?:\\\\.[^\"\\\\]*)*)\"|\\'([^\'\\\\]*(?:\\\\.[^\'\\\\]*)*)\')";
 
     /**
      * @param input An array of parameters from the CLI (in the argv format)
-     * @param definition A InputDefinition instance
+     * @param definition An InputDefinition instance
      */
     public StringInput(final String input, final InputDefinition definition) throws Exception {
         super(new String[0], definition);
@@ -34,7 +41,7 @@ class StringInput extends ArgvInput {
      * Tokenizes a string.
      *
      * @param input The input to tokenize
-     * @return String[] The tokenized string
+     * @return The tokenized string
      *
      * @throws Exception When unable to parse input (should never happen)
      */
@@ -44,6 +51,7 @@ class StringInput extends ArgvInput {
         tokens = new ArrayList<String>();
         int length = input.length();
         int cursor = 0;
+        // TODO Implement this part
         /* while (cursor < length) {
             if (preg_match('/\s+/A', $input, $match, null, $cursor)) {
             } else if (preg_match('/([^="\' ]+?)(=?)('.self::REGEX_QUOTED_STRING.'+)/A', $input, $match, null, $cursor)) {

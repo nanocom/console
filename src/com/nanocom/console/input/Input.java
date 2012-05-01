@@ -1,3 +1,10 @@
+/*
+ * This file is part of the Console package.
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 package com.nanocom.console.input;
 
 import java.util.HashMap;
@@ -24,7 +31,7 @@ abstract class Input implements InputInterface {
     /**
      * Constructor.
      *
-     * @param definition A InputDefinition instance
+     * @param definition An InputDefinition instance
      */
 
     public void init(InputDefinition definition) throws Exception {
@@ -39,7 +46,7 @@ abstract class Input implements InputInterface {
     /**
      * Binds the current Input instance with the given arguments and options.
      *
-     * @param definition A InputDefinition instance
+     * @param definition An InputDefinition instance
      */
     @Override
     public void bind(InputDefinition definition) throws Exception {
@@ -58,7 +65,7 @@ abstract class Input implements InputInterface {
     /**
      * Validates the input.
      *
-     * @throws \RuntimeException When not enough arguments are given
+     * @throws Exception When not enough arguments are given
      */
     @Override
     public void validate() throws Exception {
@@ -184,7 +191,7 @@ abstract class Input implements InputInterface {
     @Override
     public Object getOption(final String name) throws Exception {
         if (!definition.hasOption(name)) {
-            throw new Exception("The \"" + name + "\" option does not exist.");
+            throw new Exception("The \"--" + name + "\" option does not exist.");
         }
 
         return options.containsKey(name) ? options.get(name) : definition.getOption(name).getDefaultValue();

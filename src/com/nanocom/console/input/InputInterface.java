@@ -1,3 +1,10 @@
+/*
+ * This file is part of the Console package.
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 package com.nanocom.console.input;
 
 import java.util.List;
@@ -25,7 +32,7 @@ public interface InputInterface {
      *
      * @param values The values to look for in the raw parameters
      *
-     * @return Boolean true if the value is contained in the raw parameters
+     * @return True if the value is contained in the raw parameters
      */
     boolean hasParameterOption(final String value);
 

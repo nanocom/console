@@ -1,6 +1,14 @@
+/*
+ * This file is part of the Console package.
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 package com.nanocom.console.helper;
 
 import com.nanocom.console.command.Command;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,6 +39,10 @@ public class HelperSet {
         for (Helper helper : helpers) {
             set(helper, null);
         }
+    }
+
+    public HelperSet() {
+        this(new ArrayList<Helper>());
     }
 
     /**
@@ -87,6 +99,10 @@ public class HelperSet {
      */
     public void setCommand(Command command) {
         this.command = command;
+    }
+
+    public void setCommand() {
+        setCommand(null);
     }
 
     /**

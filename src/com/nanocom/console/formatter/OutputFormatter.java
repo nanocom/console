@@ -1,3 +1,10 @@
+/*
+ * This file is part of the Console package.
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 package com.nanocom.console.formatter;
 
 import java.util.HashMap;
@@ -40,10 +47,10 @@ public final class OutputFormatter implements OutputFormatterInterface {
     private void init(final boolean decorated, Map<String, OutputFormatterStyleInterface> styles) throws Exception {
         this.decorated = decorated;
 
-        this.setStyle("error",    new OutputFormatterStyle("white", "red"));
-        this.setStyle("info",     new OutputFormatterStyle("green"));
-        this.setStyle("comment",  new OutputFormatterStyle("yellow"));
-        this.setStyle("question", new OutputFormatterStyle("black", "cyan"));
+        setStyle("error",    new OutputFormatterStyle("white", "red"));
+        setStyle("info",     new OutputFormatterStyle("green"));
+        setStyle("comment",  new OutputFormatterStyle("yellow"));
+        setStyle("question", new OutputFormatterStyle("black", "cyan"));
 
         for (Entry<String, OutputFormatterStyleInterface> style : styles.entrySet()) {
             setStyle(style.getKey(), style.getValue());
@@ -67,7 +74,7 @@ public final class OutputFormatter implements OutputFormatterInterface {
      */
     @Override
     public boolean isDecorated() {
-        return this.decorated;
+        return decorated;
     }
 
     /**
@@ -120,7 +127,7 @@ public final class OutputFormatter implements OutputFormatterInterface {
      */
     @Override
     public String format(final String message) {
-        // return preg_replace_callback(self::FORMAT_PATTERN, array(this, 'replaceStyle'), message);
+        // return preg_replace_callback(FORMAT_PATTERN, array(this, 'replaceStyle'), message);
         // TODO
         return "";
     }
@@ -133,24 +140,23 @@ public final class OutputFormatter implements OutputFormatterInterface {
      * @return The replaced style
      */
     private String replaceStyle(final String match) {
-        // TODO
-        return "";
-        /*
-        if (!this.isDecorated()) {
-            return match[2];
+        if (!isDecorated()) {
+            return String.valueOf(match.charAt(2));
         }
 
-        if (isset(styles[strtolower(match[1])])) {
-            style = this.styles[strtolower(match[1])];
-        } else {
-            style = this.createStyleFromString(match[1]);
+        OutputFormatterStyleInterface locStyle;
 
-            if (false == style) {
-                return match[0];
+        if (styles.containsKey(String.valueOf(match.charAt(1)).toLowerCase())) {
+            locStyle = styles.get(String.valueOf(match.charAt(1)).toLowerCase());
+        } else {
+            locStyle = createStyleFromString(String.valueOf(match.charAt(1)));
+
+            if (null == locStyle) {
+                return String.valueOf(match.charAt(0));
             }
         }
 
-        return style.apply(this.format(match[2]));*/
+        return locStyle.apply(format(String.valueOf(match.charAt(2))));
     }
 
     /**
@@ -158,13 +164,14 @@ public final class OutputFormatter implements OutputFormatterInterface {
      *
      * @param string
      *
-     * @return Format\FormatterStyle|false if string is not format string
+     * @return Null if string is not format string
      */
-    private void createStyleFromString(final String string) {
+    private OutputFormatterStyle createStyleFromString(final String string) {
         // TODO
+        return null;
         /*
         if (!preg_match_all('/([^=]+)=([^;]+)(;|)/', strtolower(string), matches, PREG_SET_ORDER)) {
-            return false;
+            return false; // return null;
         }
 
         style = new OutputFormatterStyle();

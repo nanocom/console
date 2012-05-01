@@ -1,3 +1,10 @@
+/*
+ * This file is part of the Console package.
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 package com.nanocom.console;
 
 import com.nanocom.console.command.Command;
@@ -73,138 +80,141 @@ public final class Application {
         }
     }
 
-//    /**
-//     * Runs the current application.
-//     *
-//     * @param input  An Input instance
-//     * @param output An Output instance
-//     *
-//     * @return 0 if everything went fine, or an error code
-//     *
-//     * @throws Exception When doRun returns Exception
-//     */
-//    public int run(InputInterface input, OutputInterface output) throws Exception {
-//        if (null == input) {
-//            input = new ArgvInput();
-//        }
-//
-//        if (null == output) {
-//            output = new ConsoleOutput();
-//        }
-//
-//        int statusCode;
-//
-//        try {
-//            statusCode = doRun(input, output);
-//        } catch (Exception e) {
-//            if (!catchExceptions) {
-//                throw e;
-//            }
-//
-//            if (output instanceof ConsoleOutputInterface) {
-//                renderException(e, ((ConsoleOutputInterface)output).getErrorOutput());
-//            } else {
-//                renderException(e, output);
-//            }
-//
-//            statusCode = e.hashCode();
-//
-//            statusCode = statusCode != 0 ? statusCode : 1;
-//        }
-//
-//        if (autoExit) {
-//            if (statusCode > 255) {
-//                statusCode = 255;
-//            }
-//
-//            System.exit(statusCode);
-//        }
-//
-//        return statusCode;
-//    }
-//
-//    /**
-//     * Runs the current application.
-//     *
-//     * @param input  An Input instance
-//     * @param output An Output instance
-//     *
-//     * @return 0 if everything went fine, or an error code
-//     */
-//    public int doRun(InputInterface input, OutputInterface output) throws Exception {
-//        // TODO Check this method
-//        String locName = getCommandName(input);
-//
-//        List<String> options = new ArrayList<String>();
-//        options.add("--ansi");
-//        options.add("--no-ansi");
-//        options.add("--help");
-//        options.add("-h");
-//        options.add("--no-interaction");
-//        options.add("-n");
-//
-//        if (true == input.hasParameterOption(options.subList(0, 0))) {
-//            output.setDecorated(true);
-//        } else if (true == input.hasParameterOption(options.subList(1, 1))) {
-//            output.setDecorated(false);
-//        }
-//
-//        if (true == input.hasParameterOption(options.subList(2, 3))) {
-//            if (null == locName) {
-//                Map<String, String> arrayInputParam = new HashMap<String, String>();
-//                arrayInputParam.put("command", "help");
-//                input = new ArrayInput(arrayInputParam);
-//            } else {
-//                wantHelps = true;
-//            }
-//        }
-//
-//        if (true == input.hasParameterOption(options.subList(4, 5))) {
-//            input.setInteractive(false);
-//        }
-//
-//        if (getHelperSet().has("dialog")) {
-//            InputStream inputStream = getHelperSet().get("dialog").getInputStream();
-//            /*if (!posix_isatty(inputStream)) {
-//                input.setInteractive(false);
-//            }*/
-//        }
-//
-//        if (true == input.hasParameterOption(Arrays.asList("--quiet", "-q"))) {
-//            output.setVerbosity(OutputInterface::VERBOSITY_QUIET);
-//        } else if (true == input.hasParameterOption(array('--verbose', '-v'))) {
-//            output.setVerbosity(OutputInterface::VERBOSITY_VERBOSE);
-//        }
-//
-//        if (true == input.hasParameterOption(Arrays.asList("--version", "-V"))) {
-//            output.writeln(getLongVersion());
-//
-//            return 0;
-//        }
-//
-//        if (null == locName) {
-//            locName = 'list';
-//            input = new ArrayInput(array('command' => 'list'));
-//        }
-//
-//        // the command name MUST be the first element of the input
-//        command = this.find(locName);
-//
-//        this.runningCommand = command;
-//        statusCode = command.run(input, output);
-//        this.runningCommand = null;
-//
-//        return is_numeric(statusCode) ? statusCode : 0;
-//    }
-//
-//    /**
-//     * Set a helper set to be used with the command.
-//     *
-//     * @param helperSet The helper set
-//     */
-//    public void setHelperSet(HelperSet helperSet) {
-//        this.helperSet = helperSet;
-//    }
+    /**
+     * Runs the current application.
+     *
+     * @param input  An Input instance
+     * @param output An Output instance
+     *
+     * @return 0 if everything went fine, or an error code
+     *
+     * @throws Exception When doRun returns Exception
+     */
+    public int run(InputInterface input, OutputInterface output) throws Exception {
+        if (null == input) {
+            input = new ArgvInput();
+        }
+
+        if (null == output) {
+            output = new ConsoleOutput();
+        }
+
+        int statusCode;
+
+        try {
+            statusCode = doRun(input, output);
+        } catch (Exception e) {
+            if (!catchExceptions) {
+                throw e;
+            }
+
+            if (output instanceof ConsoleOutputInterface) {
+                renderException(e, ((ConsoleOutputInterface)output).getErrorOutput());
+            } else {
+                renderException(e, output);
+            }
+
+            statusCode = e.hashCode();
+
+            statusCode = statusCode != 0 ? statusCode : 1;
+        }
+
+        if (autoExit) {
+            if (statusCode > 255) {
+                statusCode = 255;
+            }
+
+            System.exit(statusCode);
+        }
+
+        return statusCode;
+    }
+
+    /**
+     * Runs the current application.
+     *
+     * @param input  An Input instance
+     * @param output An Output instance
+     *
+     * @return 0 if everything went fine, or an error code
+     */
+    public int doRun(InputInterface input, OutputInterface output) throws Exception {
+        // TODO Check this method
+        String locName = getCommandName(input);
+
+        List<String> options = new ArrayList<String>();
+        options.add("--ansi");
+        options.add("--no-ansi");
+        options.add("--help");
+        options.add("-h");
+        options.add("--no-interaction");
+        options.add("-n");
+
+        if (true == input.hasParameterOption(options.subList(0, 0))) {
+            output.setDecorated(true);
+        } else if (true == input.hasParameterOption(options.subList(1, 1))) {
+            output.setDecorated(false);
+        }
+
+        if (true == input.hasParameterOption(options.subList(2, 3))) {
+            if (null == locName) {
+                Map<String, String> arrayInputParam = new HashMap<String, String>();
+                arrayInputParam.put("command", "help");
+                input = new ArrayInput(arrayInputParam);
+            } else {
+                wantHelps = true;
+            }
+        }
+
+        if (true == input.hasParameterOption(options.subList(4, 5))) {
+            input.setInteractive(false);
+        }
+
+        if (getHelperSet().has("dialog")) {
+            InputStream inputStream = ((DialogHelper) getHelperSet().get("dialog")).getInputStream();
+            // TODO Handle this
+            /*if (!posix_isatty(inputStream)) {
+                input.setInteractive(false);
+            }*/
+        }
+
+        if (true == input.hasParameterOption(Arrays.asList("--quiet", "-q"))) {
+            output.setVerbosity(OutputInterface.VERBOSITY_QUIET);
+        } else if (true == input.hasParameterOption(Arrays.asList("--verbose", "-v"))) {
+            output.setVerbosity(OutputInterface.VERBOSITY_VERBOSE);
+        }
+
+        if (true == input.hasParameterOption(Arrays.asList("--version", "-V"))) {
+            output.writeln(getLongVersion());
+
+            return 0;
+        }
+
+        if (null == locName) {
+            locName = "list";
+            Map<String, String> parameters = new HashMap<String, String>();
+            parameters.put("command", "list");
+            input = new ArrayInput(parameters);
+        }
+
+        // The command name MUST be the first element of the input
+        Command command = this.find(locName);
+
+        runningCommand = command;
+        int statusCode = command.run(input, output);
+        runningCommand = null;
+
+        return statusCode;
+    }
+
+    /**
+     * Set a helper set to be used with the command.
+     *
+     * @param helperSet The helper set
+     */
+    public void setHelperSet(HelperSet helperSet) {
+        this.helperSet = helperSet;
+    }
 
     /**
      * Get the helper set associated with the command.
@@ -224,130 +234,119 @@ public final class Application {
         return definition;
     }
 
-//    /**
-//     * Gets the help message.
-//     *
-//     * @return A help message.
-//     */
-//    public String getHelp() {
-//        messages = array(
-//            this.getLongVersion(),
-//            '',
-//            '<comment>Usage:</comment>',
-//            sprintf("  [options] command [arguments]\n"),
-//            '<comment>Options:</comment>',
-//        );
-//
-//        foreach (this.getDefinition().getOptions() as option) {
-//            messages[] = sprintf('  %-29s %s %s',
-//                '<info>--'.option.getName().'</info>',
-//                option.getShortcut() ? '<info>-'.option.getShortcut().'</info>' : '  ',
-//                option.getDescription()
-//            );
-//        }
-//
-//        return implode(PHP_EOL, messages);
-//    }
-//
-//    /**
-//     * Sets whether to catch exceptions or not during commands execution.
-//     *
-//     * @param catchExceptions Whether to catch exceptions or not during commands execution
-//     */
-//    public void setCatchExceptions(final boolean catchExceptions) {
-//        this.catchExceptions = catchExceptions;
-//    }
-//
-//    /**
-//     * Sets whether to automatically exit after a command execution or not.
-//     *
-//     * @param autoExit Whether to automatically exit after a command execution or not
-//     */
-//    public void setAutoExit(final boolean autoExit) {
-//        this.autoExit = autoExit;
-//    }
-//
-//    /**
-//     * Gets the name of the application.
-//     *
-//     * @return The application name
-//     */
-//    public String getName() {
-//        return name;
-//    }
-//
-//    /**
-//     * Sets the application name.
-//     *
-//     * @param name The application name
-//     */
-//    public void setName(final String name) {
-//        this.name = name;
-//    }
-//
-//    /**
-//     * Gets the application version.
-//     *
-//     * @return The application version
-//     */
-//    public String getVersion() {
-//        return version;
-//    }
-//
-//    /**
-//     * Sets the application version.
-//     *
-//     * @param version The application version
-//     */
-//    public void setVersion(String version) {
-//        this.version = version;
-//    }
-//
-//    /**
-//     * Returns the long version of the application.
-//     *
-//     * @return The long application version
-//     */
-//    public String getLongVersion() {
-//        if ("UNKNOWN".equals(getName()) && !"UNKNOWN".equals(getVersion())) {
-//            return "<info>" + getName() + "</info> version <comment>" + getVersion() + "</comment>";
-//        }
-//
-//        return "<info>Console Tool</info>";
-//    }
-//
-//    /**
-//     * Registers a new command.
-//     *
-//     * @param name The command name
-//     *
-//     * @return The newly created command
-//     */
-//    public Command register(final String name) {
-//        try {
-//            Command c = new Command(name) {
-//
-//                @Override
-//                protected int execute(InputInterface input, OutputInterface output) throws Exception {
-//                    return 1;
-//                }
-//            };
-//            return add(c);
-//        } catch (Exception e) {
-//            return null;
-//        }
-//    }
-//
-//    /**
-//     * Adds an array of command objects.
-//     *
-//     * @param commands An array of commands
-//     */
-//    public void addCommands(List<Command> commands) {
-//        for (Command command : commands) {
-//            add(command);
-//        }
-//    }
+    /**
+     * Gets the help message.
+     *
+     * @return A help message.
+     */
+    public String getHelp() {
+        List<String> messages = Arrays.asList(
+            getLongVersion(),
+            "",
+            "<comment>Usage:</comment>",
+            String.format("  [options] command [arguments]\n"),
+            "<comment>Options:</comment>"
+        );
+
+        for (Entry<String, InputOption> option : getDefinition().getOptions().entrySet()) {
+            messages.add(String.format("  %-29s %s %s",
+                "<info>--" + option.getValue().getName()  + "</info>",
+                option.getValue().getShortcut() != null ? "<info>-" + option.getValue().getShortcut() + "</info>" : "  ",
+                option.getValue().getDescription()
+            ));
+        }
+
+        return Util.implode(System.getProperty("line.separator"), messages);
+    }
+
+    /**
+     * Sets whether to catch exceptions or not during commands execution.
+     *
+     * @param catchExceptions Whether to catch exceptions or not during commands execution
+     */
+    public void setCatchExceptions(final boolean catchExceptions) {
+        this.catchExceptions = catchExceptions;
+    }
+
+    /**
+     * Sets whether to automatically exit after a command execution or not.
+     *
+     * @param autoExit Whether to automatically exit after a command execution or not
+     */
+    public void setAutoExit(final boolean autoExit) {
+        this.autoExit = autoExit;
+    }
+
+    /**
+     * Gets the name of the application.
+     *
+     * @return The application name
+     */
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * Sets the application name.
+     *
+     * @param name The application name
+     */
+    public void setName(final String name) {
+        this.name = name;
+    }
+
+    /**
+     * Gets the application version.
+     *
+     * @return The application version
+     */
+    public String getVersion() {
+        return version;
+    }
+
+    /**
+     * Sets the application version.
+     *
+     * @param version The application version
+     */
+    public void setVersion(String version) {
+        this.version = version;
+    }
+
+    /**
+     * Returns the long version of the application.
+     *
+     * @return The long application version
+     */
+    public String getLongVersion() {
+        if ("UNKNOWN".equals(getName()) && !"UNKNOWN".equals(getVersion())) {
+            return "<info>" + getName() + "</info> version <comment>" + getVersion() + "</comment>";
+        }
+
+        return "<info>Console Tool</info>";
+    }
+
+    /**
+     * Registers a new command.
+     *
+     * @param name The command name
+     *
+     * @return The newly created command
+     */
+    public Command register(final String name) throws Exception {
+        return add(new Command(name));
+    }
+
+    /**
+     * Adds an array of command objects.
+     *
+     * @param commands An array of commands
+     */
+    public void addCommands(List<Command> commands) {
+        for (Command command : commands) {
+            add(command);
+        }
+    }
 
     /**
      * Adds a command object.
@@ -370,66 +369,66 @@ public final class Application {
         return command;
     }
 
-//    /**
-//     * Returns a registered command by name or alias.
-//     *
-//     * @param name The command name or alias
-//     *
-//     * @return A Command object
-//     *
-//     * @throws Exception When command name given does not exist
-//     */
-//    public Command get(final String name) throws Exception {
-//        if (!commands.containsKey(name)) {
-//            throw new Exception("The command " + name + " does not exist.");
-//        }
-//
-//        Command command = commands.get(name);
-//
-//        if (wantHelps) {
-//            wantHelps = false;
-//
-//            HelpCommand helpCommand = (HelpCommand)get("help");
-//            helpCommand.setCommand(command);
-//
-//            return helpCommand;
-//        }
-//
-//        return command;
-//    }
-//
-//    /**
-//     * Returns true if the command exists, false otherwise.
-//     *
-//     * @param name The command name or alias
-//     *
-//     * @return True if the command exists, false otherwise
-//     */
-//    public boolean has(final String name) {
-//        return commands.containsKey(name);
-//    }
-//
-//    /**
-//     * Returns an array of all unique namespaces used by currently registered commands.
-//     *
-//     * It does not returns the global namespace which always exists.
-//     *
-//     * @return An array of namespaces
-//     */
-//    public List<String> getNamespaces() {
-//        List<String> namespaces = new ArrayList<String>();
-//        for (Entry<String, Command> command : commands.entrySet()) {
-//            namespaces.add(extractNamespace(command.getValue().getName()));
-//
-//            for (String alias : command.getValue().getAliases()) {
-//                namespaces.add(extractNamespace(alias));
-//            }
-//        }
-//
-//        // return array_values(array_unique(array_filter(namespaces))); TODO
-//        return namespaces;
-//    }
-//
+    /**
+     * Returns a registered command by name or alias.
+     *
+     * @param name The command name or alias
+     *
+     * @return A Command object
+     *
+     * @throws Exception When command name given does not exist
+     */
+    public Command get(final String name) throws Exception {
+        if (!commands.containsKey(name)) {
+            throw new Exception(String.format("The command \"%s\" does not exist.", name));
+        }
+
+        Command command = commands.get("name");
+
+        if (wantHelps) {
+            wantHelps = false;
+
+           HelpCommand helpCommand = (HelpCommand) get("help");
+           helpCommand.setCommand(command);
+
+           return helpCommand;
+        }
+
+        return command;
+    }
+
+    /**
+     * Returns true if the command exists, false otherwise.
+     *
+     * @param name The command name or alias
+     *
+     * @return True if the command exists, false otherwise
+     */
+    public boolean has(final String name) {
+        return commands.containsKey(name);
+    }
+
+    /**
+     * Returns an array of all unique namespaces used by currently registered commands.
+     *
+     * It does not returns the global namespace which always exists.
+     *
+     * @return An array of namespaces
+     */
+    public List<String> getNamespaces() {
+        List<String> namespaces = new ArrayList<String>();
+        for (Entry<String, Command> command : commands.entrySet()) {
+            namespaces.add(extractNamespace(command.getValue().getName()));
+
+            for (String alias : command.getValue().getAliases()) {
+                namespaces.add(extractNamespace(alias));
+            }
+        }
+
+        // return array_values(array_unique(array_filter(namespaces))); TODO
+        return namespaces;
+    }
+
 //    /**
 //     * Finds a registered namespace by a name or an abbreviation.
 //     *
@@ -473,102 +472,106 @@ public final class Application {
 //
 //        return implode(':', found);
 //    }
-//
-//    /**
-//     * Finds a command by name or alias.
-//     *
-//     * Contrary to get, this command tries to find the best
-//     * match if you give it an abbreviation of a name or alias.
-//     *
-//     * @param  string name A command name or a command alias
-//     *
-//     * @return Command A Command instance
-//     *
-//     * @throws \InvalidArgumentException When command name is incorrect or ambiguous
-//     *
-//     * @api
-//     */
-//    public find(final String name) {
-//        // Namespace
-//        namespace = '';
-//        searchName = name;
-//        if (false !== pos = strrpos(name, ':')) {
-//            namespace = this.findNamespace(substr(name, 0, pos));
-//            searchName = namespace.substr(name, pos);
-//        }
-//
-//        // Name
-//        commands = array();
-//        foreach (this.commands as command) {
-//            if (this.extractNamespace(command.getName()) == namespace) {
-//                commands[] = command.getName();
-//            }
-//        }
-//
-//        abbrevs = static::getAbbreviations(array_unique(commands));
-//        if (isset(abbrevs[searchName]) && 1 == count(abbrevs[searchName])) {
-//            return this.get(abbrevs[searchName][0]);
-//        }
-//
-//        if (isset(abbrevs[searchName]) && count(abbrevs[searchName]) > 1) {
-//            suggestions = this.getAbbreviationSuggestions(abbrevs[searchName]);
-//
-//            throw new \InvalidArgumentException(sprintf('Command "%s" is ambiguous (%s).', name, suggestions));
-//        }
-//
-//        // Aliases
-//        aliases = array();
-//        foreach (this.commands as command) {
-//            foreach (command.getAliases() as alias) {
-//                if (this.extractNamespace(alias) == namespace) {
-//                    aliases[] = alias;
-//                }
-//            }
-//        }
-//
-//        aliases = static::getAbbreviations(array_unique(aliases));
-//        if (!isset(aliases[searchName])) {
-//            message = sprintf('Command "%s" is not defined.', name);
-//
-//            if (alternatives = this.findAlternativeCommands(searchName, abbrevs)) {
-//                message .= "\n\nDid you mean one of these?\n    ";
-//                message .= implode("\n    ", alternatives);
-//            }
-//
-//            throw new \InvalidArgumentException(message);
-//        }
-//
-//        if (count(aliases[searchName]) > 1) {
-//            throw new \InvalidArgumentException(sprintf('Command "%s" is ambiguous (%s).', name, this.getAbbreviationSuggestions(aliases[searchName])));
-//        }
-//
-//        return this.get(aliases[searchName][0]);
-//    }
-//
-//    /**
-//     * Gets the commands (registered in the given namespace if provided).
-//     *
-//     * The array keys are the full names and the values the command instances.
-//     *
-//     * @param namespace A namespace name
-//     *
-//     * @return An array of Command instances
-//     */
-//    public List<Command> all(final String namespace) {
-//        if (null == namespace) {
-//            return this.commands;
-//        }
-//
-//        commands = array();
-//        foreach (this.commands as name => command) {
-//            if (namespace == this.extractNamespace(name, substr_count(namespace, ':') + 1)) {
-//                commands[name] = command;
-//            }
-//        }
-//
-//        return commands;
-//    }
-//
+
+    /**
+     * Finds a command by name or alias.
+     *
+     * Contrary to get, this command tries to find the best
+     * match if you give it an abbreviation of a name or alias.
+     *
+     * @param name A command name or a command alias
+     *
+     * @return A Command instance
+     *
+     * @throws Exception When command name is incorrect or ambiguous
+     */
+    public Command find(final String name) throws Exception {
+        String namespace = "";
+        String searchName = name;
+        int pos = name.indexOf(":");
+        
+        // TODO
+        return new Command();
+        /*if (-1 < pos) {
+            namespace = findNamespace(name.substring(0, pos));
+            searchName = namespace + name.substring(pos);
+        }
+
+        commands = array();
+        foreach (this.commands as command) {
+            if (this.extractNamespace(command.getName()) == namespace) {
+                commands[] = command.getName();
+            }
+        }
+
+        abbrevs = static::getAbbreviations(array_unique(commands));
+        if (isset(abbrevs[searchName]) && 1 == count(abbrevs[searchName])) {
+            return this.get(abbrevs[searchName][0]);
+        }
+
+        if (isset(abbrevs[searchName]) && count(abbrevs[searchName]) > 1) {
+            suggestions = this.getAbbreviationSuggestions(abbrevs[searchName]);
+
+            throw new \InvalidArgumentException(sprintf('Command "%s" is ambiguous (%s).', name, suggestions));
+        }
+
+        aliases = array();
+        foreach (this.commands as command) {
+            foreach (command.getAliases() as alias) {
+                if (this.extractNamespace(alias) == namespace) {
+                    aliases[] = alias;
+                }
+            }
+        }
+
+        aliases = static::getAbbreviations(array_unique(aliases));
+        if (!isset(aliases[searchName])) {
+            message = sprintf('Command "%s" is not defined.', name);
+
+            if (alternatives = this.findAlternativeCommands(searchName, abbrevs)) {
+                message .= "\n\nDid you mean one of these?\n    ";
+                message .= implode("\n    ", alternatives);
+            }
+
+            throw new Exception(message);
+        }
+
+        if (count(aliases[searchName]) > 1) {
+            throw new Exception(sprintf('Command "%s" is ambiguous (%s).', name, this.getAbbreviationSuggestions(aliases[searchName])));
+        }
+
+        return get(aliases[searchName][0]);*/
+    }
+
+    /**
+     * Gets the commands (registered in the given namespace if provided).
+     *
+     * The array keys are the full names and the values the command instances.
+     *
+     * @param namespace A namespace name
+     *
+     * @return An array of Command instances
+     */
+    public Map<String, Command> all(final String namespace) {
+        if (null == namespace) {
+            return commands;
+        }
+
+        Map<String, Command> locCommands = new HashMap<String, Command>();
+        for (Entry<String, Command> command : commands.entrySet()) {
+            // TODO DL commonslang and use StringUtils.countMatches
+            /*if (namespace == null ? extractNamespace(name/*, command.getKey().replaceAll("[^:]", "").length() + 1)) == null : namespace.equals(extractNamespace(name)) {
+                locCommands.put(command.getKey(), command.getValue());
+            }*/
+        }
+
+        return commands;
+    }
+ 
+    public Map<String, Command> all() {
+        return all(null);
+    }
+
 //    /**
 //     * Returns an array of possible abbreviations given a set of names.
 //     *
@@ -699,132 +702,121 @@ public final class Application {
 //
 //        return asDom ? dom : dom.saveXml();
 //    }
-//
-//    /**
-//     * Renders a catched exception.
-//     *
-//     * @param Exception       e      An exception instance
-//     * @param OutputInterface output An OutputInterface instance
-//     */
-//    public renderException(e, output)
-//    {
-//        strlen = function (string) {
-//            if (!function_exists('mb_strlen')) {
-//                return strlen(string);
-//            }
-//
-//            if (false == encoding = mb_detect_encoding(string)) {
-//                return strlen(string);
-//            }
-//
-//            return mb_strlen(string, encoding);
-//        };
-//
-//        do {
-//            title = sprintf('  [%s]  ', get_class(e));
-//            len = strlen(title);
-//            width = this.getTerminalWidth() ? this.getTerminalWidth() - 1 : PHP_INT_MAX;
-//            lines = array();
-//            foreach (preg_split("{\r?\n}", e.getMessage()) as line) {
-//                foreach (str_split(line, width - 4) as line) {
-//                    lines[] = sprintf('  %s  ', line);
-//                    len = max(strlen(line) + 4, len);
-//                }
-//            }
-//
-//            messages = array(str_repeat(' ', len), title.str_repeat(' ', max(0, len - strlen(title))));
-//
-//            foreach (lines as line) {
-//                messages[] = line.str_repeat(' ', len - strlen(line));
-//            }
-//
-//            messages[] = str_repeat(' ', len);
-//
-//            output.writeln("");
-//            output.writeln("");
-//            foreach (messages as message) {
-//                output.writeln('<error>'.message.'</error>');
-//            }
-//            output.writeln("");
-//            output.writeln("");
-//
-//            if (OutputInterface::VERBOSITY_VERBOSE == output.getVerbosity()) {
-//                output.writeln('<comment>Exception trace:</comment>');
-//
-//                // exception related properties
-//                trace = e.getTrace();
-//                array_unshift(trace, array(
-//                    'function' => '',
-//                    'file'     => e.getFile() != null ? e.getFile() : 'n/a',
-//                    'line'     => e.getLine() != null ? e.getLine() : 'n/a',
-//                    'args'     => array(),
-//                ));
-//
-//                for (i = 0, count = count(trace); i < count; i++) {
-//                    class = isset(trace[i]['class']) ? trace[i]['class'] : '';
-//                    type = isset(trace[i]['type']) ? trace[i]['type'] : '';
-//                    function = trace[i]['function'];
-//                    file = isset(trace[i]['file']) ? trace[i]['file'] : 'n/a';
-//                    line = isset(trace[i]['line']) ? trace[i]['line'] : 'n/a';
-//
-//                    output.writeln(sprintf(' %s%s%s() at <info>%s:%s</info>', class, type, function, file, line));
-//                }
-//
-//                output.writeln("");
-//                output.writeln("");
-//            }
-//        } while (e = e.getPrevious());
-//
-//        if (null !== this.runningCommand) {
-//            output.writeln(sprintf('<info>%s</info>', sprintf(this.runningCommand.getSynopsis(), this.getName())));
-//            output.writeln("");
-//            output.writeln("");
-//        }
-//    }
-//
-//    /**
-//     * Tries to figure out the terminal width in which this application runs
-//     *
-//     * @return int|null
-//     */
-//    protected function getTerminalWidth()
-//    {
-//        if (defined('PHP_WINDOWS_VERSION_BUILD') && ansicon = getenv('ANSICON')) {
-//            return preg_replace('{^(\d+)x.*}', '1', ansicon);
-//        }
-//
-//        if (preg_match("{rows.(\d+);.columns.(\d+);}i", exec('stty -a | grep columns'), match)) {
-//            return match[1];
-//        }
-//    }
-//
-//    /**
-//     * Tries to figure out the terminal height in which this application runs
-//     *
-//     * @return int|null
-//     */
-//    protected function getTerminalHeight()
-//    {
-//        if (defined('PHP_WINDOWS_VERSION_BUILD') && ansicon = getenv('ANSICON')) {
-//            return preg_replace('{^\d+x\d+ \(\d+x(\d+)\)}', '1', trim(ansicon));
-//        }
-//
-//        if (preg_match("{rows.(\d+);.columns.(\d+);}i", exec('stty -a | grep columns'), match)) {
-//            return match[2];
-//        }
-//    }
-//
-//    /**
-//     * Gets the name of the command based on input.
-//     *
-//     * @param InputInterface input The input interface
-//     *
-//     * @return string The command name
-//     */
-//    protected function getCommandName(InputInterface input)
-//    {
-//        return input.getFirstArgument('command');
-//    }
+
+    /**
+     * Renders a catched exception.
+     *
+     * @param e      An exception instance
+     * @param output An OutputInterface instance
+     */
+    public void renderException(Exception e, final OutputInterface output) throws Exception {
+
+        /*do {
+            String title = String.format("  [%s]  ", e.getClass().toString());
+            int len = title.length();
+            int width = getTerminalWidth() < 0 ? getTerminalWidth() - 1 : Integer.MAX_VALUE;
+            List<String> lines = new ArrayList<String>();
+            String[] pieces = e.getMessage().split("{\r?\n}");
+            for (int i = 0; i < pieces.length; i++) {
+                // TODO Write a similar str_split
+                foreach (str_split(line, width - 4) as line) {
+                    lines[] = sprintf("  %s  ", line);
+                    len = max(strlen(line) + 4, len);
+                }
+            }
+
+            /*List<String> messages = Arrays.asList(str_repeat(" ", len), title + str_repeat(" ", Math.max(0, len - title.length())));
+
+            foreach (lines as line) {
+                messages[] = line.str_repeat(" ", len - strlen(line));
+            }
+
+            messages[] = str_repeat(" ", len);
+
+            output.writeln("");
+            output.writeln("");
+            foreach (messages as message) {
+                output.writeln("<error>" + message + "</error>");
+            }
+            output.writeln("");
+            output.writeln("");
+
+            if (OutputInterface.VERBOSITY_VERBOSE == output.getVerbosity()) {
+                output.writeln("<comment>Exception trace:</comment>");
+
+                // exception related properties
+                trace = e.getTrace();
+                array_unshift(trace, array(
+                    "function" => "",
+                    "file"     => e.getFile() != null ? e.getFile() : "n/a",
+                    "line"     => e.getLine() != null ? e.getLine() : "n/a",
+                    "args"     => array(),
+                ));
+
+                for (i = 0, count = count(trace); i < count; i++) {
+                    class = isset(trace[i]["class"]) ? trace[i]["class"] : "";
+                    type = isset(trace[i]["type"]) ? trace[i]["type"] : "";
+                    function = trace[i]["function"];
+                    file = isset(trace[i]["file"]) ? trace[i]["file"] : "n/a";
+                    line = isset(trace[i]["line"]) ? trace[i]["line"] : "n/a";
+
+                    output.writeln(sprintf(" %s%s%s() at <info>%s:%s</info>", class, type, function, file, line));
+                }
+
+                output.writeln("");
+                output.writeln("");
+            }
+        } while (null != (e = e.getCause().));*/
+
+        if (null != runningCommand) {
+            output.writeln(String.format("<info>%s</info>", String.format(runningCommand.getSynopsis(), getName())));
+            output.writeln("");
+            output.writeln("");
+        }
+    }
+
+    /**
+     * Tries to figure out the terminal width in which this application runs
+     *
+     * @return -1 if the width cannot be determined
+     */
+    protected int getTerminalWidth() {
+        /*if (defined("PHP_WINDOWS_VERSION_BUILD") && ansicon = getenv('ANSICON')) {
+            return preg_replace('{^(\d+)x.*}', '1', ansicon);
+        }*/
+        // TODO
+        /*if (preg_match("{rows.(\d+);.columns.(\d+);}i", exec('stty -a | grep columns'), match)) {
+            return match[1];
+        }*/
+        return -1;
+    }
+
+    /**
+     * Tries to figure out the terminal height in which this application runs
+     *
+     * @return -1 if the height cannot be determined
+     */
+    protected int getTerminalHeight() {
+        /*if (defined('PHP_WINDOWS_VERSION_BUILD') && ansicon = getenv('ANSICON')) {
+            return preg_replace('{^\d+x\d+ \(\d+x(\d+)\)}', '1', trim(ansicon));
+        }*/
+        // TODO
+        /*if (preg_match("{rows.(\d+);.columns.(\d+);}i", exec('stty -a | grep columns'), match)) {
+            return match[2];
+        }*/
+        return -1;
+    }
+
+    /**
+     * Gets the name of the command based on input.
+     *
+     * @param input The input interface
+     *
+     * @return The command name
+     */
+    protected String getCommandName(InputInterface input) {
+        return input.getFirstArgument();
+    }
 
     /**
      * Gets the default input definition.
@@ -891,35 +883,33 @@ public final class Application {
 //
 //        return namespacedCommands;
 //    }
-//
-//    /**
-//     * Returns abbreviated suggestions in string format.
-//     *
-//     * @param array abbrevs Abbreviated suggestions to convert
-//     *
-//     * @return string A formatted string of abbreviated suggestions
-//     */
-//    private function getAbbreviationSuggestions(abbrevs)
-//    {
-//        return sprintf('%s, %s%s', abbrevs[0], abbrevs[1], count(abbrevs) > 2 ? sprintf(' and %d more', count(abbrevs) - 2) : '');
-//    }
-//
-//    /**
-//     * Returns the namespace part of the command name.
-//     *
-//     * @param string name  The full name of the command
-//     * @param string limit The maximum number of parts of the namespace
-//     *
-//     * @return string The namespace of the command
-//     */
-//    private function extractNamespace(name, limit = null)
-//    {
-//        parts = explode(':', name);
-//        array_pop(parts);
-//
-//        return implode(':', null == limit ? parts : array_slice(parts, 0, limit));
-//    }
-//
+
+    /**
+     * Returns abbreviated suggestions in string format.
+     *
+     * @param abbrevs Abbreviated suggestions to convert
+     *
+     * @return A formatted string of abbreviated suggestions
+     */
+    private String getAbbreviationSuggestions(String[] abbrevs) {
+        return String.format("%s, %s%s", abbrevs[0], abbrevs[1], abbrevs.length > 2 ? String.format(" and %d more", abbrevs.length - 2) : "");
+    }
+
+    /**
+     * Returns the namespace part of the command name.
+     *
+     * @param name  The full name of the command
+     * @param limit The maximum number of parts of the namespace
+     *
+     * @return The namespace of the command
+     */
+    private String extractNamespace(final String name) { // TODO add limit argument
+        String[] parts = name.split(":");
+        Util.array_pop(parts);
+
+        return Util.implode(":", parts);
+    }
+
 //    /**
 //     * Finds alternative commands of name
 //     *

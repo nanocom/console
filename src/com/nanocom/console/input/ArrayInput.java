@@ -1,6 +1,12 @@
+/*
+ * This file is part of the Console package.
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 package com.nanocom.console.input;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -159,7 +165,7 @@ public class ArrayInput extends Input {
      */
     private void addShortOption(final String shortcut, final Object value) throws Exception {
         if (!definition.hasShortcut(shortcut)) {
-            throw new Exception("The \"" + shortcut + "\" option does not exist.");
+            throw new Exception("The \"-" + shortcut + "\" option does not exist.");
         }
 
         addLongOption(definition.getOptionForShortcut(shortcut).getName(), value);
@@ -176,14 +182,14 @@ public class ArrayInput extends Input {
      */
     private void addLongOption(final String name, Object value) throws Exception {
         if (!definition.hasOption(name)) {
-            throw new Exception("The \"" + name + "\" option does not exist.");
+            throw new Exception("The \"--" + name + "\" option does not exist.");
         }
 
         InputOption option = definition.getOption(name);
 
         if (null == value) {
             if (option.isValueRequired()) {
-                throw new Exception("The \"" + name + "\" option requires a value.");
+                throw new Exception("The \"--" + name + "\" option requires a value.");
             }
 
             value = option.isValueOptional() ? option.getDefaultValue() : true;
@@ -198,10 +204,9 @@ public class ArrayInput extends Input {
      * @param name  The argument name
      * @param value The value for the argument
      *
-     * @throws \InvalidArgumentException When argument given doesn't exist
+     * @throws Exception When argument given doesn't exist
      */
-    private void addArgument(final String name, final Object value) throws Exception
-    {
+    private void addArgument(final String name, final Object value) throws Exception {
         if (!definition.hasArgument(name)) {
             throw new Exception("The \"" + name + "\" argument does not exist.");
         }

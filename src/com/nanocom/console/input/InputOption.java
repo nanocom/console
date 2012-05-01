@@ -1,3 +1,10 @@
+/*
+ * This file is part of the Console package.
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 package com.nanocom.console.input;
 
 import java.util.ArrayList;
@@ -141,11 +148,11 @@ public class InputOption {
     }
 
     /**
-     * Sets the defaultValue value.
+     * Sets the default value.
      *
-     * @param defaultValue The defaultValue value
+     * @param defaultValue The default value
      *
-     * @throws Exception When incorrect defaultValue value is given
+     * @throws Exception When incorrect default value is given
      */
     public void setDefaultValue(Object defaultValue) throws Exception {
         if (VALUE_NONE == (VALUE_NONE & mode) && null != defaultValue) {
@@ -164,9 +171,9 @@ public class InputOption {
     }
 
     /**
-     * Returns the defaultValue value.
+     * Returns the default value.
      *
-     * @return The defaultValue value
+     * @return The default value
      */
     public Object getDefaultValue() {
         return defaultValue;

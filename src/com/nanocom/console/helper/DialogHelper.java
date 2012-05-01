@@ -1,7 +1,15 @@
+/*
+ * This file is part of the Console package.
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 package com.nanocom.console.helper;
 
 import com.nanocom.console.output.OutputInterface;
 import java.io.InputStream;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -16,25 +24,36 @@ public class DialogHelper extends Helper {
     /**
      * Asks a question to the user.
      *
-     * @param output   An Output instance
-     * @param question The question to ask
-     * @param default  The default answer if none is given by the user
+     * @param output        An Output instance
+     * @param question      The question to ask
+     * @param defaultAnswer The default answer if none is given by the user
      *
      * @return The user answer
      *
      * @throws Exception If there is no data to read in the input stream
      */
-    public String ask(final OutputInterface output, final List<String> question, final String defaultAnswer) throws Exception {
-        output.write(question, false, 0);
+    public String ask(final OutputInterface output, final List<String> questions, final String defaultAnswer) throws Exception {
+        output.write(questions);
 
-        // TODO
-        String ret = ""; //fgets(this.inputStream ?: STDIN, 4096);
+        String ret = System.console().readLine();
         if (null == ret) {
             throw new Exception("Aborted");
         }
         ret = ret.trim();
 
         return ret.length() > 0 ? ret : defaultAnswer;
+    }
+
+    public String ask(final OutputInterface output, final List<String> questions) throws Exception {
+        return ask(output, questions, null);
+    }
+
+    public String ask(final OutputInterface output, final String question, final String defaultValue) throws Exception {
+        return ask(output, Arrays.asList(question), defaultValue); // There's maybe something better to do
+    }
+
+    public String ask(OutputInterface output, final String question) throws Exception {
+        return ask(output, question, null);
     }
 
     /**
@@ -50,15 +69,15 @@ public class DialogHelper extends Helper {
      */
     public boolean askConfirmation(final OutputInterface output, final List<String> question, final boolean defaultAnswer) throws Exception {
         String answer = "z";
-        while (!answer.isEmpty() && (answer.charAt(0) == 'y' || answer.charAt(0) == 'n')) {
+        while (null != answer && !("y".equals(answer.substring(0, 1).toLowerCase()) || "n".equals(answer.substring(0, 1).toLowerCase()))) {
             answer = ask(output, question, null);
         }
 
         if (false == defaultAnswer) {
-            return !answer.isEmpty() && 'y' == answer.charAt(0);
+            return null != answer && "y".equals(answer.substring(0, 1).toLowerCase());
         }
 
-        return answer.isEmpty() || 'y' == answer.charAt(0);
+        return null == answer || "y".equals(answer.substring(0, 1).toLowerCase());
     }
 
     /**
@@ -78,24 +97,25 @@ public class DialogHelper extends Helper {
      *
      * @throws Exception When any of the validators return an error
      */
-    public Object askAndValidate(final OutputInterface output, final List<String> question, Object validator, final int attempts, final String defaultAnswer) {
-        return null;
-        /* error = null;
+    public Object askAndValidate(final OutputInterface output, final List<String> question, Object validator, int attempts, final String defaultAnswer) throws Exception {
+        Exception error = null;
         while (attempts > 0) {
             attempts--;
-            if (null !== error) {
-                output.writeln(this.getHelperSet().get('formatter').formatBlock(error.getMessage(), 'error'));
+            if (null != error) {
+                output.writeln(((FormatterHelper) getHelperSet().get("formatter")).formatBlock(error.getMessage(), "error"));
             }
 
-            value = this.ask(output, question, defaultAnswer);
+            String value = ask(output, question, defaultAnswer);
 
             try {
-                return call_user_func(validator, value);
+                // TODO Imitate this behavior
+                // return call_user_func(validator, value);
+                return null;
             } catch (Exception e) {
             }
         }
 
-        throw error;*/
+        throw error;
     }
 
     /**
@@ -107,6 +127,15 @@ public class DialogHelper extends Helper {
      */
     public void setInputStream(final InputStream stream) {
         this.inputStream = stream;
+    }
+
+    /**
+     * Returns the helper's input stream
+     *
+     * @return
+     */
+    public InputStream getInputStream() {
+        return inputStream;
     }
 
     /**

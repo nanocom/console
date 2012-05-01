@@ -1,5 +1,14 @@
+/*
+ * This file is part of the Console package.
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 package com.nanocom.console.output;
 
+import com.nanocom.console.formatter.OutputFormatterInterface;
+import java.io.File;
 import java.io.PrintStream;
 
 /**
@@ -19,29 +28,35 @@ public class StreamOutput extends Output {
 
     private PrintStream stream;
 
-//   /**
-//    * Constructor.
-//    *
-//    * @param stream    A stream resource
-//    * @param verbosity The verbosity level (VERBOSITY_QUIET, VERBOSITY_NORMAL, VERBOSITY_VERBOSE)
-//    * @param decorated Whether to decorate messages or not (null for auto-guessing)
-//    * @param formatter Output formatter instance
-//    *
-//    * @throws Exception When first argument is not a real stream
-//    */
-//    public StreamOutput(PrintStream stream, verbosity = VERBOSITY_NORMAL, decorated = null, OutputFormatterInterface formatter = null) {
-//        if (!is_resource(stream) || 'stream' !== get_resource_type(stream)) {
-//            throw new \InvalidArgumentException('The StreamOutput class needs a stream as its first argument.');
-//        }
-//
-//        this.stream = stream;
-//
-//        if (null === decorated) {
-//            decorated = this.hasColorSupport(decorated);
-//        }
-//
-//        super(verbosity, decorated, formatter);
-//    }
+   /**
+    * @param stream    A stream resource
+    * @param verbosity The verbosity level (VERBOSITY_QUIET, VERBOSITY_NORMAL, VERBOSITY_VERBOSE)
+    * @param decorated Whether to decorate messages or not (null for auto-guessing)
+    * @param formatter Output formatter instance
+    *
+    * @throws Exception When first argument is not a real stream
+    */
+    public StreamOutput(final PrintStream stream, final int verbosity, Boolean decorated, final OutputFormatterInterface formatter) throws Exception {
+        if (null == stream) {
+            throw new Exception("The stream cannot be null.");
+        }
+
+        this.stream = stream;
+
+        if (null == decorated) {
+            decorated = hasColorSupport();
+        }
+
+        init(verbosity, decorated, formatter);
+    }
+
+    public StreamOutput(final PrintStream stream) throws Exception {
+        this(stream, OutputInterface.VERBOSITY_NORMAL, null, null);
+    }
+
+    public StreamOutput() throws Exception {
+        super();
+    }
 
     /**
      * Gets the stream attached to this StreamOutput instance.
@@ -52,41 +67,43 @@ public class StreamOutput extends Output {
         return stream;
     }
 
-//    /**
-//     * Writes a message to the output.
-//     *
-//     * @param message A message to write to the output
-//     * @param newline Whether to add a newline or not
-//     *
-//     * @throws Exception When unable to write output (should never happen)
-//     */
-//    @Override
-//    public void doWrite(final String message, final boolean newline) throws Exception {
-//        stream.write(message.getBytes());
-//        if (newline) {
-//            // Add PHP_EOL
-//        }
-//
-//        stream.flush();
-//    }
-//
-//    /**
-//     * Returns true if the stream supports colorization.
-//     *
-//     * Colorization is disabled if not supported by the stream:
-//     * - windows without ansicon
-//     * - non tty consoles
-//     *
-//     * @return True if the stream supports colorization, false otherwise
-//     */
-//    protected boolean hasColorSupport() {
-//        /*if (DIRECTORY_SEPARATOR == '\\') {
-//            return false != getenv('ANSICON');
-//        }
-//
-//        return void_exists('posix_isatty') && @posix_isatty(this.stream);*/
-//        
-//        return false;
-//    }
+    /**
+     * Writes a message to the output.
+     *
+     * @param message A message to write to the output
+     * @param newline Whether to add a newline or not
+     *
+     * @throws Exception When unable to write output (should never happen)
+     */
+    @Override
+    public void doWrite(final String message, final boolean newline) throws Exception {
+        if (newline) {
+            stream.println(message);
+        } else {
+            stream.print(message);
+        }
+
+        stream.flush();
+    }
+
+    /**
+     * Returns true if the stream supports colorization.
+     *
+     * Colorization is disabled if not supported by the stream:
+     * - windows without ansicon
+     * - non tty consoles
+     *
+     * @return True if the stream supports colorization, false otherwise
+     */
+    protected final boolean hasColorSupport() {
+        if ("\\".equals(File.separator)) {
+            // Install AnsiCon on Windows to get colors in the command line
+            return !"false".equals(System.getenv("ANSICON"));
+        }
+
+        // return function_exists('posix_isatty') && @posix_isatty(this.stream);
+        // TODO check that this is equivalent to
+        return System.console() != null;
+    }
 
 }

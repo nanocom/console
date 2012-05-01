@@ -1,3 +1,10 @@
+/*
+ * This file is part of the Console package.
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 package com.nanocom.console.command;
 
 import com.nanocom.console.Application;
@@ -142,7 +149,7 @@ public class Command {
      * @param input  An InputInterface instance
      * @param output An OutputInterface instance
      */
-    protected void interact(InputInterface input, OutputInterface output)
+    protected void interact(InputInterface input, OutputInterface output) throws Exception
     {
     }
 
@@ -536,7 +543,7 @@ public class Command {
     }
 
     private void validateName(final String name) throws Exception {
-        // TODO This regex does not work correctly
+        // TODO This regex might not work correctly
         if (name.isEmpty() || !name.matches("^[^\\:]+(\\:[^\\:]+)*$")) {
             throw new Exception("Command name \"" + name + "\" is invalid.");
         }

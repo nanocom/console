@@ -1,5 +1,13 @@
+/*
+ * This file is part of the Console package.
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 package com.nanocom.console.input;
 
+import com.nanocom.console.Util;
 import java.util.*;
 
 /**
@@ -269,7 +277,7 @@ public class InputDefinition {
      * Returns an InputOption by name.
      *
      * @param name The InputOption name
-     * @return A InputOption object
+     * @return An InputOption object
      */
     public InputOption getOption(final String name) throws Exception {
         if (!hasOption(name)) {
@@ -311,7 +319,7 @@ public class InputDefinition {
     /**
      * Gets an InputOption by shortcut.
      *
-     * @param shortcut the Shortcut name
+     * @param shortcut The shortcut name
      * @return An InputOption object
      */
     public InputOption getOptionForShortcut(final String shortcut) throws Exception {
@@ -321,7 +329,7 @@ public class InputDefinition {
     /**
      * Gets an array of default values.
      *
-     * @return array An array of all default values
+     * @return An array of all default values
      */
     public Map<String, Object> getOptionDefaults() {
         Map<String, Object> values = new HashMap<String, Object>();
@@ -381,7 +389,7 @@ public class InputDefinition {
             }
         }
 
-        return sb.toString();
+        return sb.toString().trim();
     }
 
     /**
@@ -477,12 +485,13 @@ public class InputDefinition {
     }
 
     private String formatDefaultValue(final Object defaultValue) {
-        //TODO implement this part
-        /*if (defaultValue instanceof ArrayList && defaultValue == array_values(defaultValue)) {
-            return sprintf("array('%s')", implode("', '", defaultValue));
+        if (defaultValue instanceof ArrayList) {
+            return String.format("array('%s')",
+                    Util.implode("', '", (String[]) ((List<String>) defaultValue).toArray()));
         }
 
-        return str_replace("\n", '', var_export(defaultValue, true));*/
+        //TODO implement this part
+        //return str_replace("\n", '', var_export(defaultValue, true));
         return "";
     }
 

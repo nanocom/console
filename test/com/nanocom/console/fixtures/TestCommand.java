@@ -25,14 +25,14 @@ public class TestCommand extends Command {
     }
 
     @Override
-    protected int execute(InputInterface input, OutputInterface output) {
+    protected int execute(InputInterface input, OutputInterface output) throws Exception {
         output.writeln("execute called");
 
         return 1;
     }
 
     @Override
-    protected void interact(InputInterface input, OutputInterface output) {
+    protected void interact(InputInterface input, OutputInterface output) throws Exception {
         output.writeln("interact called");
     }
 
