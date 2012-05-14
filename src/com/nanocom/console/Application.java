@@ -9,9 +9,11 @@ package com.nanocom.console;
 
 import com.nanocom.console.command.Command;
 import com.nanocom.console.helper.HelperSet;
-import com.nanocom.console.input.InputDefinition;
-import java.util.HashMap;
-import java.util.Map;
+import com.nanocom.console.input.*;
+import com.nanocom.console.output.ConsoleOutput;
+import com.nanocom.console.output.ConsoleOutputInterface;
+import com.nanocom.console.output.OutputInterface;
+import java.util.*;
 
 /**
  * An Application is the container for a collection of commands.
@@ -28,7 +30,7 @@ import java.util.Map;
  *
  * @author Arnaud Kleinpeter <arnaud.kleinpeter at gmail dot com>
  */
-class Application {
+public class Application {
 
     private Map<String, Command> commands;
     private boolean wantHelps = false;
@@ -45,6 +47,18 @@ class Application {
      * @param version The version of the application
      */
     public void Application(final String name, final String version) {
+        init(name, version);
+    }
+
+    public void Application(final String name) {
+        init(name, "UNKNOWN");
+    }
+
+    public void Application() {
+        init("UNKNOWN", "UNKNOWN");
+    }
+
+    private void init(final String name, final String version) {
         this.name = name;
         this.version = version;
         catchExceptions = true;
@@ -54,61 +68,53 @@ class Application {
         definition = getDefaultInputDefinition();
 
         for (Command command : getDefaultCommands()) {
-            this.add(command);
+            add(command);
         }
-    }
-
-    public void Application(final String name) {
-        this(name, "UNKNOWN");
-    }
-
-    public void Application() {
-        this("UNKNOWN", "UNKNOWN");
     }
 
     /**
      * Runs the current application.
      *
-     * @param InputInterface  input  An Input instance
-     * @param OutputInterface output An Output instance
+     * @param input  An Input instance
+     * @param output An Output instance
      *
      * @return 0 if everything went fine, or an error code
      *
      * @throws Exception When doRun returns Exception
      */
-    public int run(final InputInterface input = null, final OutputInterface output = null) {
-        if (null === input) {
+    public int run(InputInterface input, OutputInterface output) throws Exception {
+        if (null == input) {
             input = new ArgvInput();
         }
 
-        if (null === output) {
+        if (null == output) {
             output = new ConsoleOutput();
         }
 
+        int statusCode;
+
         try {
-            statusCode = this.doRun(input, output);
+            statusCode = doRun(input, output);
         } catch (Exception e) {
-            if (!this.catchExceptions) {
+            if (!catchExceptions) {
                 throw e;
             }
 
             if (output instanceof ConsoleOutputInterface) {
-                this.renderException(e, output.getErrorOutput());
+                renderException(e, ((ConsoleOutputInterface) output).getErrorOutput());
             } else {
-                this.renderException(e, output);
+                renderException(e, output);
             }
-            statusCode = e.getCode();
 
-            statusCode = is_numeric(statusCode) && statusCode ? statusCode : 1;
+            statusCode = e.hashCode();
         }
 
-        if (this.autoExit) {
+        if (autoExit) {
             if (statusCode > 255) {
                 statusCode = 255;
             }
-            // @codeCoverageIgnoreStart
-            exit(statusCode);
-            // @codeCoverageIgnoreEnd
+
+            System.exit(statusCode);
         }
 
         return statusCode;
@@ -117,211 +123,185 @@ class Application {
     /**
      * Runs the current application.
      *
-     * @param InputInterface  input  An Input instance
-     * @param OutputInterface output An Output instance
+     * @param input  An Input instance
+     * @param output An Output instance
      *
-     * @return integer 0 if everything went fine, or an error code
+     * @return 0 if everything went fine, or an error code
      */
-    public void doRun(InputInterface input, OutputInterface output)
-    {
-        name = this.getCommandName(input);
+    public int doRun(InputInterface input, OutputInterface output) throws Exception {
+        name = getCommandName(input);
 
-        if (true === input.hasParameterOption(array("--ansi"))) {
+        if (true == input.hasParameterOption(Arrays.asList("--ansi"))) {
             output.setDecorated(true);
-        } elseif (true === input.hasParameterOption(array("--no-ansi"))) {
+        } else if (true == input.hasParameterOption(Arrays.asList("--no-ansi"))) {
             output.setDecorated(false);
         }
 
-        if (true === input.hasParameterOption(array("--help", "-h"))) {
-            if (!name) {
+        if (true == input.hasParameterOption(Arrays.asList("--help", "-h"))) {
+            if (null == name) {
                 name = "help";
-                input = new ArrayInput(array("command" => "help"));
+                Map<String, String> arrayInputParams = new HashMap<String, String>();
+                arrayInputParams.put("command", "help");
+                input = new ArrayInput(arrayInputParams);
             } else {
-                this.wantHelps = true;
+                wantHelps = true;
             }
         }
 
-        if (true === input.hasParameterOption(array("--no-interaction", "-n"))) {
+        if (true == input.hasParameterOption(Arrays.asList("--no-interaction", "-n"))) {
             input.setInteractive(false);
         }
 
-        if (void_exists("posix_isatty") && this.getHelperSet().has("dialog")) {
+        if (/*void_exists("posix_isatty") &&*/ getHelperSet().has("dialog")) {
             inputStream = this.getHelperSet().get("dialog").getInputStream();
             if (!posix_isatty(inputStream)) {
                 input.setInteractive(false);
             }
         }
 
-        if (true === input.hasParameterOption(array("--quiet", "-q"))) {
+        if (true == input.hasParameterOption(array("--quiet", "-q"))) {
             output.setVerbosity(OutputInterface::VERBOSITY_QUIET);
-        } elseif (true === input.hasParameterOption(array("--verbose", "-v"))) {
+        } else if (true == input.hasParameterOption(array("--verbose", "-v"))) {
             output.setVerbosity(OutputInterface::VERBOSITY_VERBOSE);
         }
 
-        if (true === input.hasParameterOption(array("--version", "-V"))) {
+        if (true == input.hasParameterOption(array("--version", "-V"))) {
             output.writeln(this.getLongVersion());
 
             return 0;
         }
 
-        if (!name) {
+        if (null == name) {
             name = "list";
-            input = new ArrayInput(array("command" => "list"));
+            Map<String, String> arrayInputParams = new HashMap<String, String>();
+            arrayInputParams.put("command", "list");
+            input = new ArrayInput(arrayInputParams);
         }
 
-        // the command name MUST be the first element of the input
-        command = this.find(name);
+        // The command name MUST be the first element of the input
+        Command command = find(name);
 
-        this.runningCommand = command;
-        statusCode = command.run(input, output);
-        this.runningCommand = null;
+        runningCommand = command;
+        int statusCode = command.run(input, output);
+        runningCommand = null;
 
-        return is_numeric(statusCode) ? statusCode : 0;
+        return statusCode;
     }
 
     /**
      * Set a helper set to be used with the command.
      *
-     * @param HelperSet helperSet The helper set
-     *
-     * @api
+     * @param helperSet The helper set
      */
-    public void setHelperSet(HelperSet helperSet)
-    {
+    public void setHelperSet(final HelperSet helperSet) {
         this.helperSet = helperSet;
     }
 
     /**
      * Get the helper set associated with the command.
      *
-     * @return HelperSet The HelperSet instance associated with this command
-     *
-     * @api
+     * @return The HelperSet instance associated with this command
      */
-    public void getHelperSet()
-    {
-        return this.helperSet;
+    public HelperSet getHelperSet() {
+        return helperSet;
     }
 
     /**
      * Gets the InputDefinition related to this Application.
      *
-     * @return InputDefinition The InputDefinition instance
+     * @return The InputDefinition instance
      */
-    public void getDefinition()
-    {
-        return this.definition;
+    public InputDefinition getDefinition() {
+        return definition;
     }
 
     /**
      * Gets the help message.
      *
-     * @return string A help message.
+     * @return A help message.
      */
-    public void getHelp()
-    {
-        messages = array(
-            this.getLongVersion(),
+    public String getHelp() {
+        List<String> messages = Arrays.asList(
+            getLongVersion(),
             "",
             "<comment>Usage:</comment>",
-            sprintf(\"  [options] command [arguments]\n\"),
-            "<comment>Options:</comment>",
+            String.format("  [options] command [arguments]\n"),
+            "<comment>Options:</comment>"
         );
 
-        foreach (this.getDefinition().getOptions() as option) {
-            messages[] = sprintf("  %-29s %s %s",
-                "<info>--".option.getName()."</info>",
-                option.getShortcut() ? "<info>-".option.getShortcut()."</info>" : "  ",
+        for (final InputOption option : getDefinition().getOptions().values()) {
+            messages.add(String.format("  %-29s %s %s",
+                "<info>--" + option.getName() + "</info>",
+                null != option.getShortcut() ? "<info>-" + option.getShortcut() + "</info>" : "  ",
                 option.getDescription()
-            );
+            ));
         }
 
-        return implode(PHP_EOL, messages);
+        return Util.implode(System.getProperty("line.separator"), messages);
     }
 
     /**
      * Sets whether to catch exceptions or not during commands execution.
      *
-     * @param Boolean boolean Whether to catch exceptions or not during commands execution
-     *
-     * @api
+     * @param catchExceptions Whether to catch exceptions or not during commands execution
      */
-    public void setCatchExceptions(boolean)
-    {
-        this.catchExceptions = (Boolean) boolean;
+    public void setCatchExceptions(final boolean catchExceptions) {
+        this.catchExceptions = catchExceptions;
     }
 
     /**
      * Sets whether to automatically exit after a command execution or not.
      *
-     * @param Boolean boolean Whether to automatically exit after a command execution or not
-     *
-     * @api
+     * @param autoExit Whether to automatically exit after a command execution or not
      */
-    public void setAutoExit(boolean)
-    {
-        this.autoExit = (Boolean) boolean;
+    public void setAutoExit(final boolean autoExit) {
+        this.autoExit = autoExit;
     }
 
     /**
      * Gets the name of the application.
      *
-     * @return string The application name
-     *
-     * @api
+     * @return The application name
      */
-    public void getName()
-    {
-        return this.name;
+    public String getName() {
+        return name;
     }
 
     /**
      * Sets the application name.
      *
-     * @param string name The application name
-     *
-     * @api
+     * @param name The application name
      */
-    public void setName(name)
-    {
+    public void setName(final String name) {
         this.name = name;
     }
 
     /**
      * Gets the application version.
      *
-     * @return string The application version
-     *
-     * @api
+     * @return The application version
      */
-    public void getVersion()
-    {
-        return this.version;
+    public String getVersion() {
+        return version;
     }
 
     /**
      * Sets the application version.
      *
-     * @param string version The application version
-     *
-     * @api
+     * @param version The application version
      */
-    public void setVersion(version)
-    {
+    public void setVersion(final String version) {
         this.version = version;
     }
 
     /**
      * Returns the long version of the application.
      *
-     * @return string The long application version
-     *
-     * @api
+     * @return The long application version
      */
-    public void getLongVersion()
-    {
-        if ("UNKNOWN" !== this.getName() && "UNKNOWN" !== this.getVersion()) {
-            return sprintf("<info>%s</info> version <comment>%s</comment>", this.getName(), this.getVersion());
+    public String getLongVersion() {
+        if (!"UNKNOWN".equals(getName()) && !"UNKNOWN".equals(this.getVersion())) {
+            return String.format("<info>%s</info> version <comment>%s</comment>", getName(), getVersion());
         }
 
         return "<info>Console Tool</info>";
@@ -330,28 +310,22 @@ class Application {
     /**
      * Registers a new command.
      *
-     * @param string name The command name
+     * @param name The command name
      *
-     * @return Command The newly created command
-     *
-     * @api
+     * @return The newly created command
      */
-    public void register(name)
-    {
-        return this.add(new Command(name));
+    public Command register(final String name) throws Exception {
+        return add(new Command(name));
     }
 
     /**
      * Adds an array of command objects.
      *
-     * @param Command[] commands An array of commands
-     *
-     * @api
+     * @param commands An array of commands
      */
-    public void addCommands(array commands)
-    {
-        foreach (commands as command) {
-            this.add(command);
+    public void addCommands(final List<Command> commands) {
+        for (final Command command : commands) {
+            add(command);
         }
     }
 
@@ -360,26 +334,23 @@ class Application {
      *
      * If a command with the same name already exists, it will be overridden.
      *
-     * @param Command command A Command object
+     * @param command A Command object
      *
-     * @return Command The registered command
-     *
-     * @api
+     * @return The registered command
      */
-    public void add(Command command)
-    {
+    public Command add(final Command command) {
         command.setApplication(this);
 
         if (!command.isEnabled()) {
             command.setApplication(null);
 
-            return;
+            return null;
         }
 
-        this.commands[command.getName()] = command;
+        commands.put(command.getName(), command);
 
-        foreach (command.getAliases() as alias) {
-            this.commands[alias] = command;
+        for (final String alias : command.getAliases()) {
+            commands.put(alias, command);
         }
 
         return command;
@@ -388,26 +359,23 @@ class Application {
     /**
      * Returns a registered command by name or alias.
      *
-     * @param string name The command name or alias
+     * @param name The command name or alias
      *
-     * @return Command A Command object
+     * @return A Command object
      *
-     * @throws \InvalidArgumentException When command name given does not exist
-     *
-     * @api
+     * @throws Exception When command name given does not exist
      */
-    public void get(name)
-    {
-        if (!isset(this.commands[name])) {
-            throw new \InvalidArgumentException(sprintf("The command \"%s\" does not exist.", name));
+    public Command get(final String name) throws Exception {
+        if (!commands.containsKey(name)) {
+            throw new Exception(String.format("The command \"%s\" does not exist.", name));
         }
 
-        command = this.commands[name];
+        Command command = commands.get(name);
 
-        if (this.wantHelps) {
-            this.wantHelps = false;
+        if (wantHelps) {
+            wantHelps = false;
 
-            helpCommand = this.get("help");
+            Command helpCommand = get("help");
             helpCommand.setCommand(command);
 
             return helpCommand;
@@ -419,15 +387,12 @@ class Application {
     /**
      * Returns true if the command exists, false otherwise.
      *
-     * @param string name The command name or alias
+     * @param name The command name or alias
      *
-     * @return Boolean true if the command exists, false otherwise
-     *
-     * @api
+     * @return True if the command exists, false otherwise
      */
-    public void has(name)
-    {
-        return isset(this.commands[name]);
+    public boolean has(final String name) {
+        return commands.containsKey(name);
     }
 
     /**
@@ -435,65 +400,67 @@ class Application {
      *
      * It does not returns the global namespace which always exists.
      *
-     * @return array An array of namespaces
+     * @return An array of namespaces
      */
-    public void getNamespaces()
-    {
-        namespaces = array();
-        foreach (this.commands as command) {
-            namespaces[] = this.extractNamespace(command.getName());
+    public List<String> getNamespaces() {
+        List<String> namespaces = new ArrayList<String>();
+        for (final Command command : commands.values()) {
+            namespaces.add(extractNamespace(command.getName()));
 
-            foreach (command.getAliases() as alias) {
-                namespaces[] = this.extractNamespace(alias);
+            for (final String alias : command.getAliases()) {
+                namespaces.add(extractNamespace(alias));
             }
         }
 
-        return array_values(array_unique(array_filter(namespaces)));
+        return namespaces; // TODO array_unique and array_filter
     }
 
     /**
      * Finds a registered namespace by a name or an abbreviation.
      *
-     * @param string namespace A namespace or abbreviation to search for
+     * @param namespace A namespace or abbreviation to search for
      *
-     * @return string A registered namespace
+     * @return A registered namespace
      *
-     * @throws \InvalidArgumentException When namespace is incorrect or ambiguous
+     * @throws Exception When namespace is incorrect or ambiguous
      */
-    public void findNamespace(namespace)
-    {
-        allNamespaces = array();
-        foreach (this.getNamespaces() as n) {
-            allNamespaces[n] = explode(":", n);
+    public String findNamespace(final String namespace) throws Exception {
+        Map<String, String[]> allNamespaces = new HashMap<String, String[]>();
+        for (final String n : getNamespaces()) {
+            allNamespaces.put(n, n.split(":"));
         }
 
-        found = array();
-        foreach (explode(":", namespace) as i => part) {
-            abbrevs = static::getAbbreviations(array_unique(array_values(array_filter(array_map(void (p) use (i) { return isset(p[i]) ? p[i] : ""; }, allNamespaces)))));
+        List<String> found = new ArrayList<String>();
+        int i = 0;
+        for (String part : namespace.split(":")) {
+            // TODO array_unique(array_values(array_filter(array_map(void (p) use (i) { return isset(p[i]) ? p[i] : ""; }
+            Map<String, List<String>> abbrevs = new HashMap<String, List<String>>(); // = getAbbreviations(allNamespaces);
 
-            if (!isset(abbrevs[part])) {
-                message = sprintf("There are no commands defined in the \"%s\" namespace.", namespace);
+            if (!abbrevs.containsKey(part)) {
+                String message = String.format("There are no commands defined in the \"%s\" namespace.", namespace);
 
                 if (1 <= i) {
-                    part = implode(":", found).":".part;
+                    part = Util.implode(":", found) + ":" + part;
                 }
 
-                if (alternatives = this.findAlternativeNamespace(part, abbrevs)) {
-                    message .= \"\n\nDid you mean one of these?\n    \";
-                    message .= implode(\"\n    \", alternatives);
+                List<String> alternatives = new ArrayList<String>(); // = findAlternativeNamespace(part, abbrevs);
+
+                if (null != alternatives) {
+                    message += "\n\nDid you mean one of these?\n    ";
+                    message += Util.implode("\n    ", alternatives);
                 }
 
-                throw new \InvalidArgumentException(message);
+                throw new Exception(message);
             }
 
-            if (count(abbrevs[part]) > 1) {
-                throw new \InvalidArgumentException(sprintf("The namespace \"%s\" is ambiguous (%s).", namespace, this.getAbbreviationSuggestions(abbrevs[part])));
+            if (abbrevs.get(part).size() > 1) {
+                throw new Exception(String.format("The namespace \"%s\" is ambiguous.", namespace /*, getAbbreviationSuggestions(abbrevs.get(part))*/));
             }
 
-            found[] = abbrevs[part][0];
+            found.add(abbrevs.get(part).get(0));
         }
 
-        return implode(":", found);
+        return Util.implode(":", found);
     }
 
     /**
@@ -502,70 +469,68 @@ class Application {
      * Contrary to get, this command tries to find the best
      * match if you give it an abbreviation of a name or alias.
      *
-     * @param  string name A command name or a command alias
+     * @param name A command name or a command alias
      *
-     * @return Command A Command instance
+     * @return A Command instance
      *
-     * @throws \InvalidArgumentException When command name is incorrect or ambiguous
-     *
-     * @api
+     * @throws Exception When command name is incorrect or ambiguous
      */
-    public void find(name)
-    {
-        // namespace
-        namespace = "";
-        searchName = name;
-        if (false !== pos = strrpos(name, ":")) {
-            namespace = this.findNamespace(substr(name, 0, pos));
-            searchName = namespace.substr(name, pos);
+    public Command find(final String name) throws Exception {
+        // Namespace
+        String namespace = "";
+        String searchName = name;
+        int pos = name.indexOf(':');
+        if (pos >= 0) {
+            namespace = findNamespace(name.substring(0, pos));
+            searchName = namespace + name.substring(pos);
         }
 
-        // name
-        commands = array();
-        foreach (this.commands as command) {
-            if (this.extractNamespace(command.getName()) == namespace) {
-                commands[] = command.getName();
+        // Name
+        commands = new HashMap<String, Command>();
+        for (final Command command : commands.values()) {
+            if (extractNamespace(command.getName()) == namespace) {
+                commands.put(command.getName(), command);
             }
         }
 
-        abbrevs = static::getAbbreviations(array_unique(commands));
-        if (isset(abbrevs[searchName]) && 1 == count(abbrevs[searchName])) {
-            return this.get(abbrevs[searchName][0]);
+        Map<String, List<String>> abbrevs = getAbbreviations(commands); // TODO array_unique on commands
+        if (abbrevs.containsKey(searchName) && 1 == abbrevs.get(searchName).size()) {
+            return get(abbrevs.get(searchName).get(0));
         }
 
-        if (isset(abbrevs[searchName]) && count(abbrevs[searchName]) > 1) {
-            suggestions = this.getAbbreviationSuggestions(abbrevs[searchName]);
+        if (abbrevs.containsKey(searchName) && abbrevs.get(searchName).size() > 1) {
+            Map<String, List<String>> suggestions = getAbbreviationSuggestions(abbrevs.get(searchName));
 
-            throw new \InvalidArgumentException(sprintf("Command \"%s\" is ambiguous (%s).", name, suggestions));
+            throw new Exception(String.format("Command \"%s\" is ambiguous (%s).", name, suggestions));
         }
 
-        // aliases
-        aliases = array();
-        foreach (this.commands as command) {
-            foreach (command.getAliases() as alias) {
-                if (this.extractNamespace(alias) == namespace) {
-                    aliases[] = alias;
+        // Aliases
+        List<String> aliases = ArrayList<String>();
+        for (final Command command : commands) {
+            for (final String alias : command.getAliases()) {
+                if (extractNamespace(alias) == namespace) {
+                    aliases.add(alias);
                 }
             }
         }
 
-        aliases = static::getAbbreviations(array_unique(aliases));
+        Map<String, List<String>> aliases = getAbbreviations(aliases); // TODO array_unique on aliases
         if (!isset(aliases[searchName])) {
-            message = sprintf("Command \"%s\" is not defined.", name);
+            message = String.format("Command \"%s\" is not defined.", name);
 
-            if (alternatives = this.findAlternativeCommands(searchName, abbrevs)) {
-                message .= \"\n\nDid you mean one of these?\n    \";
-                message .= implode(\"\n    \", alternatives);
+            if (alternatives = findAlternativeCommands(searchName, abbrevs)) {
+                message += "\n\nDid you mean one of these?\n    ";
+                message += Util.implode("\n    ", alternatives);
             }
 
-            throw new \InvalidArgumentException(message);
+            throw new Exception(message);
         }
 
-        if (count(aliases[searchName]) > 1) {
-            throw new \InvalidArgumentException(sprintf("Command \"%s\" is ambiguous (%s).", name, this.getAbbreviationSuggestions(aliases[searchName])));
+        if (aliases.get(searchName).size() > 1) {
+            throw new Exception(String.format("Command \"%s\" is ambiguous (%s).", name, getAbbreviationSuggestions(aliases[searchName])));
         }
 
-        return this.get(aliases[searchName][0]);
+        return get(aliases.get(searchName).get(0));
     }
 
     /**
@@ -579,15 +544,14 @@ class Application {
      *
      * @api
      */
-    public void all(namespace = null)
-    {
-        if (null === namespace) {
-            return this.commands;
+    public void all(namespace = null) {
+        if (null == namespace) {
+            return commands;
         }
 
         commands = array();
         foreach (this.commands as name => command) {
-            if (namespace === this.extractNamespace(name, substr_count(namespace, ":") + 1)) {
+            if (namespace == this.extractNamespace(name, substr_count(namespace, ":") + 1)) {
                 commands[name] = command;
             }
         }
@@ -598,15 +562,14 @@ class Application {
     /**
      * Returns an array of possible abbreviations given a set of names.
      *
-     * @param array names An array of names
+     * @param names An array of names
      *
-     * @return array An array of abbreviations
+     * @return An array of abbreviations
      */
-    static public void getAbbreviations(names)
-    {
-        abbrevs = array();
-        foreach (names as name) {
-            for (len = strlen(name) - 1; len > 0; --len) {
+    static public Map<String, List<String>> getAbbreviations(final List<String> names) {
+        abbrevs = new HashMap<String, List<String>>();
+        for (final String name : names) {
+            for (int len = name.length() - 1; len > 0; --len) {
                 abbrev = substr(name, 0, len);
                 if (!isset(abbrevs[abbrev])) {
                     abbrevs[abbrev] = array(name);
@@ -616,9 +579,9 @@ class Application {
             }
         }
 
-        // Non-abbreviations always get entered, even if they aren"t unique
-        foreach (names as name) {
-            abbrevs[name] = array(name);
+        // Non-abbreviations always get entered, even if they aren't unique
+        for (final String name : names) {
+            abbrevs.put(name) = Arrays.asList(name);
         }
 
         return abbrevs;
@@ -646,32 +609,32 @@ class Application {
             messages = array();
             foreach (this.sortCommands(commands) as space => commands) {
                 foreach (commands as name => command) {
-                    messages[] = sprintf(\"%-{width}s %s\", name, command.getDescription());
+                    messages[] = String.format(\"%-{width}s %s\", name, command.getDescription());
                 }
             }
 
-            return implode(PHP_EOL, messages);
+            return Util.implode(System.getProperty("line.separator"), messages);
         }
 
         messages = array(this.getHelp(), "");
         if (namespace) {
-            messages[] = sprintf(\"<comment>Available commands for the \\"%s\\" namespace:</comment>\", namespace);
+            messages[] = String.format(\"<comment>Available commands for the \\"%s\\" namespace:</comment>\", namespace);
         } else {
             messages[] = "<comment>Available commands:</comment>";
         }
 
         // add commands by namespace
         foreach (this.sortCommands(commands) as space => commands) {
-            if (!namespace && "_global" !== space) {
+            if (!namespace && "_global" != space) {
                 messages[] = "<comment>".space."</comment>";
             }
 
             foreach (commands as name => command) {
-                messages[] = sprintf(\"  <info>%-{width}s</info> %s\", name, command.getDescription());
+                messages[] = String.format(\"  <info>%-{width}s</info> %s\", name, command.getDescription());
             }
         }
 
-        return implode(PHP_EOL, messages);
+        return implode(System.getProperty("line.separator"), messages);
     }
 
     /**
@@ -708,7 +671,7 @@ class Application {
             }
 
             foreach (commands as name => command) {
-                if (name !== command.getName()) {
+                if (name != command.getName()) {
                     continue;
                 }
 
@@ -741,7 +704,7 @@ class Application {
                 return strlen(string);
             }
 
-            if (false === encoding = mb_detect_encoding(string)) {
+            if (false == encoding = mb_detect_encoding(string)) {
                 return strlen(string);
             }
 
@@ -749,13 +712,13 @@ class Application {
         };
 
         do {
-            title = sprintf("  [%s]  ", get_class(e));
+            title = String.format("  [%s]  ", get_class(e));
             len = strlen(title);
             width = this.getTerminalWidth() ? this.getTerminalWidth() - 1 : PHP_INT_MAX;
             lines = array();
             foreach (preg_split(\"{\r?\n}\", e.getMessage()) as line) {
                 foreach (str_split(line, width - 4) as line) {
-                    lines[] = sprintf("  %s  ", line);
+                    lines[] = String.format("  %s  ", line);
                     len = max(strlen(line) + 4, len);
                 }
             }
@@ -776,7 +739,7 @@ class Application {
             output.writeln(\"\");
             output.writeln(\"\");
 
-            if (OutputInterface::VERBOSITY_VERBOSE === output.getVerbosity()) {
+            if (OutputInterface::VERBOSITY_VERBOSE == output.getVerbosity()) {
                 output.writeln("<comment>Exception trace:</comment>");
 
                 // exception related properties
@@ -795,7 +758,7 @@ class Application {
                     file = isset(trace[i]["file"]) ? trace[i]["file"] : "n/a";
                     line = isset(trace[i]["line"]) ? trace[i]["line"] : "n/a";
 
-                    output.writeln(sprintf(" %s%s%s() at <info>%s:%s</info>", class, type, void, file, line));
+                    output.writeln(String.format(" %s%s%s() at <info>%s:%s</info>", class, type, void, file, line));
                 }
 
                 output.writeln(\"\");
@@ -803,8 +766,8 @@ class Application {
             }
         } while (e = e.getPrevious());
 
-        if (null !== this.runningCommand) {
-            output.writeln(sprintf("<info>%s</info>", sprintf(this.runningCommand.getSynopsis(), this.getName())));
+        if (null != this.runningCommand) {
+            output.writeln(String.format("<info>%s</info>", String.format(this.runningCommand.getSynopsis(), this.getName())));
             output.writeln(\"\");
             output.writeln(\"\");
         }
@@ -898,13 +861,12 @@ class Application {
     }
 
     /**
-     * Runs and parses stty -a if it"s available, suppressing any error output
+     * Runs and parses stty -a if it's available, suppressing any error output
      *
-     * @return string
+     * @return
      */
-    private void getSttyColumns()
-    {
-        descriptorspec = array(1 => array("pipe", "w"), 2 => array("pipe", "w"));
+    private String getSttyColumns() {
+        /*descriptorspec = array(1 => array("pipe", "w"), 2 => array("pipe", "w"));
         process = proc_open("stty -a | grep columns", descriptorspec, pipes, null, null, array("suppress_errors" => true));
         if (is_resource(process)) {
             info = stream_get_contents(pipes[1]);
@@ -913,7 +875,8 @@ class Application {
             proc_close(process);
 
             return info;
-        }
+        }*/
+        return ""; // Not implemented
     }
 
     /**
@@ -948,27 +911,28 @@ class Application {
      *
      * @param array abbrevs Abbreviated suggestions to convert
      *
-     * @return string A formatted string of abbreviated suggestions
+     * @return A formatted string of abbreviated suggestions
      */
-    private void getAbbreviationSuggestions(abbrevs)
-    {
-        return sprintf("%s, %s%s", abbrevs[0], abbrevs[1], count(abbrevs) > 2 ? sprintf(" and %d more", count(abbrevs) - 2) : "");
+    private String getAbbreviationSuggestions(abbrevs) {
+        return String.format("%s, %s%s", abbrevs[0], abbrevs[1], count(abbrevs) > 2 ? String.format(" and %d more", count(abbrevs) - 2) : "");
     }
 
     /**
      * Returns the namespace part of the command name.
      *
-     * @param string name  The full name of the command
-     * @param string limit The maximum number of parts of the namespace
+     * @param name  The full name of the command
+     * @param limit The maximum number of parts of the namespace
      *
-     * @return string The namespace of the command
+     * @return The namespace of the command
      */
-    private void extractNamespace(name, limit = null)
-    {
-        parts = explode(":", name);
-        array_pop(parts);
+    private String extractNamespace(final String name, final String limit) {
+        List<String> parts = Arrays.asList(name.split(":"));
 
-        return implode(":", null === limit ? parts : array_slice(parts, 0, limit));
+        return Util.implode(":", null == limit ? parts : array_slice(parts, 0, limit));
+    }
+
+    private String extractNamespace(final String name) {
+        return extractNamespace(name, null);
     }
 
     /**
@@ -991,14 +955,13 @@ class Application {
     /**
      * Finds alternative namespace of name
      *
-     * @param string name      The full name of the namespace
+     * @param name      The full name of the namespace
      * @param array  abbrevs   The abbreviations
      *
      * @return array A sorted array of similar namespace
      */
-    private void findAlternativeNamespace(name, abbrevs)
-    {
-        return this.findAlternatives(name, this.getNamespaces(), abbrevs);
+    private void findAlternativeNamespace(final Strig name, abbrevs) {
+        return findAlternatives(name, getNamespaces(), abbrevs);
     }
 
     /**
@@ -1006,22 +969,22 @@ class Application {
      * if nothing is found in collection, try in abbrevs
      *
      * @param string                name       The string
-     * @param array|Traversable     collection The collecion
+     * @param array|Traversable     collection The collection
      * @param array                 abbrevs    The abbreviations
      * @param Closure|string|array  callback   The callable to transform collection item before comparison
      *
      * @return array A sorted array of similar string
      */
-    private void findAlternatives(name, collection, abbrevs, callback = null) {
+    private void findAlternatives(final String name, collection, abbrevs) {
         alternatives = array();
 
         foreach (collection as item) {
-            if (null !== callback) {
+            if (null != callback) {
                 item = call_user_func(callback, item);
             }
 
             lev = levenshtein(name, item);
-            if (lev <= strlen(name) / 3 || false !== strpos(item, name)) {
+            if (lev <= strlen(name) / 3 || false != strpos(item, name)) {
                 alternatives[item] = lev;
             }
         }
@@ -1029,7 +992,7 @@ class Application {
         if (!alternatives) {
             foreach (abbrevs as key => values) {
                 lev = levenshtein(name, key);
-                if (lev <= strlen(name) / 3 || false !== strpos(key, name)) {
+                if (lev <= strlen(name) / 3 || false != strpos(key, name)) {
                     foreach (values as value) {
                         alternatives[value] = lev;
                     }
@@ -1041,4 +1004,5 @@ class Application {
 
         return array_keys(alternatives);
     }
+
 }
