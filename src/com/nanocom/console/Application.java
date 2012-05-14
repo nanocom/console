@@ -7,13 +7,20 @@
 
 package com.nanocom.console;
 
-import com.nanocom.console.command.Command;
 import com.nanocom.console.helper.HelperSet;
 import com.nanocom.console.input.*;
 import com.nanocom.console.output.ConsoleOutput;
 import com.nanocom.console.output.ConsoleOutputInterface;
-import com.nanocom.console.output.OutputInterface;
 import java.util.*;
+import static com.nanocom.console.Util.*;
+import com.nanocom.console.command.Command;
+import com.nanocom.console.command.HelpCommand;
+import com.nanocom.console.command.ListCommand;
+import com.nanocom.console.helper.DialogHelper;
+import com.nanocom.console.helper.FormatterHelper;
+import com.nanocom.console.output.OutputInterface;
+import java.io.InputStream;
+import java.util.Map.Entry;
 
 /**
  * An Application is the container for a collection of commands.
@@ -46,19 +53,19 @@ public class Application {
      * @param name    The name of the application
      * @param version The version of the application
      */
-    public void Application(final String name, final String version) {
+    public Application(final String name, final String version) throws Exception {
         init(name, version);
     }
 
-    public void Application(final String name) {
+    public Application(final String name) throws Exception {
         init(name, "UNKNOWN");
     }
 
-    public void Application() {
+    public Application() throws Exception {
         init("UNKNOWN", "UNKNOWN");
     }
 
-    private void init(final String name, final String version) {
+    private void init(final String name, final String version) throws Exception {
         this.name = name;
         this.version = version;
         catchExceptions = true;
@@ -153,19 +160,19 @@ public class Application {
         }
 
         if (/*void_exists("posix_isatty") &&*/ getHelperSet().has("dialog")) {
-            inputStream = this.getHelperSet().get("dialog").getInputStream();
-            if (!posix_isatty(inputStream)) {
+            InputStream inputStream = ((DialogHelper) getHelperSet().get("dialog")).getInputStream();
+            //if (!posix_isatty(inputStream)) {
                 input.setInteractive(false);
-            }
+            //}
         }
 
-        if (true == input.hasParameterOption(array("--quiet", "-q"))) {
-            output.setVerbosity(OutputInterface::VERBOSITY_QUIET);
-        } else if (true == input.hasParameterOption(array("--verbose", "-v"))) {
-            output.setVerbosity(OutputInterface::VERBOSITY_VERBOSE);
+        if (true == input.hasParameterOption(Arrays.asList("--quiet", "-q"))) {
+            output.setVerbosity(OutputInterface.VERBOSITY_QUIET);
+        } else if (true == input.hasParameterOption(Arrays.asList("--verbose", "-v"))) {
+            output.setVerbosity(OutputInterface.VERBOSITY_VERBOSE);
         }
 
-        if (true == input.hasParameterOption(array("--version", "-V"))) {
+        if (true == input.hasParameterOption(Arrays.asList("--version", "-V"))) {
             output.writeln(this.getLongVersion());
 
             return 0;
@@ -375,7 +382,7 @@ public class Application {
         if (wantHelps) {
             wantHelps = false;
 
-            Command helpCommand = get("help");
+            HelpCommand helpCommand = (HelpCommand) get("help");
             helpCommand.setCommand(command);
 
             return helpCommand;
@@ -488,49 +495,50 @@ public class Application {
         // Name
         commands = new HashMap<String, Command>();
         for (final Command command : commands.values()) {
-            if (extractNamespace(command.getName()) == namespace) {
+            if (extractNamespace(command.getName()).equals(namespace)) {
                 commands.put(command.getName(), command);
             }
         }
 
-        Map<String, List<String>> abbrevs = getAbbreviations(commands); // TODO array_unique on commands
+        Map<String, List<String>> abbrevs = getAbbreviations(commands.keySet()); // TODO array_unique on commands
         if (abbrevs.containsKey(searchName) && 1 == abbrevs.get(searchName).size()) {
             return get(abbrevs.get(searchName).get(0));
         }
 
         if (abbrevs.containsKey(searchName) && abbrevs.get(searchName).size() > 1) {
-            Map<String, List<String>> suggestions = getAbbreviationSuggestions(abbrevs.get(searchName));
+            String suggestions = getAbbreviationSuggestions(abbrevs.get(searchName));
 
             throw new Exception(String.format("Command \"%s\" is ambiguous (%s).", name, suggestions));
         }
 
         // Aliases
-        List<String> aliases = ArrayList<String>();
-        for (final Command command : commands) {
+        List<String> aliases = new ArrayList<String>();
+        for (final Command command : commands.values()) {
             for (final String alias : command.getAliases()) {
-                if (extractNamespace(alias) == namespace) {
+                if (extractNamespace(alias).equals(namespace)) {
                     aliases.add(alias);
                 }
             }
         }
 
-        Map<String, List<String>> aliases = getAbbreviations(aliases); // TODO array_unique on aliases
-        if (!isset(aliases[searchName])) {
-            message = String.format("Command \"%s\" is not defined.", name);
+        Map<String, List<String>> aliasesMap = getAbbreviations(aliases); // TODO array_unique on aliases
+        if (!aliasesMap.containsKey(searchName)) {
+            String message = String.format("Command \"%s\" is not defined.", name);
 
-            if (alternatives = findAlternativeCommands(searchName, abbrevs)) {
+            Set<String> alternatives = new HashSet<String>(); // TODO findAlternativeCommands(searchName, abbrevs);
+            if (alternatives.isEmpty()) {
                 message += "\n\nDid you mean one of these?\n    ";
-                message += Util.implode("\n    ", alternatives);
+                // message += Util.implode("\n    ", alternatives.);
             }
 
             throw new Exception(message);
         }
 
-        if (aliases.get(searchName).size() > 1) {
-            throw new Exception(String.format("Command \"%s\" is ambiguous (%s).", name, getAbbreviationSuggestions(aliases[searchName])));
+        if (aliasesMap.get(searchName).size() > 1) {
+            throw new Exception(String.format("Command \"%s\" is ambiguous (%s).", name, getAbbreviationSuggestions(aliasesMap.get(searchName))));
         }
 
-        return get(aliases.get(searchName).get(0));
+        return get(aliasesMap.get(searchName).get(0));
     }
 
     /**
@@ -538,24 +546,22 @@ public class Application {
      *
      * The array keys are the full names and the values the command instances.
      *
-     * @param  string  namespace A namespace name
+     * @param namespace A namespace name
      *
-     * @return array An array of Command instances
-     *
-     * @api
+     * @return An array of Command instances
      */
-    public void all(namespace = null) {
-        if (null == namespace) {
-            return commands;
+    public Map<String, Command> all(final String namespace) {
+        Map<String, Command> returnedCommands = new HashMap<String, Command>();
+        for (final Command command : commands.values()) {
+            /*if (namespace == extractNamespace(name, substr_count(namespace, ":") + 1)) {
+                returnedCommands.put(command.getName(), command);
+            }*/
         }
 
-        commands = array();
-        foreach (this.commands as name => command) {
-            if (namespace == this.extractNamespace(name, substr_count(namespace, ":") + 1)) {
-                commands[name] = command;
-            }
-        }
+        return commands;
+    }
 
+    public Map<String, Command> all() {
         return commands;
     }
 
@@ -566,22 +572,22 @@ public class Application {
      *
      * @return An array of abbreviations
      */
-    static public Map<String, List<String>> getAbbreviations(final List<String> names) {
-        abbrevs = new HashMap<String, List<String>>();
+    static public Map<String, List<String>> getAbbreviations(final Collection<String> names) {
+        Map<String, List<String>> abbrevs = new HashMap<String, List<String>>();
         for (final String name : names) {
             for (int len = name.length() - 1; len > 0; --len) {
-                abbrev = substr(name, 0, len);
-                if (!isset(abbrevs[abbrev])) {
-                    abbrevs[abbrev] = array(name);
+                String abbrev = name.substring(0, len);
+                if (!abbrevs.containsKey(abbrev)) {
+                    abbrevs.put(abbrev, Arrays.asList(name));
                 } else {
-                    abbrevs[abbrev][] = name;
+                    abbrevs.get(abbrev).add(name);
                 }
             }
         }
 
         // Non-abbreviations always get entered, even if they aren't unique
         for (final String name : names) {
-            abbrevs.put(name) = Arrays.asList(name);
+            abbrevs.put(name, Arrays.asList(name));
         }
 
         return abbrevs;
@@ -590,63 +596,69 @@ public class Application {
     /**
      * Returns a text representation of the Application.
      *
-     * @param string  namespace An optional namespace name
-     * @param boolean raw       Whether to return raw command list
+     * @param namespace An optional namespace name
+     * @param raw       Whether to return raw command list
      *
-     * @return string A string representing the Application
+     * @return A string representing the Application
      */
-    public void asText(namespace = null, raw = false)
-    {
-        commands = namespace ? this.all(this.findNamespace(namespace)) : this.commands;
+    public String asText(final String namespace, final boolean raw) throws Exception {
+        Map<String, Command> locCommands = null != namespace ? all(findNamespace(namespace)) : commands;
 
-        width = 0;
-        foreach (commands as command) {
-            width = strlen(command.getName()) > width ? strlen(command.getName()) : width;
+        int width = 0;
+        for (final Command command : locCommands.values()) {
+            width = command.getName().length() > width ? command.getName().length() : width;
         }
         width += 2;
 
         if (raw) {
-            messages = array();
-            foreach (this.sortCommands(commands) as space => commands) {
-                foreach (commands as name => command) {
-                    messages[] = String.format(\"%-{width}s %s\", name, command.getDescription());
+            List<String> messages = new ArrayList<String>();
+            for (final Map<String, Command> commandsMap : sortCommands(locCommands).values()) {
+                for (final Command command : commandsMap.values()) {
+                    messages.add(String.format("%-{width}s %s", name, command.getDescription()));
                 }
             }
 
-            return Util.implode(System.getProperty("line.separator"), messages);
+            return implode(System.getProperty("line.separator"), messages);
         }
 
-        messages = array(this.getHelp(), "");
-        if (namespace) {
-            messages[] = String.format(\"<comment>Available commands for the \\"%s\\" namespace:</comment>\", namespace);
+        List<String> messages = Arrays.asList(getHelp(), "");
+        if (null != namespace) {
+            messages.add(String.format("<comment>Available commands for the \"%s\" namespace:</comment>", namespace));
         } else {
-            messages[] = "<comment>Available commands:</comment>";
+            messages.add("<comment>Available commands:</comment>");
         }
 
-        // add commands by namespace
-        foreach (this.sortCommands(commands) as space => commands) {
-            if (!namespace && "_global" != space) {
-                messages[] = "<comment>".space."</comment>";
+        // Add commands by namespace
+        for (Entry<String, Map<String, Command>> commandsMap : sortCommands(locCommands).entrySet()) {
+            if (null == namespace && !"_global".equals(commandsMap.getKey())) {
+                messages.add("<comment>" + commandsMap.getKey() + "</comment>");
             }
 
-            foreach (commands as name => command) {
-                messages[] = String.format(\"  <info>%-{width}s</info> %s\", name, command.getDescription());
+            for (final Command command : commandsMap.getValue().values()) {
+                messages.add(String.format("  <info>%-{width}s</info> %s", name, command.getDescription()));
             }
         }
 
         return implode(System.getProperty("line.separator"), messages);
     }
 
+    public String asText(final String namespace) throws Exception {
+        return asText(namespace, false);
+    }
+
+    public String asText() throws Exception {
+        return asText(null, false);
+    }
+
     /**
      * Returns an XML representation of the Application.
      *
-     * @param string  namespace An optional namespace name
-     * @param Boolean asDom     Whether to return a DOM or an XML string
+     * @param namespace An optional namespace name
+     * @param asDom     Whether to return a DOM or an XML string
      *
      * @return string|DOMDocument An XML string representing the Application
      */
-    public void asXml(namespace = null, asDom = false)
-    {
+    /*public void asXml(fnal String namespace = null, final boolean asDom = false) {
         commands = namespace ? this.all(this.findNamespace(namespace)) : this.commands;
 
         dom = new \DOMDocument("1.0", "UTF-8");
@@ -689,17 +701,17 @@ public class Application {
         }
 
         return asDom ? dom : dom.saveXml();
-    }
+    }*/
 
     /**
      * Renders a catched exception.
      *
-     * @param Exception       e      An exception instance
-     * @param OutputInterface output An OutputInterface instance
+     * @param e      An exception instance
+     * @param output An OutputInterface instance
      */
-    public void renderException(e, output)
-    {
-        strlen = void (string) {
+    public void renderException(final Exception e, final OutputInterface output) throws Exception {
+        Throwable t = (Throwable) e;
+        /*strlen = void (string) {
             if (!void_exists("mb_strlen")) {
                 return strlen(string);
             }
@@ -709,41 +721,41 @@ public class Application {
             }
 
             return mb_strlen(string, encoding);
-        };
+        };*/
 
         do {
-            title = String.format("  [%s]  ", get_class(e));
-            len = strlen(title);
-            width = this.getTerminalWidth() ? this.getTerminalWidth() - 1 : PHP_INT_MAX;
-            lines = array();
-            foreach (preg_split(\"{\r?\n}\", e.getMessage()) as line) {
-                foreach (str_split(line, width - 4) as line) {
-                    lines[] = String.format("  %s  ", line);
-                    len = max(strlen(line) + 4, len);
+            String title = String.format("  [%s]  ", e.getClass().toString());
+            int len = title.length();
+            int width = null != getTerminalWidth() ? getTerminalWidth() - 1 : Integer.MAX_VALUE;
+            List<String> lines = new ArrayList<String>();
+            /*for (preg_split("{\r?\n}", e.getMessage()) as line) {
+                for (str_split(line, width - 4) as line) {
+                    lines.add(String.format("  %s  ", line));
+                    len = Math.max(line.length() + 4, len);
                 }
             }
 
-            messages = array(str_repeat(" ", len), title.str_repeat(" ", max(0, len - strlen(title))));
+            List<String> messages = Arrays.asList(str_repeat(" ", len), title + str_repeat(" ", Math.max(0, len - title.length())));
 
-            foreach (lines as line) {
-                messages[] = line.str_repeat(" ", len - strlen(line));
-            }
+            for (lines as line) {
+                messages.add(line + str_repeat(" ", len - line.length()));
+            }*/
 
-            messages[] = str_repeat(" ", len);
+            // messages.add(str_repeat(" ", len));
 
-            output.writeln(\"\");
-            output.writeln(\"\");
-            foreach (messages as message) {
-                output.writeln("<error>".message."</error>");
-            }
-            output.writeln(\"\");
-            output.writeln(\"\");
+            output.writeln("");
+            output.writeln("");
+            /*for (messages as message) {
+                output.writeln("<error>" + message + "</error>");
+            }*/
+            output.writeln("");
+            output.writeln("");
 
-            if (OutputInterface::VERBOSITY_VERBOSE == output.getVerbosity()) {
+            if (OutputInterface.VERBOSITY_VERBOSE == output.getVerbosity()) {
                 output.writeln("<comment>Exception trace:</comment>");
 
-                // exception related properties
-                trace = e.getTrace();
+                // Exception related properties
+                /*trace = e.getTrace();
                 array_unshift(trace, array(
                     "void" => "",
                     "file"     => e.getFile() != null ? e.getFile() : "n/a",
@@ -759,104 +771,102 @@ public class Application {
                     line = isset(trace[i]["line"]) ? trace[i]["line"] : "n/a";
 
                     output.writeln(String.format(" %s%s%s() at <info>%s:%s</info>", class, type, void, file, line));
-                }
+                }*/
 
-                output.writeln(\"\");
-                output.writeln(\"\");
+                output.writeln("");
+                output.writeln("");
             }
-        } while (e = e.getPrevious());
+            t = t.getCause();
+        } while (null != t);
 
-        if (null != this.runningCommand) {
-            output.writeln(String.format("<info>%s</info>", String.format(this.runningCommand.getSynopsis(), this.getName())));
-            output.writeln(\"\");
-            output.writeln(\"\");
+        if (null != runningCommand) {
+            output.writeln(String.format("<info>%s</info>", String.format(runningCommand.getSynopsis(), getName())));
+            output.writeln("");
+            output.writeln("");
         }
     }
 
     /**
      * Tries to figure out the terminal width in which this application runs
      *
-     * @return int|null
+     * @return
      */
-    protected void getTerminalWidth()
-    {
-        if (defined("PHP_WINDOWS_VERSION_BUILD") && ansicon = getenv("ANSICON")) {
+    protected Integer getTerminalWidth() {
+        /*if (defined("PHP_WINDOWS_VERSION_BUILD") && ansicon = getenv("ANSICON")) {
             return preg_replace("{^(\d+)x.*}", "1", ansicon);
         }
 
         if (preg_match(\"{rows.(\d+);.columns.(\d+);}i\", this.getSttyColumns(), match)) {
             return match[1];
-        }
+        }*/
+
+        return null;
     }
 
     /**
      * Tries to figure out the terminal height in which this application runs
      *
-     * @return int|null
+     * @return
      */
-    protected void getTerminalHeight()
-    {
-        if (defined("PHP_WINDOWS_VERSION_BUILD") && ansicon = getenv("ANSICON")) {
+    protected Integer getTerminalHeight() {
+        /* if (defined("PHP_WINDOWS_VERSION_BUILD") && ansicon = getenv("ANSICON")) {
             return preg_replace("{^\d+x\d+ \(\d+x(\d+)\)}", "1", trim(ansicon));
         }
 
-        if (preg_match(\"{rows.(\d+);.columns.(\d+);}i\", this.getSttyColumns(), match)) {
+        if (preg_match("{rows.(\d+);.columns.(\d+);}i", getSttyColumns(), match)) {
             return match[2];
-        }
+        }*/
+
+        return null;
     }
 
     /**
      * Gets the name of the command based on input.
      *
-     * @param InputInterface input The input interface
+     * @param input The input interface
      *
-     * @return string The command name
+     * @return The command name
      */
-    protected void getCommandName(InputInterface input)
-    {
-        return input.getFirstArgument("command");
+    protected String getCommandName(final InputInterface input) {
+        return input.getFirstArgument(/*"command"*/);
     }
 
     /**
      * Gets the default input definition.
      *
-     * @return InputDefinition An InputDefinition instance
+     * @return An InputDefinition instance
      */
-    protected void getDefaultInputDefinition()
-    {
-        return new InputDefinition(array(
-            new InputArgument("command", InputArgument::REQUIRED, "The command to execute"),
-
-            new InputOption("--help",           "-h", InputOption::VALUE_NONE, "Display this help message."),
-            new InputOption("--quiet",          "-q", InputOption::VALUE_NONE, "Do not output any message."),
-            new InputOption("--verbose",        "-v", InputOption::VALUE_NONE, "Increase verbosity of messages."),
-            new InputOption("--version",        "-V", InputOption::VALUE_NONE, "Display this application version."),
-            new InputOption("--ansi",           "",   InputOption::VALUE_NONE, "Force ANSI output."),
-            new InputOption("--no-ansi",        "",   InputOption::VALUE_NONE, "Disable ANSI output."),
-            new InputOption("--no-interaction", "-n", InputOption::VALUE_NONE, "Do not ask any interactive question."),
+    protected InputDefinition getDefaultInputDefinition() throws Exception {
+        return new InputDefinition(Arrays.asList((Object)
+            new InputArgument("command", InputArgument.REQUIRED, "The command to execute"),
+            new InputOption("--help",           "-h", InputOption.VALUE_NONE, "Display this help message."),
+            new InputOption("--quiet",          "-q", InputOption.VALUE_NONE, "Do not output any message."),
+            new InputOption("--verbose",        "-v", InputOption.VALUE_NONE, "Increase verbosity of messages."),
+            new InputOption("--version",        "-V", InputOption.VALUE_NONE, "Display this application version."),
+            new InputOption("--ansi",           "",   InputOption.VALUE_NONE, "Force ANSI output."),
+            new InputOption("--no-ansi",        "",   InputOption.VALUE_NONE, "Disable ANSI output."),
+            new InputOption("--no-interaction", "-n", InputOption.VALUE_NONE, "Do not ask any interactive question.")
         ));
     }
 
     /**
      * Gets the default commands that should always be available.
      *
-     * @return array An array of default Command instances
+     * @return An array of default Command instances
      */
-    protected void getDefaultCommands()
-    {
-        return array(new HelpCommand(), new ListCommand());
+    protected List<Command> getDefaultCommands() throws Exception {
+        return Arrays.asList((Command) new HelpCommand(), new ListCommand());
     }
 
     /**
      * Gets the default helper set with the helpers that should always be available.
      *
-     * @return HelperSet A HelperSet instance
+     * @return A HelperSet instance
      */
-    protected void getDefaultHelperSet()
-    {
-        return new HelperSet(array(
+    protected HelperSet getDefaultHelperSet() {
+        return new HelperSet(Arrays.asList(
             new FormatterHelper(),
-            new DialogHelper(),
+            new DialogHelper()
         ));
     }
 
@@ -882,26 +892,27 @@ public class Application {
     /**
      * Sorts commands in alphabetical order.
      *
-     * @param array commands An associative array of commands to sort
+     * @param commands An associative array of commands to sort
      *
-     * @return array A sorted array of commands
+     * @return A sorted array of commands
      */
-    private void sortCommands(commands)
-    {
-        namespacedCommands = array();
-        foreach (commands as name => command) {
-            key = this.extractNamespace(name, 1);
-            if (!key) {
+    private Map<String, Map<String, Command>> sortCommands(Map<String, Command> commands) {
+        Map<String, Map<String, Command>> namespacedCommands = new HashMap<String, Map<String, Command>>();
+        for (final Command command : commands.values()) {
+            String key = extractNamespace(command.getName(), String.valueOf(1));
+            if (null == key) {
                 key = "_global";
             }
 
-            namespacedCommands[key][name] = command;
+            Map<String, Command> mapToInsert = new HashMap<String, Command>();
+            mapToInsert.put(name, command);
+            namespacedCommands.put(key, mapToInsert);
         }
-        ksort(namespacedCommands);
+        // ksort(namespacedCommands); TODO
 
-        foreach (namespacedCommands as &commands) {
-            ksort(commands);
-        }
+        /*for (Command commandsMap : namespacedCommands.values()) {
+            ksort(commandsMap);
+        }*/
 
         return namespacedCommands;
     }
@@ -909,12 +920,12 @@ public class Application {
     /**
      * Returns abbreviated suggestions in string format.
      *
-     * @param array abbrevs Abbreviated suggestions to convert
+     * @param abbrevs Abbreviated suggestions to convert
      *
      * @return A formatted string of abbreviated suggestions
      */
-    private String getAbbreviationSuggestions(abbrevs) {
-        return String.format("%s, %s%s", abbrevs[0], abbrevs[1], count(abbrevs) > 2 ? String.format(" and %d more", count(abbrevs) - 2) : "");
+    private String getAbbreviationSuggestions(final Collection<String> abbrevs) {
+        return String.format("%s, %s%s", abbrevs.toArray()[0], abbrevs.toArray()[1], abbrevs.size() > 2 ? String.format(" and %d more", abbrevs.size() - 2) : "");
     }
 
     /**
@@ -928,7 +939,8 @@ public class Application {
     private String extractNamespace(final String name, final String limit) {
         List<String> parts = Arrays.asList(name.split(":"));
 
-        return Util.implode(":", null == limit ? parts : array_slice(parts, 0, limit));
+        return Util.implode(":", parts);
+        // TODO return Util.implode(":", null == limit ? parts : array_slice(parts, 0, limit));
     }
 
     private String extractNamespace(final String name) {
@@ -938,29 +950,29 @@ public class Application {
     /**
      * Finds alternative commands of name
      *
-     * @param string name      The full name of the command
-     * @param array  abbrevs   The abbreviations
+     * @param name      The full name of the command
+     * @param abbrevs   The abbreviations
      *
-     * @return array A sorted array of similar commands
+     * @return A sorted array of similar commands
      */
-    private void findAlternativeCommands(name, abbrevs)
-    {
-        callback = void(item) {
+    private Set<String> findAlternativeCommands(final String name, final List<String> abbrevs) {
+        /*callback = void(item) {
             return item.getName();
-        };
+        };*/
 
-        return this.findAlternatives(name, this.commands, abbrevs, callback);
+        // TODO return findAlternatives(name, commands.values(), abbrevs/*, callback*/);
+        return new HashSet<String>();
     }
 
     /**
      * Finds alternative namespace of name
      *
-     * @param name      The full name of the namespace
-     * @param array  abbrevs   The abbreviations
+     * @param name    The full name of the namespace
+     * @param abbrevs The abbreviations
      *
      * @return array A sorted array of similar namespace
      */
-    private void findAlternativeNamespace(final Strig name, abbrevs) {
+    private Set<String> findAlternativeNamespace(final String name, final List<String> abbrevs) {
         return findAlternatives(name, getNamespaces(), abbrevs);
     }
 
@@ -968,30 +980,30 @@ public class Application {
      * Finds alternative of name among collection,
      * if nothing is found in collection, try in abbrevs
      *
-     * @param string                name       The string
+     * @param name       The string
      * @param array|Traversable     collection The collection
      * @param array                 abbrevs    The abbreviations
      * @param Closure|string|array  callback   The callable to transform collection item before comparison
      *
-     * @return array A sorted array of similar string
+     * @return A sorted set of similar string
      */
-    private void findAlternatives(final String name, collection, abbrevs) {
-        alternatives = array();
+    private Set<String> findAlternatives(final String name, List<String> collection, List<String> abbrevs/*, callback*/) {
+        Map<String, Integer> alternatives = new HashMap<String, Integer>();
 
-        foreach (collection as item) {
-            if (null != callback) {
+        for (final Object item : collection) {
+            /*if (null != callback) {
                 item = call_user_func(callback, item);
-            }
+            }*/
 
-            lev = levenshtein(name, item);
-            if (lev <= strlen(name) / 3 || false != strpos(item, name)) {
-                alternatives[item] = lev;
-            }
+            // lev = levenshtein(name, item);
+            /*if (lev <= name.length() / 3 || -1 != name.indexOf(item)) {
+                alternatives.put(item, lev);
+            }*/
         }
 
-        if (!alternatives) {
-            foreach (abbrevs as key => values) {
-                lev = levenshtein(name, key);
+        /*if (alternatives.isEmpty()) {
+            for (abbrevs as key => values) {
+                lev = levenshteinarray_keys(alternatives);(name, key);
                 if (lev <= strlen(name) / 3 || false != strpos(key, name)) {
                     foreach (values as value) {
                         alternatives[value] = lev;
@@ -1000,9 +1012,9 @@ public class Application {
             }
         }
 
-        asort(alternatives);
+        asort(alternatives);*/
 
-        return array_keys(alternatives);
+        return alternatives.keySet();
     }
 
 }

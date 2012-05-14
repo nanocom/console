@@ -72,12 +72,8 @@ public class Util {
         return toReturn;
     }
 
-    public static Object array_pop(List<Object> array) {
-        return array.remove(0);
-    }
-
     /**
-     * TODO Improve this method.
+     * TODO
      *
      * @param pieces
      *
@@ -88,6 +84,8 @@ public class Util {
         for (int i = 0; i < pieces.length; i++) {
             pieces[i].split(":");
         }
+
+        return null;
     }
 
 }

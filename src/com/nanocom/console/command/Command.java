@@ -20,7 +20,7 @@ import java.util.List;
 
 /**
  * Base class for all commands.
- * 
+ *
  * @author Arnaud Kleinpeter <arnaud.kleinpeter at gmail dot com>
  */
 public class Command {
@@ -35,6 +35,14 @@ public class Command {
     private Boolean applicationDefinitionMerged;
     private String synopsis;
     private HelperSet helperSet;
+
+    /**
+     * TODO
+     * @return
+     */
+    public boolean isEnabled() {
+        return true; // TOSO
+    }
 
     /**
      * @param name The name of the command

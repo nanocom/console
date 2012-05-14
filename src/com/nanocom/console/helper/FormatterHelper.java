@@ -11,11 +11,11 @@ import com.nanocom.console.Util;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import org.apache.commons.lang3.StringUtils;
+//import org.apache.commons.lang3.StringUtils;
 
 /**
  * The Formatter class provides helpers to format messages.
- * 
+ *
  * @author Arnaud Kleinpeter <arnaud.kleinpeter at gmail dot com>
  */
 public class FormatterHelper extends Helper {
@@ -26,7 +26,7 @@ public class FormatterHelper extends Helper {
      * @param section The section name
      * @param message The message
      * @param style   The style to apply to the section
-     * 
+     *
      * @return The formatted section
      */
     public String formatSection(final String section, final String message, final String style) {
@@ -55,13 +55,13 @@ public class FormatterHelper extends Helper {
         }
 
         // TODO Implement this part
-        messages = large ? Arrays.asList(StringUtils.repeat(" ", len)) : new ArrayList<String>();
+        /*messages = large ? Arrays.asList(StringUtils.repeat(" ", len)) : new ArrayList<String>();
         for (String line : lines) {
             messages.add(line + StringUtils.repeat(" ", len - strlen(line)));
         }
         if (large) {
             messages.add(StringUtils.repeat(" ", len));
-        }
+        }*/
 
         for (String message : messages) {
             message = String.format("<%s>%s</%s>", style, message, style);
