@@ -73,19 +73,28 @@ public class Util {
     }
 
     /**
-     * TODO
-     *
      * @param pieces
      *
      * @return
      */
     public static Map<String, String> asAssociativeArray(String... pieces) {
-        Map<String, String> toReturn = new HashMap<String, String>();
+        Map<String, String> toReturn = new HashMap<>();
         for (int i = 0; i < pieces.length; i++) {
             pieces[i].split(":");
         }
 
         return null;
+    }
+
+    /**
+     * @param text
+     * @param search
+     * @return 
+     */
+    public static int substr_count(String text, String search) {
+        int count = text.split(search).length - 1;
+
+        return count;
     }
 
 }

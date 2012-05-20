@@ -92,7 +92,7 @@ public class ApplicationTest {
     public void testRegister() throws Exception {
         Application application = new Application();
         Command command = application.register("foo");
-        assertEquals("foo", command.getName(), ".register() registers a new command");
+        assertEquals(".register() registers a new command", "foo", command.getName());
     }
 
     @Test

@@ -37,14 +37,6 @@ public class Command {
     private HelperSet helperSet;
 
     /**
-     * TODO
-     * @return
-     */
-    public boolean isEnabled() {
-        return true; // TOSO
-    }
-
-    /**
      * @param name The name of the command
      *
      * @throws Exception When the command name is empty
@@ -61,13 +53,13 @@ public class Command {
         definition = new InputDefinition();
         ignoreValidationErrors = false;
         applicationDefinitionMerged = false;
-        aliases = new ArrayList<String>();
+        aliases = new ArrayList<>();
 
         if (null != name) {
             setName(name);
         }
 
-        configure(); // TODO this mechanism doesn't work, the default empty configure() method is called
+        configure();
 
         if (null == name || name.isEmpty()) {
             throw new Exception("The command name cannot be empty.");
@@ -122,6 +114,18 @@ public class Command {
      */
     public Application getApplication() {
         return application;
+    }
+
+    /**
+     * Checks whether the command is enabled or not in the current environment.
+     *
+     * Override this to check for x or y and return false if the command can not
+     * run properly under the current conditions.
+     *
+     * @return
+     */
+    public boolean isEnabled() {
+        return true;
     }
 
     /**
@@ -222,14 +226,14 @@ public class Command {
             return;
         }
 
-        List<InputArgument> currentArguments = new ArrayList<InputArgument>();
+        List<InputArgument> currentArguments = new ArrayList<>();
         currentArguments.addAll(definition.getArguments().values());
-        List<InputArgument> applicationArguments = new ArrayList<InputArgument>();
+        List<InputArgument> applicationArguments = new ArrayList<>();
         applicationArguments.addAll(application.getDefinition().getArguments().values());
         definition.setArguments(applicationArguments);
         definition.addArguments(currentArguments);
 
-        List<InputOption> applicationOptions = new ArrayList<InputOption>();
+        List<InputOption> applicationOptions = new ArrayList<>();
         applicationOptions.addAll(application.getDefinition().getOptions().values());
         definition.addOptions(applicationOptions);
 

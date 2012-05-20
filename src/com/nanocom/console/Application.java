@@ -7,20 +7,20 @@
 
 package com.nanocom.console;
 
-import com.nanocom.console.helper.HelperSet;
-import com.nanocom.console.input.*;
-import com.nanocom.console.output.ConsoleOutput;
-import com.nanocom.console.output.ConsoleOutputInterface;
-import java.util.*;
 import static com.nanocom.console.Util.*;
 import com.nanocom.console.command.Command;
 import com.nanocom.console.command.HelpCommand;
 import com.nanocom.console.command.ListCommand;
 import com.nanocom.console.helper.DialogHelper;
 import com.nanocom.console.helper.FormatterHelper;
+import com.nanocom.console.helper.HelperSet;
+import com.nanocom.console.input.*;
+import com.nanocom.console.output.ConsoleOutput;
+import com.nanocom.console.output.ConsoleOutputInterface;
 import com.nanocom.console.output.OutputInterface;
 import java.io.InputStream;
 import java.util.Map.Entry;
+import java.util.*;
 
 /**
  * An Application is the container for a collection of commands.
@@ -70,7 +70,7 @@ public class Application {
         this.version = version;
         catchExceptions = true;
         autoExit = true;
-        commands = new HashMap<String, Command>();
+        commands = new HashMap<>();
         helperSet = getDefaultHelperSet();
         definition = getDefaultInputDefinition();
 
@@ -147,7 +147,7 @@ public class Application {
         if (true == input.hasParameterOption(Arrays.asList("--help", "-h"))) {
             if (null == name) {
                 name = "help";
-                Map<String, String> arrayInputParams = new HashMap<String, String>();
+                Map<String, String> arrayInputParams = new HashMap<>();
                 arrayInputParams.put("command", "help");
                 input = new ArrayInput(arrayInputParams);
             } else {
@@ -180,7 +180,7 @@ public class Application {
 
         if (null == name) {
             name = "list";
-            Map<String, String> arrayInputParams = new HashMap<String, String>();
+            Map<String, String> arrayInputParams = new HashMap<>();
             arrayInputParams.put("command", "list");
             input = new ArrayInput(arrayInputParams);
         }
@@ -410,7 +410,7 @@ public class Application {
      * @return An array of namespaces
      */
     public List<String> getNamespaces() {
-        List<String> namespaces = new ArrayList<String>();
+        List<String> namespaces = new ArrayList<>();
         for (final Command command : commands.values()) {
             namespaces.add(extractNamespace(command.getName()));
 
@@ -432,16 +432,16 @@ public class Application {
      * @throws Exception When namespace is incorrect or ambiguous
      */
     public String findNamespace(final String namespace) throws Exception {
-        Map<String, String[]> allNamespaces = new HashMap<String, String[]>();
+        Map<String, String[]> allNamespaces = new HashMap<>();
         for (final String n : getNamespaces()) {
             allNamespaces.put(n, n.split(":"));
         }
 
-        List<String> found = new ArrayList<String>();
+        List<String> found = new ArrayList<>();
         int i = 0;
         for (String part : namespace.split(":")) {
             // TODO array_unique(array_values(array_filter(array_map(void (p) use (i) { return isset(p[i]) ? p[i] : ""; }
-            Map<String, List<String>> abbrevs = new HashMap<String, List<String>>(); // = getAbbreviations(allNamespaces);
+            Map<String, List<String>> abbrevs = new HashMap<>(); // = getAbbreviations(allNamespaces);
 
             if (!abbrevs.containsKey(part)) {
                 String message = String.format("There are no commands defined in the \"%s\" namespace.", namespace);
@@ -450,7 +450,7 @@ public class Application {
                     part = Util.implode(":", found) + ":" + part;
                 }
 
-                List<String> alternatives = new ArrayList<String>(); // = findAlternativeNamespace(part, abbrevs);
+                List<String> alternatives = new ArrayList<>(); // = findAlternativeNamespace(part, abbrevs);
 
                 if (null != alternatives) {
                     message += "\n\nDid you mean one of these?\n    ";
@@ -493,7 +493,7 @@ public class Application {
         }
 
         // Name
-        commands = new HashMap<String, Command>();
+        commands = new HashMap<>();
         for (final Command command : commands.values()) {
             if (extractNamespace(command.getName()).equals(namespace)) {
                 commands.put(command.getName(), command);
@@ -512,7 +512,7 @@ public class Application {
         }
 
         // Aliases
-        List<String> aliases = new ArrayList<String>();
+        List<String> aliases = new ArrayList<>();
         for (final Command command : commands.values()) {
             for (final String alias : command.getAliases()) {
                 if (extractNamespace(alias).equals(namespace)) {
@@ -525,7 +525,7 @@ public class Application {
         if (!aliasesMap.containsKey(searchName)) {
             String message = String.format("Command \"%s\" is not defined.", name);
 
-            Set<String> alternatives = new HashSet<String>(); // TODO findAlternativeCommands(searchName, abbrevs);
+            Set<String> alternatives = new HashSet<>(); // TODO findAlternativeCommands(searchName, abbrevs);
             if (alternatives.isEmpty()) {
                 message += "\n\nDid you mean one of these?\n    ";
                 // message += Util.implode("\n    ", alternatives.);
@@ -551,14 +551,14 @@ public class Application {
      * @return An array of Command instances
      */
     public Map<String, Command> all(final String namespace) {
-        Map<String, Command> returnedCommands = new HashMap<String, Command>();
+        Map<String, Command> returnedCommands = new HashMap<>();
         for (final Command command : commands.values()) {
-            /*if (namespace == extractNamespace(name, substr_count(namespace, ":") + 1)) {
+            if (namespace.equals(extractNamespace(command.getName(), Integer.valueOf(Util.substr_count(namespace, ":") + 1)))) {
                 returnedCommands.put(command.getName(), command);
-            }*/
+            }
         }
 
-        return commands;
+        return returnedCommands;
     }
 
     public Map<String, Command> all() {
@@ -573,7 +573,7 @@ public class Application {
      * @return An array of abbreviations
      */
     static public Map<String, List<String>> getAbbreviations(final Collection<String> names) {
-        Map<String, List<String>> abbrevs = new HashMap<String, List<String>>();
+        Map<String, List<String>> abbrevs = new HashMap<>();
         for (final String name : names) {
             for (int len = name.length() - 1; len > 0; --len) {
                 String abbrev = name.substring(0, len);
@@ -611,7 +611,7 @@ public class Application {
         width += 2;
 
         if (raw) {
-            List<String> messages = new ArrayList<String>();
+            List<String> messages = new ArrayList<>();
             for (final Map<String, Command> commandsMap : sortCommands(locCommands).values()) {
                 for (final Command command : commandsMap.values()) {
                     messages.add(String.format("%-{width}s %s", name, command.getDescription()));
@@ -727,7 +727,7 @@ public class Application {
             String title = String.format("  [%s]  ", e.getClass().toString());
             int len = title.length();
             int width = null != getTerminalWidth() ? getTerminalWidth() - 1 : Integer.MAX_VALUE;
-            List<String> lines = new ArrayList<String>();
+            List<String> lines = new ArrayList<>();
             /*for (preg_split("{\r?\n}", e.getMessage()) as line) {
                 for (str_split(line, width - 4) as line) {
                     lines.add(String.format("  %s  ", line));
@@ -897,14 +897,14 @@ public class Application {
      * @return A sorted array of commands
      */
     private Map<String, Map<String, Command>> sortCommands(Map<String, Command> commands) {
-        Map<String, Map<String, Command>> namespacedCommands = new HashMap<String, Map<String, Command>>();
+        Map<String, Map<String, Command>> namespacedCommands = new HashMap<>();
         for (final Command command : commands.values()) {
-            String key = extractNamespace(command.getName(), String.valueOf(1));
+            String key = extractNamespace(command.getName(), 1);
             if (null == key) {
                 key = "_global";
             }
 
-            Map<String, Command> mapToInsert = new HashMap<String, Command>();
+            Map<String, Command> mapToInsert = new HashMap<>();
             mapToInsert.put(name, command);
             namespacedCommands.put(key, mapToInsert);
         }
@@ -936,11 +936,16 @@ public class Application {
      *
      * @return The namespace of the command
      */
-    private String extractNamespace(final String name, final String limit) {
-        List<String> parts = Arrays.asList(name.split(":"));
+    private String extractNamespace(final String name, Integer limit) {
+        String[] arrayParts = name.split(":");
+        List<String> parts = new ArrayList<>();
 
-        return Util.implode(":", parts);
-        // TODO return Util.implode(":", null == limit ? parts : array_slice(parts, 0, limit));
+        for (int i = 0; i < arrayParts.length - 1; i++) {
+            parts.add(arrayParts[i]);
+        }
+
+        limit = Math.min(limit, parts.size());
+        return implode(":", null == limit ? parts : parts.subList(0, limit));
     }
 
     private String extractNamespace(final String name) {
@@ -961,7 +966,7 @@ public class Application {
         };*/
 
         // TODO return findAlternatives(name, commands.values(), abbrevs/*, callback*/);
-        return new HashSet<String>();
+        return new HashSet<>();
     }
 
     /**
@@ -988,7 +993,7 @@ public class Application {
      * @return A sorted set of similar string
      */
     private Set<String> findAlternatives(final String name, List<String> collection, List<String> abbrevs/*, callback*/) {
-        Map<String, Integer> alternatives = new HashMap<String, Integer>();
+        Map<String, Integer> alternatives = new HashMap<>();
 
         for (final Object item : collection) {
             /*if (null != callback) {
