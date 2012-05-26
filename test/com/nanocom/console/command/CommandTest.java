@@ -93,8 +93,7 @@ public class CommandTest {
         command.setName("foo");
         assertEquals(".setName() sets the command name", "foo", command.getName());
 
-        Command ret = command.setName("foobar:bar");
-        assertEquals(".setName() implements a fluent interface", command, ret);
+        command.setName("foobar:bar");
         assertEquals(".setName() sets the command name", "foobar:bar", command.getName());
 
         try {
@@ -204,6 +203,7 @@ public class CommandTest {
         CommandTester tester = new CommandTester(command);
         Map<String, String> foobar = new HashMap<>();
         foobar.put("--bar", "true");
+
         try {
             tester.execute(foobar);
             fail(".run() throws a Exception when the input does not validate the current InputDefinition");

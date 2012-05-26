@@ -97,4 +97,16 @@ public class Util {
         return count;
     }
 
+    public static List<String> array_slice(List<String> array, int offset, int length) {
+        if (array.isEmpty()) {
+            return array;
+        }
+
+        if (length >= array.size()) {
+            return array;
+        }
+
+        return array.subList(offset, length);
+    }
+
 }

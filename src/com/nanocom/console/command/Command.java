@@ -61,7 +61,7 @@ public class Command {
 
         configure();
 
-        if (null == name || name.isEmpty()) {
+        if (null == this.name || this.name.isEmpty()) {
             throw new Exception("The command name cannot be empty.");
         }
     }
@@ -555,7 +555,7 @@ public class Command {
     }
 
     private void validateName(final String name) throws Exception {
-        // TODO This regex might not work correctly
+        // TODO This regex might not work correctly, check for it
         if (name.isEmpty() || !name.matches("^[^\\:]+(\\:[^\\:]+)*$")) {
             throw new Exception("Command name \"" + name + "\" is invalid.");
         }

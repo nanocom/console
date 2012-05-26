@@ -103,6 +103,7 @@ public class Application {
         try {
             statusCode = doRun(input, output);
         } catch (Exception e) {
+            e.printStackTrace();
             if (!catchExceptions) {
                 throw e;
             }
@@ -493,10 +494,10 @@ public class Application {
         }
 
         // Name
-        commands = new HashMap<>();
+        HashMap<String, Command> locCommands = new HashMap<>();
         for (final Command command : commands.values()) {
             if (extractNamespace(command.getName()).equals(namespace)) {
-                commands.put(command.getName(), command);
+                locCommands.put(command.getName(), command);
             }
         }
 
@@ -526,7 +527,7 @@ public class Application {
             String message = String.format("Command \"%s\" is not defined.", name);
 
             Set<String> alternatives = new HashSet<>(); // TODO findAlternativeCommands(searchName, abbrevs);
-            if (alternatives.isEmpty()) {
+            if (!alternatives.isEmpty()) {
                 message += "\n\nDid you mean one of these?\n    ";
                 // message += Util.implode("\n    ", alternatives.);
             }
@@ -578,7 +579,7 @@ public class Application {
             for (int len = name.length() - 1; len > 0; --len) {
                 String abbrev = name.substring(0, len);
                 if (!abbrevs.containsKey(abbrev)) {
-                    abbrevs.put(abbrev, Arrays.asList(name));
+                    abbrevs.put(abbrev, new ArrayList<>(Arrays.asList(name)));
                 } else {
                     abbrevs.get(abbrev).add(name);
                 }
@@ -587,7 +588,7 @@ public class Application {
 
         // Non-abbreviations always get entered, even if they aren't unique
         for (final String name : names) {
-            abbrevs.put(name, Arrays.asList(name));
+            abbrevs.put(name, new ArrayList<>(Arrays.asList(name)));
         }
 
         return abbrevs;
@@ -936,16 +937,12 @@ public class Application {
      *
      * @return The namespace of the command
      */
-    private String extractNamespace(final String name, Integer limit) {
+    private String extractNamespace(final String name, final Integer limit) {
         String[] arrayParts = name.split(":");
-        List<String> parts = new ArrayList<>();
+        List<String> parts = new ArrayList<>(Arrays.asList(arrayParts));
+        parts.remove(parts.size() - 1);
 
-        for (int i = 0; i < arrayParts.length - 1; i++) {
-            parts.add(arrayParts[i]);
-        }
-
-        limit = Math.min(limit, parts.size());
-        return implode(":", null == limit ? parts : parts.subList(0, limit));
+        return implode(":", null == limit ? parts : Util.array_slice(parts, 0, limit));
     }
 
     private String extractNamespace(final String name) {

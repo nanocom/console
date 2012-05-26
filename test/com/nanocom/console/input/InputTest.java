@@ -5,8 +5,8 @@ import java.util.HashMap;
 import java.util.Map;
 import org.junit.AfterClass;
 import org.junit.Assert;
-import org.junit.Test;
 import org.junit.BeforeClass;
+import org.junit.Test;
 
 /**
  * @author Arnaud Kleinpeter <arnaud.kleinpeter at gmail dot com>
@@ -26,7 +26,7 @@ public class InputTest {
 
     @Test
     public void testConstructor() throws Exception {
-        Map<String, String> foobar = new HashMap<String, String>();
+        Map<String, String> foobar = new HashMap<>();
         foobar.put("name", "foo");
         ArrayInput input = new ArrayInput(foobar, new InputDefinition(Arrays.asList((Object) new InputArgument("name"))));
         Assert.assertEquals(".__construct() takes a InputDefinition as an argument", "foo", input.getArgument("name"));
@@ -34,7 +34,7 @@ public class InputTest {
 
     @Test
     public void testOptions() throws Exception {
-        Map<String, String> foobar = new HashMap<String, String>();
+        Map<String, String> foobar = new HashMap<>();
         foobar.put("--name", "foo");
         ArrayInput input = new ArrayInput(foobar, new InputDefinition(Arrays.asList((Object) new InputOption("name"))));
         Assert.assertEquals(".getOption() returns the value for the given option", "foo", input.getOption("name"));
@@ -73,14 +73,14 @@ public class InputTest {
 
     @Test
     public void testArguments() throws Exception {
-        Map<String, String> foobar = new HashMap<String, String>();
+        Map<String, String> foobar = new HashMap<>();
         foobar.put("name", "foo");
 
         ArrayInput input = new ArrayInput(foobar, new InputDefinition(Arrays.asList((Object) new InputArgument("name"))));
         Assert.assertEquals(".getArgument() returns the value for the given argument", "foo", input.getArgument("name"));
 
         input.setArgument("name", "bar");
-        foobar = new HashMap<String, String>();
+        foobar = new HashMap<>();
         foobar.clear();
         foobar.put("name", "bar");
         Assert.assertEquals(".setArgument() sets the value for a given argument", "bar", input.getArgument("name"));
@@ -123,7 +123,7 @@ public class InputTest {
             Assert.assertEquals("Not enough arguments.", e.getMessage());
         }
 
-        Map<String, String> foobar = new HashMap<String, String>();
+        Map<String, String> foobar = new HashMap<>();
         foobar.put("name", "foo");
         input = new ArrayInput(foobar);
         input.bind(new InputDefinition(Arrays.asList((Object) new InputArgument("name", InputArgument.REQUIRED))));

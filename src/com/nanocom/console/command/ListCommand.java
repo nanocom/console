@@ -29,8 +29,8 @@ public class ListCommand extends Command {
     protected void configure() {
         try {
             setDefinition(createDefinition())
-            .setName("list")
-            .setDescription("Lists commands")
+            .setName("list");
+            setDescription("Lists commands")
             .setHelp("The <info>list</info> command lists all commands:"
                 + "<info>php app/console list</info>"
                 + "You can also display the commands for a specific namespace:"

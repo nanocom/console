@@ -51,7 +51,7 @@ public class CommandTester {
             this.input.setInteractive((Boolean) options.get("interactive"));
         }
 
-        output = new StreamOutput();
+        output = new StreamOutput(System.out);
         // StreamOutput output = new StreamOutput(fopen("php://memory", "w", false));
         if (options.containsKey("decorated")) {
             output.setDecorated((Boolean) options.get("decorated"));

@@ -191,7 +191,7 @@ abstract class Input implements InputInterface {
     @Override
     public Object getOption(final String name) throws Exception {
         if (!definition.hasOption(name)) {
-            throw new Exception("The \"--" + name + "\" option does not exist.");
+            throw new Exception(String.format("The \"%s\" option does not exist.", name));
         }
 
         return options.containsKey(name) ? options.get(name) : definition.getOption(name).getDefaultValue();
