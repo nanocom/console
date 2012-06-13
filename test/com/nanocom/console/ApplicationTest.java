@@ -1,7 +1,8 @@
 package com.nanocom.console;
 
-import com.nanocom.console.command.Command;
-import com.nanocom.console.command.HelpCommand;
+import org.nanocom.console.Application;
+import org.nanocom.console.command.Command;
+import org.nanocom.console.command.HelpCommand;
 import com.nanocom.console.fixtures.Foo1Command;
 import com.nanocom.console.fixtures.FooCommand;
 import java.util.Arrays;

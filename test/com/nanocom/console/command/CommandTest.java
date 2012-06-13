@@ -1,15 +1,16 @@
 package com.nanocom.console.command;
 
-import com.nanocom.console.Application;
+import org.nanocom.console.command.Command;
+import org.nanocom.console.Application;
 import com.nanocom.console.fixtures.TestCommand;
-import com.nanocom.console.helper.FormatterHelper;
-import com.nanocom.console.helper.HelperInterface;
-import com.nanocom.console.input.InputArgument;
-import com.nanocom.console.input.InputDefinition;
-import com.nanocom.console.input.InputOption;
-import com.nanocom.console.input.StringInput;
-import com.nanocom.console.output.NullOutput;
-import com.nanocom.console.tester.CommandTester;
+import org.nanocom.console.helper.FormatterHelper;
+import org.nanocom.console.helper.HelperInterface;
+import org.nanocom.console.input.InputArgument;
+import org.nanocom.console.input.InputDefinition;
+import org.nanocom.console.input.InputOption;
+import org.nanocom.console.input.StringInput;
+import org.nanocom.console.output.NullOutput;
+import org.nanocom.console.tester.CommandTester;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;

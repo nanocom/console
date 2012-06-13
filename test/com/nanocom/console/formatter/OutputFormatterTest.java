@@ -1,5 +1,7 @@
 package com.nanocom.console.formatter;
 
+import org.nanocom.console.formatter.OutputFormatter;
+import org.nanocom.console.formatter.OutputFormatterStyle;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;

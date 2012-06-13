@@ -1,5 +1,6 @@
 package com.nanocom.console.input;
 
+import org.nanocom.console.input.InputArgument;
 import java.util.Arrays;
 import org.junit.AfterClass;
 import org.junit.Assert;

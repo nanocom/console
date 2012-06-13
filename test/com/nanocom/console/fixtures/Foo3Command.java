@@ -1,8 +1,8 @@
 package com.nanocom.console.fixtures;
 
-import com.nanocom.console.command.Command;
-import com.nanocom.console.input.InputInterface;
-import com.nanocom.console.output.OutputInterface;
+import org.nanocom.console.command.Command;
+import org.nanocom.console.input.InputInterface;
+import org.nanocom.console.output.OutputInterface;
 
 /**
  * @author Arnaud Kleinpeter <arnaud.kleinpeter at gmail dot com>

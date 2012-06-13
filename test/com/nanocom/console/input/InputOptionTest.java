@@ -1,5 +1,6 @@
 package com.nanocom.console.input;
 
+import org.nanocom.console.input.InputOption;
 import java.util.ArrayList;
 import java.util.Arrays;
 import org.junit.AfterClass;

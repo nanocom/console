@@ -1,5 +1,8 @@
 package com.nanocom.console.input;
 
+import org.nanocom.console.input.InputDefinition;
+import org.nanocom.console.input.InputOption;
+import org.nanocom.console.input.InputArgument;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
