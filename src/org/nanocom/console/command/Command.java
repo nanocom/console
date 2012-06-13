@@ -7,6 +7,9 @@
 
 package org.nanocom.console.command;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import org.nanocom.console.Application;
 import org.nanocom.console.helper.HelperSet;
 import org.nanocom.console.input.InputArgument;
@@ -14,16 +17,13 @@ import org.nanocom.console.input.InputDefinition;
 import org.nanocom.console.input.InputInterface;
 import org.nanocom.console.input.InputOption;
 import org.nanocom.console.output.OutputInterface;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * Base class for all commands.
  *
  * @author Arnaud Kleinpeter <arnaud.kleinpeter at gmail dot com>
  */
-public class Command {
+public class Command extends Executable {
 
     private Application application;
     private String name;
@@ -33,6 +33,7 @@ public class Command {
     private String description;
     private Boolean ignoreValidationErrors;
     private Boolean applicationDefinitionMerged;
+	private Executable code;
     private String synopsis;
     private HelperSet helperSet;
 
@@ -151,6 +152,7 @@ public class Command {
      * @throws Exception When this abstract method is not implemented
      * @see    setCode()
      */
+	@Override
     protected int execute(InputInterface input, OutputInterface output) throws Exception {
         throw new Exception("You must override the execute() method in the concrete command class.");
     }
@@ -215,7 +217,30 @@ public class Command {
 
         input.validate();
 
+		if (null != this.code) {
+            return this.code.execute(input, output);
+        }
+
         return execute(input, output);
+    }
+
+	
+   /**
+	* Sets the code to execute when running this command.
+	*
+	* If this method is used, it overrides the code defined
+	* in the execute() method.
+	*
+	* @param Executable code An Executable instance
+	*
+	* @return Command The current instance
+	*
+	* @see #execute 
+	*/
+    public Command setCode(Executable code) {
+        this.code = code;
+
+        return this;
     }
 
     /**

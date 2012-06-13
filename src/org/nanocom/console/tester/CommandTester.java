@@ -73,12 +73,11 @@ public class CommandTester {
      *
      * @return The display
      */
-    public String getDisplay() {
-        // rewind(output.getStream());
-
+    /*public String getDisplay() {
+        // rewind(output.getStream()); Does not exist in Java...
         // TODO return stream_get_contents(output.getStream());
         return "";
-    }
+    }*/
 
     /**
      * Gets the input instance used by the last execution of the command.

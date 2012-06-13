@@ -18,6 +18,8 @@ import org.junit.AfterClass;
 import static org.junit.Assert.*;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.nanocom.console.input.*;
+import org.nanocom.console.output.OutputInterface;
 
 /**
  *
@@ -233,18 +235,22 @@ public class CommandTest {
         }
     }
 
-    /*@Test
+    @Test
     public void testSetCode() throws Exception {
         Command command = new TestCommand();
-        Command ret = command.setCode(void (InputInterface input, OutputInterface output)
-        {
-            output.writeln("from the code...");
-        });
-        assertEquals(command, ret, ".setCode() implements a fluent interface");
-        tester = new CommandTester(command);
-        tester.execute(array());
-        assertEquals("interact called".PHP_EOL."from the code...".PHP_EOL, tester.getDisplay());
-    }*/
+        Command ret = command.setCode(new Executable() {
+			@Override
+			protected int execute(InputInterface input, OutputInterface output) throws Exception {
+				output.writeln("from the code...");
+
+				return 0;
+			}
+		});
+        assertEquals(".setCode() implements a fluent interface", command, ret);
+        CommandTester tester = new CommandTester(command);
+        tester.execute(new HashMap<String, String>());
+        // assertEquals("interact called" + System.getProperty("line.separator") + "from the code..." + System.getProperty("line.separator"), tester.getDisplay());
+    }
 
     @Test
     public void testAsText() throws Exception {
