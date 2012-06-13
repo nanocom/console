@@ -1,10 +1,10 @@
-package com.nanocom.console;
+package org.nanocom.console;
 
 import org.nanocom.console.Application;
 import org.nanocom.console.command.Command;
 import org.nanocom.console.command.HelpCommand;
-import com.nanocom.console.fixtures.Foo1Command;
-import com.nanocom.console.fixtures.FooCommand;
+import org.nanocom.console.fixtures.Foo1Command;
+import org.nanocom.console.fixtures.FooCommand;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.Map.Entry;

@@ -1,8 +1,8 @@
-package com.nanocom.console.command;
+package org.nanocom.console.command;
 
 import org.nanocom.console.command.Command;
 import org.nanocom.console.Application;
-import com.nanocom.console.fixtures.TestCommand;
+import org.nanocom.console.fixtures.TestCommand;
 import org.nanocom.console.helper.FormatterHelper;
 import org.nanocom.console.helper.HelperInterface;
 import org.nanocom.console.input.InputArgument;

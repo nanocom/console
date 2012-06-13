@@ -1,4 +1,4 @@
-package com.nanocom.console.formatter;
+package org.nanocom.console.formatter;
 
 import org.nanocom.console.formatter.OutputFormatter;
 import org.nanocom.console.formatter.OutputFormatterStyle;

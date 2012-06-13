@@ -1,4 +1,4 @@
-package com.nanocom.console.input;
+package org.nanocom.console.input;
 
 import org.nanocom.console.input.ArrayInput;
 import org.nanocom.console.input.InputDefinition;

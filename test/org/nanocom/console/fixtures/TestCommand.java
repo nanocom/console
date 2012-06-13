@@ -1,4 +1,4 @@
-package com.nanocom.console.fixtures;
+package org.nanocom.console.fixtures;
 
 import org.nanocom.console.command.Command;
 import org.nanocom.console.input.InputInterface;
