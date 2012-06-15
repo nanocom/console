@@ -1,25 +1,28 @@
 package org.nanocom.console.command;
 
-import org.nanocom.console.command.Command;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
+import java.lang.reflect.Method;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.junit.Test;
 import org.nanocom.console.Application;
 import org.nanocom.console.fixtures.TestCommand;
 import org.nanocom.console.helper.FormatterHelper;
 import org.nanocom.console.helper.HelperInterface;
 import org.nanocom.console.input.InputArgument;
 import org.nanocom.console.input.InputDefinition;
+import org.nanocom.console.input.InputInterface;
 import org.nanocom.console.input.InputOption;
 import org.nanocom.console.input.StringInput;
 import org.nanocom.console.output.NullOutput;
-import org.nanocom.console.tester.CommandTester;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import org.junit.AfterClass;
-import static org.junit.Assert.*;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.nanocom.console.input.*;
 import org.nanocom.console.output.OutputInterface;
+import org.nanocom.console.tester.CommandTester;
 
 public class CommandTest {
 
@@ -171,18 +174,19 @@ public class CommandTest {
         command.setApplication(application1);
         InputDefinition definition = new InputDefinition(Arrays.asList((Object) new InputArgument("bar"), new InputOption("foo")));
         command.setDefinition(definition);
- 
-        /* TODO r = new \ReflectionObject(command);
-        m = r.getMethod("mergeApplicationDefinition");
+
+        Class<Command> cls = Command.class;
+        Method m = cls.getDeclaredMethod("mergeApplicationDefinition");
         m.setAccessible(true);
         m.invoke(command);
-        assertTrue(command.getDefinition().hasArgument("foo"), ".mergeApplicationDefinition() merges the application arguments and the command arguments");
-        assertTrue(command.getDefinition().hasArgument("bar"), ".mergeApplicationDefinition() merges the application arguments and the command arguments");
-        assertTrue(command.getDefinition().hasOption("foo"), ".mergeApplicationDefinition() merges the application options and the command options");
-        assertTrue(command.getDefinition().hasOption("bar"), ".mergeApplicationDefinition() merges the application options and the command options");
+
+        assertTrue(".mergeApplicationDefinition() merges the application arguments and the command arguments", command.getDefinition().hasArgument("foo"));
+        assertTrue(".mergeApplicationDefinition() merges the application arguments and the command arguments", command.getDefinition().hasArgument("bar"));
+        assertTrue(".mergeApplicationDefinition() merges the application options and the command options", command.getDefinition().hasOption("foo"));
+        assertTrue(".mergeApplicationDefinition() merges the application options and the command options", command.getDefinition().hasOption("bar"));
 
         m.invoke(command);
-        assertEquals(3, command.getDefinition().getArgumentCount(), ".mergeApplicationDefinition() does not try to merge twice the application arguments and options");*/
+        assertEquals(".mergeApplicationDefinition() does not try to merge twice the application arguments and options", 3, command.getDefinition().getArgumentCount());
     }
 
     @Test
@@ -237,7 +241,7 @@ public class CommandTest {
         // assertEquals("interact called" + System.getProperty("line.separator") + "from the code..." + System.getProperty("line.separator"), tester.getDisplay());
     }
 
-    @Test
+    /*@Test
     public void testAsText() throws Exception {
         Command command = new TestCommand();
         command.setApplication(new Application());
@@ -246,7 +250,7 @@ public class CommandTest {
         foobar.put("command", command.getName());
         tester.execute(foobar);
         // assertStringEqualsFile(self.fixturesPath."/command_astext.txt", command.asText(), ".asText() returns a text representation of the command");
-    }
+    }*/
 
     /*@Test
     public void testAsXml() {
