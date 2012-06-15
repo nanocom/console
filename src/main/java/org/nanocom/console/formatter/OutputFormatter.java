@@ -24,7 +24,7 @@ public final class OutputFormatter implements OutputFormatterInterface {
     private static final String FORMAT_PATTERN = "#<([a-z][a-z0-9_=;-]+)>(.*?)</\\1?>#is";
 
     private Boolean decorated;
-    private Map<String, OutputFormatterStyleInterface> styles = new HashMap<>();
+    private Map<String, OutputFormatterStyleInterface> styles = new HashMap<String, OutputFormatterStyleInterface>();
 
     /**
      * Initializes console output formatter.

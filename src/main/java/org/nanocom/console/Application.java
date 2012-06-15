@@ -70,7 +70,7 @@ public class Application {
         this.version = version;
         catchExceptions = true;
         autoExit = true;
-        commands = new HashMap<>();
+        commands = new HashMap<String, Command>();
         helperSet = getDefaultHelperSet();
         definition = getDefaultInputDefinition();
 
@@ -147,7 +147,7 @@ public class Application {
         if (true == input.hasParameterOption(Arrays.asList("--help", "-h"))) {
             if (null == name) {
                 name = "help";
-                Map<String, String> arrayInputParams = new HashMap<>();
+                Map<String, String> arrayInputParams = new HashMap<String, String>();
                 arrayInputParams.put("command", "help");
                 input = new ArrayInput(arrayInputParams);
             } else {
@@ -180,7 +180,7 @@ public class Application {
 
         if (null == name) {
             name = "list";
-            Map<String, String> arrayInputParams = new HashMap<>();
+            Map<String, String> arrayInputParams = new HashMap<String, String>();
             arrayInputParams.put("command", "list");
             input = new ArrayInput(arrayInputParams);
         }
@@ -410,7 +410,7 @@ public class Application {
      * @return An array of namespaces
      */
     public List<String> getNamespaces() {
-        List<String> namespaces = new ArrayList<>();
+        List<String> namespaces = new ArrayList<String>();
         for (final Command command : commands.values()) {
             namespaces.add(extractNamespace(command.getName()));
 
@@ -432,16 +432,16 @@ public class Application {
      * @throws Exception When namespace is incorrect or ambiguous
      */
     public String findNamespace(final String namespace) throws Exception {
-        Map<String, String[]> allNamespaces = new HashMap<>();
+        Map<String, String[]> allNamespaces = new HashMap<String, String[]>();
         for (final String n : getNamespaces()) {
             allNamespaces.put(n, n.split(":"));
         }
 
-        List<String> found = new ArrayList<>();
+        List<String> found = new ArrayList<String>();
         int i = 0;
         for (String part : namespace.split(":")) {
             // TODO array_unique(array_values(array_filter(array_map(void (p) use (i) { return isset(p[i]) ? p[i] : ""; }
-            Map<String, List<String>> abbrevs = new HashMap<>(); // = getAbbreviations(allNamespaces);
+            Map<String, List<String>> abbrevs = new HashMap<String, List<String>>(); // = getAbbreviations(allNamespaces);
 
             if (!abbrevs.containsKey(part)) {
                 String message = String.format("There are no commands defined in the \"%s\" namespace.", namespace);
@@ -450,7 +450,7 @@ public class Application {
                     part = Util.implode(":", found) + ":" + part;
                 }
 
-                List<String> alternatives = new ArrayList<>(); // = findAlternativeNamespace(part, abbrevs);
+                List<String> alternatives = new ArrayList<String>(); // = findAlternativeNamespace(part, abbrevs);
 
                 if (null != alternatives) {
                     message += "\n\nDid you mean one of these?\n    ";
@@ -493,7 +493,7 @@ public class Application {
         }
 
         // Name
-        HashMap<String, Command> locCommands = new HashMap<>();
+        HashMap<String, Command> locCommands = new HashMap<String, Command>();
         for (final Command command : commands.values()) {
             if (extractNamespace(command.getName()).equals(namespace)) {
                 locCommands.put(command.getName(), command);
@@ -512,7 +512,7 @@ public class Application {
         }
 
         // Aliases
-        List<String> aliases = new ArrayList<>();
+        List<String> aliases = new ArrayList<String>();
         for (final Command command : commands.values()) {
             for (final String alias : command.getAliases()) {
                 if (extractNamespace(alias).equals(namespace)) {
@@ -525,7 +525,7 @@ public class Application {
         if (!aliasesMap.containsKey(searchName)) {
             String message = String.format("Command \"%s\" is not defined.", name);
 
-            Set<String> alternatives = new HashSet<>(); // TODO findAlternativeCommands(searchName, abbrevs);
+            Set<String> alternatives = new HashSet<String>(); // TODO findAlternativeCommands(searchName, abbrevs);
             if (!alternatives.isEmpty()) {
                 message += "\n\nDid you mean one of these?\n    ";
                 // message += Util.implode("\n    ", alternatives.);
@@ -551,7 +551,7 @@ public class Application {
      * @return An array of Command instances
      */
     public Map<String, Command> all(final String namespace) {
-        Map<String, Command> returnedCommands = new HashMap<>();
+        Map<String, Command> returnedCommands = new HashMap<String, Command>();
         for (final Command command : commands.values()) {
             if (namespace.equals(extractNamespace(command.getName(), Integer.valueOf(Util.substr_count(namespace, ":") + 1)))) {
                 returnedCommands.put(command.getName(), command);
@@ -573,12 +573,12 @@ public class Application {
      * @return An array of abbreviations
      */
     static public Map<String, List<String>> getAbbreviations(final Collection<String> names) {
-        Map<String, List<String>> abbrevs = new HashMap<>();
+        Map<String, List<String>> abbrevs = new HashMap<String, List<String>>();
         for (final String name : names) {
             for (int len = name.length() - 1; len > 0; --len) {
                 String abbrev = name.substring(0, len);
                 if (!abbrevs.containsKey(abbrev)) {
-                    abbrevs.put(abbrev, new ArrayList<>(Arrays.asList(name)));
+                    abbrevs.put(abbrev, new ArrayList<String>(Arrays.asList(name)));
                 } else {
                     abbrevs.get(abbrev).add(name);
                 }
@@ -587,7 +587,7 @@ public class Application {
 
         // Non-abbreviations always get entered, even if they aren't unique
         for (final String name : names) {
-            abbrevs.put(name, new ArrayList<>(Arrays.asList(name)));
+            abbrevs.put(name, new ArrayList<String>(Arrays.asList(name)));
         }
 
         return abbrevs;
@@ -611,7 +611,7 @@ public class Application {
         width += 2;
 
         if (raw) {
-            List<String> messages = new ArrayList<>();
+            List<String> messages = new ArrayList<String>();
             for (final Map<String, Command> commandsMap : sortCommands(locCommands).values()) {
                 for (final Command command : commandsMap.values()) {
                     messages.add(String.format("%-{width}s %s", name, command.getDescription()));
@@ -727,7 +727,7 @@ public class Application {
             String title = String.format("  [%s]  ", e.getClass().toString());
             int len = title.length();
             int width = null != getTerminalWidth() ? getTerminalWidth() - 1 : Integer.MAX_VALUE;
-            List<String> lines = new ArrayList<>();
+            List<String> lines = new ArrayList<String>();
             /*for (preg_split("{\r?\n}", e.getMessage()) as line) {
                 for (str_split(line, width - 4) as line) {
                     lines.add(String.format("  %s  ", line));
@@ -897,14 +897,14 @@ public class Application {
      * @return A sorted array of commands
      */
     private Map<String, Map<String, Command>> sortCommands(Map<String, Command> commands) {
-        Map<String, Map<String, Command>> namespacedCommands = new HashMap<>();
+        Map<String, Map<String, Command>> namespacedCommands = new HashMap<String, Map<String, Command>>();
         for (final Command command : commands.values()) {
             String key = extractNamespace(command.getName(), 1);
             if (null == key) {
                 key = "_global";
             }
 
-            Map<String, Command> mapToInsert = new HashMap<>();
+            Map<String, Command> mapToInsert = new HashMap<String, Command>();
             mapToInsert.put(name, command);
             namespacedCommands.put(key, mapToInsert);
         }
@@ -938,7 +938,7 @@ public class Application {
      */
     private String extractNamespace(final String name, final Integer limit) {
         String[] arrayParts = name.split(":");
-        List<String> parts = new ArrayList<>(Arrays.asList(arrayParts));
+        List<String> parts = new ArrayList<String>(Arrays.asList(arrayParts));
         parts.remove(parts.size() - 1);
 
         return implode(":", null == limit ? parts : Util.array_slice(parts, 0, limit));
@@ -951,8 +951,8 @@ public class Application {
     /**
      * Finds alternative commands of name
      *
-     * @param name      The full name of the command
-     * @param abbrevs   The abbreviations
+     * @param name    The full name of the command
+     * @param abbrevs The abbreviations
      *
      * @return A sorted array of similar commands
      */
@@ -962,7 +962,7 @@ public class Application {
         };*/
 
         // TODO return findAlternatives(name, commands.values(), abbrevs/*, callback*/);
-        return new HashSet<>();
+        return new HashSet<String>();
     }
 
     /**
@@ -989,7 +989,7 @@ public class Application {
      * @return A sorted set of similar string
      */
     private Set<String> findAlternatives(final String name, List<String> collection, List<String> abbrevs/*, callback*/) {
-        Map<String, Integer> alternatives = new HashMap<>();
+        Map<String, Integer> alternatives = new HashMap<String, Integer>();
 
         for (final Object item : collection) {
             /*if (null != callback) {

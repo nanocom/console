@@ -54,7 +54,7 @@ public class Command extends Executable {
         definition = new InputDefinition();
         ignoreValidationErrors = false;
         applicationDefinitionMerged = false;
-        aliases = new ArrayList<>();
+        aliases = new ArrayList<String>();
 
         if (null != name) {
             setName(name);
@@ -251,14 +251,14 @@ public class Command extends Executable {
             return;
         }
 
-        List<InputArgument> currentArguments = new ArrayList<>();
+        List<InputArgument> currentArguments = new ArrayList<InputArgument>();
         currentArguments.addAll(definition.getArguments().values());
-        List<InputArgument> applicationArguments = new ArrayList<>();
+        List<InputArgument> applicationArguments = new ArrayList<InputArgument>();
         applicationArguments.addAll(application.getDefinition().getArguments().values());
         definition.setArguments(applicationArguments);
         definition.addArguments(currentArguments);
 
-        List<InputOption> applicationOptions = new ArrayList<>();
+        List<InputOption> applicationOptions = new ArrayList<InputOption>();
         applicationOptions.addAll(application.getDefinition().getOptions().values());
         definition.addOptions(applicationOptions);
 

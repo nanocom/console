@@ -204,7 +204,7 @@ public class CommandTest {
     public void testRun() throws Exception {
         Command command = new TestCommand();
         CommandTester tester = new CommandTester(command);
-        Map<String, String> foobar = new HashMap<>();
+        Map<String, String> foobar = new HashMap<String, String>();
         foobar.put("--bar", "true");
 
         try {
@@ -215,7 +215,7 @@ public class CommandTest {
             assertEquals(".run() throws an Exception when the input does not validate the current InputDefinition", "The \"--bar\" option does not exist.", e.getMessage());
         }
 
-        Map<String, Object> foobar2 = new HashMap<>();
+        Map<String, Object> foobar2 = new HashMap<String, Object>();
         foobar2.put("interactive", true);
         tester.execute(new HashMap<String, String>(), foobar2);
         // TODO assertEquals(".run() calls the interact() method if the input is interactive", "interact called" + System.getProperty("line.separator") + "execute called" + System.getProperty("line.separator"), tester.getDisplay());

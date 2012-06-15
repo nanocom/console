@@ -81,7 +81,8 @@ public class Util {
      * @return
      */
     public static Map<String, String> asAssociativeArray(String... pieces) {
-        Map<String, String> toReturn = new HashMap<>();
+        Map<String, String> toReturn = new HashMap<String, String>();
+
         for (int i = 0; i < pieces.length; i++) {
             pieces[i].split(":");
         }

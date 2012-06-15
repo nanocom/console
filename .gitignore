@@ -1,11 +1,16 @@
 *.class
 
+# Eclipse #
+.classpath
+.project
+.settings/
+
+# Maven #
+target/
+
 # Package files #
 *.jar
 *.war
 *.ear
 
-# Private files #
-nbproject/private
-/dist/
-/build/
+
