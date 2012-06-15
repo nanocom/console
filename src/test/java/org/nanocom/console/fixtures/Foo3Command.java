@@ -4,9 +4,6 @@ import org.nanocom.console.command.Command;
 import org.nanocom.console.input.InputInterface;
 import org.nanocom.console.output.OutputInterface;
 
-/**
- * @author Arnaud Kleinpeter <arnaud.kleinpeter at gmail dot com>
- */
 public class Foo3Command extends Command {
 
     public Foo3Command() throws Exception {

@@ -7,9 +7,6 @@ import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-/**
- * @author Arnaud Kleinpeter <arnaud.kleinpeter at gmail dot com>
- */
 public class OutputFormatterTest {
     
     public OutputFormatterTest() {

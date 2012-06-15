@@ -13,9 +13,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
-/**
- * @author Arnaud Kleinpeter <arnaud.kleinpeter at gmail dot com>
- */
 public class ApplicationTest {
 
     public ApplicationTest() {

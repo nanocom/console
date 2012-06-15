@@ -5,9 +5,6 @@ import org.nanocom.console.input.InputInterface;
 import org.nanocom.console.output.OutputInterface;
 import java.util.Arrays;
 
-/**
- * @author Arnaud Kleinpeter <arnaud.kleinpeter at gmail dot com>
- */
 public class TestCommand extends Command {
 
     public TestCommand() throws Exception {

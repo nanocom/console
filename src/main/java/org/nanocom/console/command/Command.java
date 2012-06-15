@@ -580,7 +580,6 @@ public class Command extends Executable {
     }
 
     private void validateName(final String name) throws Exception {
-        // TODO This regex might not work correctly, check for it
         if (name.isEmpty() || !name.matches("^[^\\:]+(\\:[^\\:]+)*$")) {
             throw new Exception("Command name \"" + name + "\" is invalid.");
         }

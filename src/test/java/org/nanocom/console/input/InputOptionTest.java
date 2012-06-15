@@ -8,9 +8,6 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.BeforeClass;
 
-/**
- * @author Arnaud Kleinpeter <arnaud.kleinpeter at gmail dot com>
- */
 public class InputOptionTest {
     
     public InputOptionTest() {

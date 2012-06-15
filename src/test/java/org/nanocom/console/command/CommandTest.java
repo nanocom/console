@@ -21,22 +21,7 @@ import org.junit.Test;
 import org.nanocom.console.input.*;
 import org.nanocom.console.output.OutputInterface;
 
-/**
- *
- * @author Arnaud Kleinpeter <arnaud.kleinpeter at gmail dot com>
- */
 public class CommandTest {
-
-    public CommandTest() {
-    }
-
-    @BeforeClass
-    public static void setUpClass() throws Exception {
-    }
-
-    @AfterClass
-    public static void tearDownClass() throws Exception {
-    }
 
     @Test
     public void testConstructor() throws Exception {
