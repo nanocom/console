@@ -7,11 +7,12 @@
 
 package org.nanocom.console.command;
 
+import java.util.Arrays;
+
 import org.nanocom.console.input.InputArgument;
 import org.nanocom.console.input.InputInterface;
 import org.nanocom.console.input.InputOption;
 import org.nanocom.console.output.OutputInterface;
-import java.util.Arrays;
 
 /**
  * HelpCommand displays the help for a given command.
