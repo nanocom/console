@@ -7,10 +7,11 @@
 
 package org.nanocom.console.output;
 
-import org.nanocom.console.formatter.OutputFormatter;
-import org.nanocom.console.formatter.OutputFormatterInterface;
 import java.util.Arrays;
 import java.util.List;
+
+import org.nanocom.console.formatter.OutputFormatter;
+import org.nanocom.console.formatter.OutputFormatterInterface;
 
 /**
  * Base class for output classes.

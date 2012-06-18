@@ -69,9 +69,9 @@ public interface InputInterface {
     /**
      * Validates if arguments given are correct.
      *
-     * @throws Exception When not enough arguments are given.
+     * @throws RuntimeException When not enough arguments are given.
      */
-    void validate() throws Exception;
+    void validate() throws RuntimeException;
 
     /**
      * Returns all the given arguments merged with the default values.
@@ -95,9 +95,9 @@ public interface InputInterface {
      * @param name  The argument name
      * @param value The argument value
      *
-     * @throws Exception When argument given doesn't exist
+     * @throws IllegalArgumentException When argument given doesn't exist
      */
-    void setArgument(final String name, final String value) throws Exception;
+    void setArgument(final String name, final String value) throws IllegalArgumentException;
 
     /**
      * Returns true if an InputArgument object exists by name.
@@ -139,9 +139,9 @@ public interface InputInterface {
      * @param name  The option name
      * @param value The option value
      *
-     * @throws Exception When option given doesn't exist
+     * @throws IllegalArgumentException When option given doesn't exist
      */
-    void setOption(final String name, final String value) throws Exception;
+    void setOption(final String name, final String value) throws IllegalArgumentException;
 
     /**
      * Returns true if an InputOption object exists by name.

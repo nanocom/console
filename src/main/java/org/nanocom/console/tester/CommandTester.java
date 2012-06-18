@@ -7,13 +7,14 @@
 
 package org.nanocom.console.tester;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.nanocom.console.command.Command;
 import org.nanocom.console.input.ArrayInput;
 import org.nanocom.console.input.InputInterface;
 import org.nanocom.console.output.OutputInterface;
 import org.nanocom.console.output.StreamOutput;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @author Arnaud Kleinpeter <arnaud.kleinpeter at gmail dot com>

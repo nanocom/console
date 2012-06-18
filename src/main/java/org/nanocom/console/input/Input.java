@@ -34,7 +34,7 @@ abstract class Input implements InputInterface {
      * @param definition An InputDefinition instance
      */
 
-    public void init(InputDefinition definition) throws Exception {
+    public void init(InputDefinition definition) throws RuntimeException {
         if (null == definition) {
             this.definition = new InputDefinition();
         } else {
@@ -65,12 +65,12 @@ abstract class Input implements InputInterface {
     /**
      * Validates the input.
      *
-     * @throws Exception When not enough arguments are given
+     * @throws RuntimeException When not enough arguments are given
      */
     @Override
-    public void validate() throws Exception {
+    public void validate() throws RuntimeException {
         if (arguments.size() < definition.getArgumentRequiredCount()) {
-            throw new Exception("Not enough arguments.");
+            throw new RuntimeException("Not enough arguments.");
         }
     }
 
@@ -114,12 +114,12 @@ abstract class Input implements InputInterface {
      *
      * @return The argument value
      *
-     * @throws Exception When argument given doesn't exist
+     * @throws IllegalArgumentException When argument given doesn't exist
      */
     @Override
-    public Object getArgument(final String name) throws Exception {
+    public Object getArgument(final String name) throws IllegalArgumentException {
         if (!definition.hasArgument(name)) {
-            throw new Exception("The \"" + name + "\" argument does not exist.");
+            throw new IllegalArgumentException(String.format("The \"%s\" argument does not exist.", name));
         }
 
         return arguments.containsKey(name) ? arguments.get(name) : definition.getArgument(name).getDefaultValue();
@@ -131,12 +131,12 @@ abstract class Input implements InputInterface {
      * @param name  The argument name
      * @param value The argument value
      *
-     * @throws Exception When argument given doesn't exist
+     * @throws IllegalArgumentException When argument given doesn't exist
      */
     @Override
-    public void setArgument(final String name, final String value) throws Exception {
+    public void setArgument(final String name, final String value) throws IllegalArgumentException {
         if (!definition.hasArgument(name)) {
-            throw new Exception("The \"" + name + "\" argument does not exist.");
+            throw new IllegalArgumentException(String.format("The \"%s\" argument does not exist.", name));
         }
 
         arguments.put(name, value);
@@ -186,12 +186,12 @@ abstract class Input implements InputInterface {
      *
      * @return The option value
      *
-     * @throws Exception When option given doesn't exist
+     * @throws IllegalArgumentException When option given doesn't exist
      */
     @Override
-    public Object getOption(final String name) throws Exception {
+    public Object getOption(final String name) throws IllegalArgumentException {
         if (!definition.hasOption(name)) {
-            throw new Exception(String.format("The \"%s\" option does not exist.", name));
+            throw new IllegalArgumentException(String.format("The \"%s\" option does not exist.", name));
         }
 
         return options.containsKey(name) ? options.get(name) : definition.getOption(name).getDefaultValue();
@@ -203,12 +203,12 @@ abstract class Input implements InputInterface {
      * @param name  The option name
      * @param value The option value
      *
-     * @throws Exception When option given doesn't exist
+     * @throws IllegalArgumentException When option given doesn't exist
      */
     @Override
-    public void setOption(final String name, final String value) throws Exception {
+    public void setOption(final String name, final String value) throws IllegalArgumentException {
         if (!definition.hasOption(name)) {
-            throw new Exception("The \"" + name + "\" option does not exist.");
+            throw new IllegalArgumentException(String.format("The \"%s\" option does not exist.", name));
         }
 
         options.put(name, value);

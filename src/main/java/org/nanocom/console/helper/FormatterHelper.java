@@ -7,11 +7,10 @@
 
 package org.nanocom.console.helper;
 
-import org.nanocom.console.Util;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-//import org.apache.commons.lang3.StringUtils;
+
+import org.nanocom.console.Util;
 
 /**
  * The Formatter class provides helpers to format messages.

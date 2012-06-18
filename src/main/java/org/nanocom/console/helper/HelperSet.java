@@ -7,12 +7,13 @@
 
 package org.nanocom.console.helper;
 
-import org.nanocom.console.command.Command;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+
+import org.nanocom.console.command.Command;
 
 /**
  * HelperSet represents a set of helpers to be used with a command.

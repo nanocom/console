@@ -7,20 +7,34 @@
 
 package org.nanocom.console;
 
+import static org.nanocom.console.Util.implode;
+
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
-import java.util.*;
+import java.util.Set;
+
 import org.nanocom.console.command.Command;
 import org.nanocom.console.command.HelpCommand;
 import org.nanocom.console.command.ListCommand;
 import org.nanocom.console.helper.DialogHelper;
 import org.nanocom.console.helper.FormatterHelper;
 import org.nanocom.console.helper.HelperSet;
-import org.nanocom.console.input.*;
+import org.nanocom.console.input.ArgvInput;
+import org.nanocom.console.input.ArrayInput;
+import org.nanocom.console.input.InputArgument;
+import org.nanocom.console.input.InputDefinition;
+import org.nanocom.console.input.InputInterface;
+import org.nanocom.console.input.InputOption;
 import org.nanocom.console.output.ConsoleOutput;
 import org.nanocom.console.output.ConsoleOutputInterface;
 import org.nanocom.console.output.OutputInterface;
-import static org.nanocom.console.Util.*;
 
 /**
  * An Application is the container for a collection of commands.

@@ -7,7 +7,11 @@
 
 package org.nanocom.console.input;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * ArgvInput represents an input coming from the CLI arguments.
@@ -31,19 +35,19 @@ public class ArgvInput extends Input {
      * @param argv An array of parameters from the CLI (in the argv format)
      * @param definition A InputDefinition instance
      */
-    public ArgvInput(String[] argv, final InputDefinition definition) throws Exception {
+    public ArgvInput(String[] argv, final InputDefinition definition) {
         tokens = new ArrayList<String>();
         tokens.addAll(Arrays.asList(argv));
         init(definition);
     }
 
-    public ArgvInput(String[] argv) throws Exception {
+    public ArgvInput(String[] argv) {
         tokens = new ArrayList<String>();
         tokens.addAll(Arrays.asList(argv));
         init(null);
     }
 
-    public ArgvInput() throws Exception {
+    public ArgvInput() {
         tokens = new ArrayList<String>();
         init(null);
     }
@@ -57,7 +61,7 @@ public class ArgvInput extends Input {
      * Processes command line arguments.
      */
     @Override
-    protected void parse() throws Exception {
+    protected void parse() {
         parsed = new LinkedList<String>();
         parsed.addAll(tokens);
         
@@ -79,7 +83,7 @@ public class ArgvInput extends Input {
      *
      * @param token The current token.
      */
-    private void parseShortOption(final String token) throws Exception {
+    private void parseShortOption(final String token) {
         String name = token.substring(1);
 
         if (name.length() > 1) {
@@ -102,13 +106,13 @@ public class ArgvInput extends Input {
      *
      * @param name The current token
      *
-     * @throws Exception When option given doesn't exist
+     * @throws RuntimeException When option given doesn't exist
      */
-    private void parseShortOptionSet(final String name) throws Exception {
+    private void parseShortOptionSet(final String name) throws RuntimeException {
         int nameLength = name.length();
         for (int i = 0; i < nameLength; i++) {
             if (!definition.hasShortcut(name.substring(i, i + 1))) {
-                throw new Exception("The \"-" + name.substring(i, i + 1) + "\" option does not exist.");
+                throw new RuntimeException(String.format("The \"-%s\" option does not exist.", name.substring(i, i + 1)));
             }
 
             InputOption option = definition.getOptionForShortcut(name.substring(i, i + 1));
@@ -144,9 +148,9 @@ public class ArgvInput extends Input {
      *
      * @param token The current token
      *
-     * @throws Exception When too many arguments are given
+     * @throws RuntimeException When too many arguments are given
      */
-    private void parseArgument(final String token) throws Exception {
+    private void parseArgument(final String token) throws RuntimeException {
         int c = arguments.size();
 
         // If input is expecting another argument, add it
@@ -168,7 +172,7 @@ public class ArgvInput extends Input {
 
         // Unexpected argument
         } else {
-            throw new Exception("Too many arguments.");
+            throw new RuntimeException("Too many arguments.");
         }
     }
 
@@ -178,11 +182,11 @@ public class ArgvInput extends Input {
      * @param shortcut The short option key
      * @param value    The value for the option
      *
-     * @throws Exception When option given doesn't exist
+     * @throws RuntimeException When option given doesn't exist
      */
-    private void addShortOption(final String shortcut, final Object value) throws Exception {
+    private void addShortOption(final String shortcut, final Object value) throws RuntimeException {
         if (!definition.hasShortcut(shortcut)) {
-            throw new Exception("The \"-" + shortcut + "\" option does not exist.");
+            throw new RuntimeException(String.format("The \"-%s\" option does not exist.", shortcut));
         }
 
         addLongOption(definition.getOptionForShortcut(shortcut).getName(), value);
@@ -194,12 +198,12 @@ public class ArgvInput extends Input {
      * @param name  The long option key
      * @param value The value for the option
      *
-     * @throws Exception When option given doesn't exist
+     * @throws RuntimeException When option given doesn't exist
      */
     @SuppressWarnings("unchecked")
-    private void addLongOption(final String name, Object value) throws Exception {
+    private void addLongOption(final String name, Object value) throws RuntimeException {
         if (!definition.hasOption(name)) {
-            throw new Exception("The \"--" + name + "\" option does not exist.");
+            throw new RuntimeException(String.format("The \"--%s\" option does not exist.", name));
         }
 
         InputOption option = definition.getOption(name);
@@ -216,7 +220,7 @@ public class ArgvInput extends Input {
 
         if (null == value) {
             if (option.isValueRequired()) {
-                throw new Exception("The \"--" + name + "\" option requires a value.");
+                throw new RuntimeException(String.format("The \"--%s\" option requires a value."));
             }
 
             value = option.isValueOptional() ? option.getDefaultValue() : true;
@@ -244,7 +248,7 @@ public class ArgvInput extends Input {
 
             return token;
         }
-        
+
         return null;
     }
 

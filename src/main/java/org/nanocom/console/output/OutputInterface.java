@@ -7,8 +7,9 @@
 
 package org.nanocom.console.output;
 
-import org.nanocom.console.formatter.OutputFormatterInterface;
 import java.util.List;
+
+import org.nanocom.console.formatter.OutputFormatterInterface;
 
 /**
  * OutputInterface is the interface implemented by all Output classes.

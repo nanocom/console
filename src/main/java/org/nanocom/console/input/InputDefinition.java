@@ -7,8 +7,13 @@
 
 package org.nanocom.console.input;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.nanocom.console.Util;
-import java.util.*;
 
 /**
  * An InputDefinition represents a set of valid command line arguments and options.
@@ -35,7 +40,7 @@ public class InputDefinition {
     /**
      * @param definition An array of InputArgument and InputOption instance
      */
-    public InputDefinition(final List<Object> definition) throws Exception {
+    public InputDefinition(final List<Object> definition) {
         setDefinition(definition);
     }
     
@@ -48,7 +53,7 @@ public class InputDefinition {
      *
      * @param definition The definition array
      */
-    public final void setDefinition(final List<Object> definition) throws Exception {
+    public final void setDefinition(final List<Object> definition) {
         List<InputArgument> locArguments = new ArrayList<InputArgument>();
         List<InputOption> locOptions = new ArrayList<InputOption>();
 
@@ -58,7 +63,7 @@ public class InputDefinition {
             } else if (item instanceof InputArgument) {
                 locArguments.add((InputArgument) item);
             } else {
-                throw new Exception("The definition list must contain only InputArgument or InputOption instances.");
+                throw new IllegalArgumentException("The definition list must contain only InputArgument or InputOption instances.");
             }
         }
 
@@ -71,7 +76,7 @@ public class InputDefinition {
      *
      * @param arguments An array of InputArgument objects
      */
-    public void setArguments(final List<InputArgument> arguments) throws Exception {
+    public void setArguments(final List<InputArgument> arguments) {
         this.arguments     = new HashMap<String, InputArgument>();
         requiredCount      = 0;
         hasOptional        = false;
@@ -84,7 +89,7 @@ public class InputDefinition {
      *
      * @param arguments An array of InputArgument objects
      */
-    public void addArguments(final List<InputArgument> arguments) throws Exception {
+    public void addArguments(final List<InputArgument> arguments) {
         if (null != arguments) {
             for (InputArgument argument : arguments) {
                 addArgument(argument);
@@ -101,7 +106,7 @@ public class InputDefinition {
      */
     public void addArgument(final InputArgument argument) throws Exception {
         if (arguments.containsKey(argument.getName())) {
-            throw new Exception("An argument with name \"" + argument.getName() + "\" already exist.");
+            throw new Exception(String.format("An argument with name \"%s\" already exist.", argument.getName()));
         }
 
         if (hasAnArrayArgument) {
@@ -132,11 +137,11 @@ public class InputDefinition {
      *
      * @return An InputArgument object
      *
-     * @throws Exception When argument given doesn't exist
+     * @throws IllegalArgumentException When argument given doesn't exist
      */
-    public InputArgument getArgument(final String name) throws Exception {
+    public InputArgument getArgument(final String name) throws IllegalArgumentException {
         if (!hasArgument(name)) {
-            throw new Exception("The \"" + name + "\" argument does not exist.");
+            throw new IllegalArgumentException(String.format("The \"%s\" argument does not exist.", name));
         }
 
         return arguments.get(name);
@@ -149,15 +154,17 @@ public class InputDefinition {
      *
      * @return An InputArgument object
      *
-     * @throws Exception When argument given doesn't exist
+     * @throws IllegalArgumentException When argument given doesn't exist
      */
-    public InputArgument getArgument(final Integer position) throws Exception {
+    public InputArgument getArgument(final Integer position) throws IllegalArgumentException {
         if (!hasArgument(position)) {
-            throw new Exception("The \"" + position + "\" argument does not exist.");
+            throw new IllegalArgumentException(String.format("The \"%s\" argument does not exist.", position);
         }
 
-        // TODO Optimize this part if possible
-        // Maybe change Map<String, InputArgument> to something more adapted?
+        /* 
+         * TODO Optimize this part if possible
+         * Maybe change Map<String, InputArgument> to something more adapted?
+         */
         Collection<InputArgument> valuesArguments = arguments.values();
         List<InputArgument> arrayArguments = new ArrayList<InputArgument>();
         arrayArguments.addAll(valuesArguments);
@@ -233,7 +240,7 @@ public class InputDefinition {
      *
      * @param options An array of InputOption objects
      */
-    public void setOptions(final List<InputOption> options) throws Exception {
+    public void setOptions(final List<InputOption> options) {
         this.options = new HashMap<String, InputOption>();
         shortcuts = new HashMap<String, String>();
         addOptions(options);
@@ -244,7 +251,7 @@ public class InputDefinition {
      *
      * @param options An array of InputOption objects
      */
-    public void addOptions(final List<InputOption> options) throws Exception {
+    public void addOptions(final List<InputOption> options) {
         for (InputOption option : options) {
             addOption(option);
         }
@@ -259,12 +266,12 @@ public class InputDefinition {
      */
     public void addOption(final InputOption option) throws Exception {
         if (options.containsKey(option.getName()) && !option.equals(options.get(option.getName()))) {
-            throw new Exception("An option named \"" + option.getName() + "\" already exist.");
+            throw new Exception(String.format("An option named \"%s\" already exist.", option.getName()));
         } else if (
                 shortcuts.containsKey(option.getShortcut())
                 && !option.equals(options.get(shortcuts.get(option.getShortcut())))
         ) {
-            throw new Exception("An option with shortcut \"" + option.getShortcut() + "\" already exist.");
+            throw new Exception(String.format("An option with shortcut \"%s\" already exist.", option.getShortcut()));
         }
 
         options.put(option.getName(), option);
@@ -320,6 +327,7 @@ public class InputDefinition {
      * Gets an InputOption by shortcut.
      *
      * @param shortcut The shortcut name
+     * 
      * @return An InputOption object
      */
     public InputOption getOptionForShortcut(final String shortcut) throws Exception {
@@ -346,11 +354,11 @@ public class InputDefinition {
      * @param shortcut The shortcut
      * @return The InputOption name
      *
-     * @throws Exception When option given does not exist
+     * @throws IllegalArgumentException When option given does not exist
      */
-    private String shortcutToName(final String shortcut) throws Exception {
+    private String shortcutToName(final String shortcut) throws IllegalArgumentException {
         if (!shortcuts.containsKey(shortcut)) {
-            throw new Exception("The \"-" + shortcut + "\" option does not exist.");
+            throw new IllegalArgumentException(String.format("The \"-%s\" option does not exist.", shortcut));
         }
 
         return shortcuts.get(shortcut);
@@ -362,30 +370,31 @@ public class InputDefinition {
      * @return The synopsis
      */
     public String getSynopsis() {
-        // TODO Some improvements to do here, avoid concatenation in append()
         StringBuilder sb = new StringBuilder();
         for (InputOption option : options.values()) {
             String shortcut = (null != option.getShortcut()) ? "-" + option.getShortcut() + "|" : "";
             sb.append("[");
+
             if (option.isValueRequired()) {
-                sb.append(shortcut + "--" + option.getName() + "=\"...\"");
+                sb.append(String.format("%s--%s=\"...\"", shortcut, option.getName()));
             } else if (option.isValueOptional()) {
-                sb.append(shortcut + "--" + option.getName() + "[=\"...\"]");
+                sb.append(String.format("%s--%s[=\"...\"]", shortcut, option.getName()));
             } else {
-                sb.append(shortcut + "--" + option.getName());
+                sb.append(String.format("%s--%s", shortcut, option.getName()));
             }
+
             sb.append("] ");
         }
 
         for (InputArgument argument : arguments.values()) {
             if (argument.isRequired()) {
-                sb.append(argument.getName() + (argument.isArray() ? "1" : ""));
+                sb.append(String.format("%s%s", argument.getName(), argument.isArray() ? "1" : ""));
             } else {
-                sb.append("[" + argument.getName() + (argument.isArray() ? "1" : "") + "]");
+                sb.append(String.format("[%s%s]", argument.getName(), (argument.isArray() ? "1" : "")));
             }
 
             if (argument.isArray()) {
-                sb.append(" ... [" + argument.getName() + "N]");
+                sb.append(String.format(" ... [%sN]", argument.getName()));
             }
         }
 

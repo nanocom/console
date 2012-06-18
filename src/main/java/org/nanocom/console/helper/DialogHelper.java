@@ -7,10 +7,11 @@
 
 package org.nanocom.console.helper;
 
-import org.nanocom.console.output.OutputInterface;
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
+
+import org.nanocom.console.output.OutputInterface;
 
 /**
  * The Dialog class provides helpers to interact with the user.

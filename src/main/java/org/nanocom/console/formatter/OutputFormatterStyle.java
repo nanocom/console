@@ -7,8 +7,13 @@
 
 package org.nanocom.console.formatter;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import org.nanocom.console.Util;
-import java.util.*;
 
 /**
  * Formatter style class for defining styles.

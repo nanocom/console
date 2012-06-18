@@ -27,7 +27,7 @@ public class StringInput extends ArgvInput {
      * @param input An array of parameters from the CLI (in the argv format)
      * @param definition An InputDefinition instance
      */
-    public StringInput(final String input, final InputDefinition definition) throws Exception {
+    public StringInput(final String input, final InputDefinition definition) {
         super(new String[0], definition);
 
         setTokens(tokenize(input));
@@ -43,9 +43,9 @@ public class StringInput extends ArgvInput {
      * @param input The input to tokenize
      * @return The tokenized string
      *
-     * @throws Exception When unable to parse input (should never happen)
+     * @throws IllegalArgumentException When unable to parse input (should never happen)
      */
-    private String[] tokenize(String input) {
+    private String[] tokenize(String input) throws IllegalArgumentException {
         input.replaceAll("(\r\n|\r|\n|\t)", " ");
 
         tokens = new ArrayList<String>();
@@ -63,7 +63,7 @@ public class StringInput extends ArgvInput {
             } else {
                 // should never happen
                 // @codeCoverageIgnoreStart
-                throw new Exception(String.format("Unable to parse input near \"... %s ...\"", input.substring(cursor, 10)));
+                throw new IllegalArgumentException(String.format("Unable to parse input near \"... %s ...\"", input.substring(cursor, 10)));
                 // @codeCoverageIgnoreEnd
             }
 

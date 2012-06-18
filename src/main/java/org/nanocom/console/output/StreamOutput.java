@@ -7,9 +7,10 @@
 
 package org.nanocom.console.output;
 
-import org.nanocom.console.formatter.OutputFormatterInterface;
 import java.io.File;
 import java.io.PrintStream;
+
+import org.nanocom.console.formatter.OutputFormatterInterface;
 
 /**
  * StreamOutput writes the output to a given stream.

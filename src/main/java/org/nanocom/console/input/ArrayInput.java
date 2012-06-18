@@ -29,12 +29,12 @@ public class ArrayInput extends Input {
      * @param parameters An array of parameters
      * @param definition A InputDefinition instance
      */
-    public ArrayInput(final Map<String, String> parameters, final InputDefinition definition) throws Exception {
+    public ArrayInput(final Map<String, String> parameters, final InputDefinition definition) {
         this.parameters = parameters;
         init(definition);
     }
 
-    public ArrayInput(final Map<String, String> parameters) throws Exception {
+    public ArrayInput(final Map<String, String> parameters) {
         this.parameters = parameters;
         init(null);
     }
@@ -143,7 +143,7 @@ public class ArrayInput extends Input {
      * Processes command line arguments.
      */
     @Override
-    protected void parse() throws Exception {
+    protected void parse() {
         for (Entry<String, String> parameter : parameters.entrySet()) {
             if (parameter.getKey().startsWith("--")) {
                 addLongOption(parameter.getKey().substring(2), parameter.getValue());
@@ -161,11 +161,11 @@ public class ArrayInput extends Input {
      * @param shortcut The short option key
      * @param value    The value for the option
      *
-     * @throws Exception When option given doesn't exist
+     * @throws RuntimeException When option given doesn't exist
      */
-    private void addShortOption(final String shortcut, final Object value) throws Exception {
+    private void addShortOption(final String shortcut, final Object value) throws RuntimeException {
         if (!definition.hasShortcut(shortcut)) {
-            throw new Exception("The \"-" + shortcut + "\" option does not exist.");
+            throw new IllegalArgumentException(String.format("The \"-%s\" option does not exist."));
         }
 
         addLongOption(definition.getOptionForShortcut(shortcut).getName(), value);
@@ -177,19 +177,19 @@ public class ArrayInput extends Input {
      * @param name  The long option key
      * @param value The value for the option
      *
-     * @throws Exception When option given doesn't exist
-     * @throws Exception When a required value is missing
+     * @throws IllegalArgumentException When option given doesn't exist
+     * @throws IllegalArgumentException When a required value is missing
      */
-    private void addLongOption(final String name, Object value) throws Exception {
+    private void addLongOption(final String name, Object value) throws IllegalArgumentException {
         if (!definition.hasOption(name)) {
-            throw new Exception("The \"--" + name + "\" option does not exist.");
+            throw new IllegalArgumentException(String.format("The \"--%s\" option does not exist.", name));
         }
 
         InputOption option = definition.getOption(name);
 
         if (null == value) {
             if (option.isValueRequired()) {
-                throw new Exception("The \"--" + name + "\" option requires a value.");
+                throw new IllegalArgumentException(String.format("The \"--%s\" option requires a value.", name));
             }
 
             value = option.isValueOptional() ? option.getDefaultValue() : true;
@@ -204,11 +204,11 @@ public class ArrayInput extends Input {
      * @param name  The argument name
      * @param value The value for the argument
      *
-     * @throws Exception When argument given doesn't exist
+     * @throws IllegalArgumentException When argument given doesn't exist
      */
-    private void addArgument(final String name, final Object value) throws Exception {
+    private void addArgument(final String name, final Object value) throws IllegalArgumentException {
         if (!definition.hasArgument(name)) {
-            throw new Exception("The \"" + name + "\" argument does not exist.");
+            throw new IllegalArgumentException(String.format("The \"%s\" argument does not exist.", name));
         }
 
         arguments.put(name, value);
