@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.nanocom.console.Util;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Formatter style class for defining styles.
@@ -123,11 +123,11 @@ public final class OutputFormatterStyle implements OutputFormatterStyleInterface
             Set<String> foregroundNames = availableForegroundColors.keySet();
             List<String> foregroundNamesList = new ArrayList<String>();
             foregroundNamesList.addAll(foregroundNames);
-            throw new Exception(
-                "Invalid foreground color specified: \"" + color
-                + "\". Expected one of (" + Util.implode(", ",
-                    (String[]) foregroundNamesList.toArray()) + ")"
-            );
+            throw new Exception(String.format(
+                "Invalid foreground color specified: \"%s\". Expected one of (%s)",
+                color,
+                StringUtils.join((String[]) foregroundNamesList.toArray(), ", ")
+            ));
         }
 
         foreground = availableForegroundColors.get(color);
@@ -152,10 +152,11 @@ public final class OutputFormatterStyle implements OutputFormatterStyleInterface
             Set<String> backgroundNames = availableBackgroundColors.keySet();
             List<String> backgroundNamesList = new ArrayList<String>();
             backgroundNamesList.addAll(backgroundNames);
-            throw new Exception(
-                "Invalid background color specified: " + color
-                + ". Expected one of (" + Util.implode(", ", (String[]) backgroundNamesList.toArray()) + ")"
-            );
+            throw new Exception(String.format(
+                "Invalid background color specified: \"%s\". Expected one of (%s)",
+                color,
+                StringUtils.join((String[]) backgroundNamesList.toArray(), ", ")
+            ));
         }
 
         background = availableBackgroundColors.get(color);
@@ -174,10 +175,11 @@ public final class OutputFormatterStyle implements OutputFormatterStyleInterface
             Set<String> optionNames = availableOptions.keySet();
             List<String> optionNamesList = new ArrayList<String>();
             optionNamesList.addAll(optionNames);
-            throw new Exception(
-                "Invalid option specified: \"" + option
-                + "\". Expected one of (" + Util.implode(", ", (String[]) optionNamesList.toArray()) + ")"
-            );
+            throw new Exception(String.format(
+                "Invalid option specified: \"%s\". Expected one of (%s)",
+                option,
+                StringUtils.join((String[]) optionNamesList.toArray(), ", ")
+            ));
         }
 
         if (!options.contains(availableOptions.get(option))) {
@@ -198,10 +200,11 @@ public final class OutputFormatterStyle implements OutputFormatterStyleInterface
             Set<String> optionNames = availableOptions.keySet();
             List<String> optionNamesList = new ArrayList<String>();
             optionNamesList.addAll(optionNames);
-            throw new Exception(
-                "Invalid option specified: \"" + option
-                + "\". Expected one of (" + Util.implode(", ", (String[]) optionNamesList.toArray()) + ")"
-            );
+            throw new Exception(String.format(
+                "Invalid option specified: \"%s\". Expected one of (%s)",
+                option,
+                StringUtils.join((String[]) optionNamesList.toArray(), ", ")
+            ));
         }
 
         int pos = options.indexOf(availableOptions.get(option));
@@ -249,7 +252,7 @@ public final class OutputFormatterStyle implements OutputFormatterStyleInterface
             }
         }
 
-        return String.format("\033[%sm%s\033[0m", Util.implode(";", (String[]) codes.toArray()), text);
+        return String.format("\033[%sm%s\033[0m", StringUtils.join((String[]) codes.toArray(), ":"), text);
     }
 
 }

@@ -7,8 +7,6 @@
 
 package org.nanocom.console;
 
-import static org.nanocom.console.Util.implode;
-
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -20,6 +18,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.apache.commons.lang3.StringUtils;
 import org.nanocom.console.command.Command;
 import org.nanocom.console.command.HelpCommand;
 import org.nanocom.console.command.ListCommand;
@@ -40,8 +39,6 @@ import org.nanocom.console.output.OutputInterface;
  * An Application is the container for a collection of commands.
  *
  * It is the main entry point of a Console application.
- *
- * This class is optimized for a standard CLI environment.
  *
  * Usage:
  *
@@ -258,7 +255,7 @@ public class Application {
             ));
         }
 
-        return Util.implode(System.getProperty("line.separator"), messages);
+        return StringUtils.join(System.getProperty("line.separator"), messages);
     }
 
     /**
@@ -461,14 +458,14 @@ public class Application {
                 String message = String.format("There are no commands defined in the \"%s\" namespace.", namespace);
 
                 if (1 <= i) {
-                    part = Util.implode(":", found) + ":" + part;
+                    part = StringUtils.join(":", found) + ":" + part;
                 }
 
                 List<String> alternatives = new ArrayList<String>(); // = findAlternativeNamespace(part, abbrevs);
 
                 if (null != alternatives) {
                     message += "\n\nDid you mean one of these?\n    ";
-                    message += Util.implode("\n    ", alternatives);
+                    message += StringUtils.join("\n    ", alternatives);
                 }
 
                 throw new Exception(message);
@@ -481,7 +478,7 @@ public class Application {
             found.add(abbrevs.get(part).get(0));
         }
 
-        return Util.implode(":", found);
+        return StringUtils.join(":", found);
     }
 
     /**
@@ -542,7 +539,7 @@ public class Application {
             Set<String> alternatives = new HashSet<String>(); // TODO findAlternativeCommands(searchName, abbrevs);
             if (!alternatives.isEmpty()) {
                 message += "\n\nDid you mean one of these?\n    ";
-                // message += Util.implode("\n    ", alternatives.);
+                // message += StringUtils.join("\n    ", alternatives.);
             }
 
             throw new Exception(message);
@@ -632,7 +629,7 @@ public class Application {
                 }
             }
 
-            return implode(System.getProperty("line.separator"), messages);
+            return StringUtils.join(System.getProperty("line.separator"), messages);
         }
 
         List<String> messages = Arrays.asList(getHelp(), "");
@@ -653,7 +650,7 @@ public class Application {
             }
         }
 
-        return implode(System.getProperty("line.separator"), messages);
+        return StringUtils.join(System.getProperty("line.separator"), messages);
     }
 
     public String asText(final String namespace) throws Exception {
@@ -955,7 +952,7 @@ public class Application {
         List<String> parts = new ArrayList<String>(Arrays.asList(arrayParts));
         parts.remove(parts.size() - 1);
 
-        return implode(":", null == limit ? parts : Util.array_slice(parts, 0, limit));
+        return StringUtils.join(":", null == limit ? parts : Util.array_slice(parts, 0, limit));
     }
 
     private String extractNamespace(final String name) {
