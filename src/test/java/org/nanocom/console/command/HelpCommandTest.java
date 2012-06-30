@@ -4,8 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.junit.Test;
-import static org.junit.Assert.*;
-
 import org.nanocom.console.Application;
 import org.nanocom.console.tester.CommandTester;
 

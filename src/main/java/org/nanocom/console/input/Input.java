@@ -28,13 +28,20 @@ abstract class Input implements InputInterface {
     protected Map<String, Object> arguments;
     protected Boolean             interactive = true;
 
+    public Input() {
+    	init(null);
+    }
+
     /**
      * Constructor.
      *
      * @param definition An InputDefinition instance
      */
+    public Input(InputDefinition definition) {
+    	init(definition);
+    }
 
-    public void init(InputDefinition definition) throws RuntimeException {
+    protected void init(InputDefinition definition) {
         if (null == definition) {
             this.definition = new InputDefinition();
         } else {
@@ -49,7 +56,7 @@ abstract class Input implements InputInterface {
      * @param definition An InputDefinition instance
      */
     @Override
-    public void bind(InputDefinition definition) throws Exception {
+    public void bind(InputDefinition definition) {
         arguments = new HashMap<String, Object>();
         options = new HashMap<String, Object>();
         this.definition = definition;
@@ -60,7 +67,7 @@ abstract class Input implements InputInterface {
     /**
      * Processes command line arguments.
      */
-    abstract protected void parse() throws Exception;
+    abstract protected void parse() throws RuntimeException;
 
     /**
      * Validates the input.

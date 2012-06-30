@@ -19,7 +19,7 @@ public interface OutputFormatterInterface {
      *
      * @param decorated Whether to decorate the messages or not
      */
-    void setDecorated(final boolean decorated);
+    void setDecorated(boolean decorated);
 
     /**
      * Gets the decorated flag.
@@ -34,23 +34,25 @@ public interface OutputFormatterInterface {
      * @param name  The style name
      * @param style The style instance
      */
-    void setStyle(final String name, final OutputFormatterStyleInterface style);
+    void setStyle(String name, OutputFormatterStyleInterface style);
 
     /**
      * Checks if output formatter has style with specified name.
      *
      * @param name
+     * 
      * @return
      */
-    boolean hasStyle(final String name);
+    boolean hasStyle(String name);
 
     /**
      * Gets style options from style with specified name.
      *
-     * @param  name
+     * @param name
+     * 
      * @return
      */
-    OutputFormatterStyleInterface getStyle(final String name) throws Exception;
+    OutputFormatterStyleInterface getStyle(String name);
 
     /**
      * Formats a message according to the given styles.
@@ -59,6 +61,5 @@ public interface OutputFormatterInterface {
      *
      * @return The styled message
      */
-    String format(final String message);
-
+    String format(String message);
 }

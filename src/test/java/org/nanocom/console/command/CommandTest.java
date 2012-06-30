@@ -229,7 +229,7 @@ public class CommandTest {
         Command command = new TestCommand();
         Command ret = command.setCode(new Executable() {
 			@Override
-			protected int execute(InputInterface input, OutputInterface output) throws Exception {
+			protected int execute(InputInterface input, OutputInterface output) {
 				output.writeln("from the code...");
 
 				return 0;

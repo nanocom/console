@@ -22,6 +22,6 @@ public abstract class Executable {
 	/**
      * Executes a command.
      */
-	protected abstract int execute(InputInterface input, OutputInterface output) throws Exception;
+	protected abstract int execute(InputInterface input, OutputInterface output);
 
 }

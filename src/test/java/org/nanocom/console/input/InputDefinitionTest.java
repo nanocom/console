@@ -1,20 +1,15 @@
 package org.nanocom.console.input;
 
-import org.nanocom.console.input.InputDefinition;
-import org.nanocom.console.input.InputOption;
-import org.nanocom.console.input.InputArgument;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+
 import org.junit.AfterClass;
 import org.junit.Assert;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class InputDefinitionTest {
-
-    static private String fixtures;
 
     private Object foo;
     private Object bar;
@@ -22,11 +17,6 @@ public class InputDefinitionTest {
     private Object foo2;
 
     public InputDefinitionTest() {
-    }
-
-    @BeforeClass
-    public static void setUpClass() throws Exception {
-        fixtures = "/../Fixtures/";
     }
 
     @AfterClass
@@ -359,7 +349,7 @@ public class InputDefinitionTest {
         Map<String, String> foobar = new HashMap<String, String>();
         foobar.put("foo", "bar");
 
-        InputDefinition definition = new InputDefinition(Arrays.asList((Object)
+        /*InputDefinition definition = new InputDefinition(Arrays.asList((Object)
             new InputArgument("foo", InputArgument.OPTIONAL, "The foo argument"),
             new InputArgument("baz", InputArgument.OPTIONAL, "The baz argument", true),
             new InputArgument("bar", InputArgument.OPTIONAL | InputArgument.IS_ARRAY, "The bar argument", Arrays.asList("bar")),
@@ -368,7 +358,7 @@ public class InputDefinitionTest {
             new InputOption("bar", "b", InputOption.VALUE_OPTIONAL, "The bar option", "bar"),
             new InputOption("qux", "", InputOption.VALUE_OPTIONAL | InputOption.VALUE_IS_ARRAY, "The qux option", Arrays.asList("foo", "bar")),
             new InputOption("qux2", "", InputOption.VALUE_OPTIONAL | InputOption.VALUE_IS_ARRAY, "The qux2 option", foobar)
-        ));
+        ));*/
         // Assert.assertStringEqualsFile(self.fixtures."/definition_astext.txt", definition.asText(), ".asText() returns a textual representation of the InputDefinition");
     }
 

@@ -7,7 +7,6 @@
 
 package org.nanocom.console;
 
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -18,6 +17,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.nanocom.console.command.Command;
 import org.nanocom.console.command.HelpCommand;
@@ -64,19 +64,19 @@ public class Application {
      * @param name    The name of the application
      * @param version The version of the application
      */
-    public Application(final String name, final String version) throws Exception {
+    public Application(String name, String version) {
         init(name, version);
     }
 
-    public Application(final String name) throws Exception {
+    public Application(String name) {
         init(name, "UNKNOWN");
     }
 
-    public Application() throws Exception {
+    public Application() {
         init("UNKNOWN", "UNKNOWN");
     }
 
-    private void init(final String name, final String version) throws Exception {
+    private void init(String name, String version) {
         this.name = name;
         this.version = version;
         catchExceptions = true;
@@ -89,6 +89,10 @@ public class Application {
             add(command);
         }
     }
+    
+    public int run(InputInterface input) throws RuntimeException {
+    	return run(input, null);
+    }
 
     /**
      * Runs the current application.
@@ -100,7 +104,7 @@ public class Application {
      *
      * @throws Exception When doRun returns Exception
      */
-    public int run(InputInterface input, OutputInterface output) throws Exception {
+    public int run(InputInterface input, OutputInterface output) throws RuntimeException {
         if (null == input) {
             input = new ArgvInput();
         }
@@ -113,7 +117,7 @@ public class Application {
 
         try {
             statusCode = doRun(input, output);
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             if (!catchExceptions) {
                 throw e;
             }
@@ -146,7 +150,7 @@ public class Application {
      *
      * @return 0 if everything went fine, or an error code
      */
-    public int doRun(InputInterface input, OutputInterface output) throws Exception {
+    public int doRun(InputInterface input, OutputInterface output) throws RuntimeException {
         name = getCommandName(input);
 
         if (true == input.hasParameterOption(Arrays.asList("--ansi"))) {
@@ -160,7 +164,9 @@ public class Application {
                 name = "help";
                 Map<String, String> arrayInputParams = new HashMap<String, String>();
                 arrayInputParams.put("command", "help");
-                input = new ArrayInput(arrayInputParams);
+                try {
+                	input = new ArrayInput(arrayInputParams);
+                } catch (Exception e) {}
             } else {
                 wantHelps = true;
             }
@@ -171,10 +177,10 @@ public class Application {
         }
 
         if (null != System.console() && getHelperSet().has("dialog")) {
-            InputStream inputStream = ((DialogHelper) getHelperSet().get("dialog")).getInputStream();
-            //if (!posix_isatty(inputStream)) {
+            // InputStream inputStream = ((DialogHelper) getHelperSet().get("dialog")).getInputStream();
+            /*if (!posix_isatty(inputStream)) {
                 input.setInteractive(false);
-            //}
+            }*/
         }
 
         if (true == input.hasParameterOption(Arrays.asList("--quiet", "-q"))) {
@@ -184,7 +190,7 @@ public class Application {
         }
 
         if (true == input.hasParameterOption(Arrays.asList("--version", "-V"))) {
-            output.writeln(this.getLongVersion());
+            output.writeln(getLongVersion());
 
             return 0;
         }
@@ -211,7 +217,7 @@ public class Application {
      *
      * @param helperSet The helper set
      */
-    public void setHelperSet(final HelperSet helperSet) {
+    public void setHelperSet(HelperSet helperSet) {
         this.helperSet = helperSet;
     }
 
@@ -247,10 +253,10 @@ public class Application {
             "<comment>Options:</comment>"
         );
 
-        for (final InputOption option : getDefinition().getOptions().values()) {
+        for (InputOption option : getDefinition().getOptions().values()) {
             messages.add(String.format("  %-29s %s %s",
-                "<info>--" + option.getName() + "</info>",
-                null != option.getShortcut() ? "<info>-" + option.getShortcut() + "</info>" : "  ",
+                String.format("<info>--%s</info>", option.getName()),
+                null != option.getShortcut() ? String.format("<info>-%s</info>", option.getShortcut()) : "  ",
                 option.getDescription()
             ));
         }
@@ -263,7 +269,7 @@ public class Application {
      *
      * @param catchExceptions Whether to catch exceptions or not during commands execution
      */
-    public void setCatchExceptions(final boolean catchExceptions) {
+    public void setCatchExceptions(boolean catchExceptions) {
         this.catchExceptions = catchExceptions;
     }
 
@@ -272,7 +278,7 @@ public class Application {
      *
      * @param autoExit Whether to automatically exit after a command execution or not
      */
-    public void setAutoExit(final boolean autoExit) {
+    public void setAutoExit(boolean autoExit) {
         this.autoExit = autoExit;
     }
 
@@ -290,7 +296,7 @@ public class Application {
      *
      * @param name The application name
      */
-    public void setName(final String name) {
+    public void setName(String name) {
         this.name = name;
     }
 
@@ -308,7 +314,7 @@ public class Application {
      *
      * @param version The application version
      */
-    public void setVersion(final String version) {
+    public void setVersion(String version) {
         this.version = version;
     }
 
@@ -318,7 +324,7 @@ public class Application {
      * @return The long application version
      */
     public String getLongVersion() {
-        if (!"UNKNOWN".equals(getName()) && !"UNKNOWN".equals(this.getVersion())) {
+        if (false == "UNKNOWN".equals(getName()) && false == "UNKNOWN".equals(getVersion())) {
             return String.format("<info>%s</info> version <comment>%s</comment>", getName(), getVersion());
         }
 
@@ -332,7 +338,7 @@ public class Application {
      *
      * @return The newly created command
      */
-    public Command register(final String name) throws Exception {
+    public Command register(String name) throws Exception {
         return add(new Command(name));
     }
 
@@ -341,8 +347,8 @@ public class Application {
      *
      * @param commands An array of commands
      */
-    public void addCommands(final List<Command> commands) {
-        for (final Command command : commands) {
+    public void addCommands(Collection<Command> commands) {
+        for (Command command : commands) {
             add(command);
         }
     }
@@ -356,7 +362,7 @@ public class Application {
      *
      * @return The registered command
      */
-    public Command add(final Command command) {
+    public Command add(Command command) {
         command.setApplication(this);
 
         if (!command.isEnabled()) {
@@ -367,7 +373,7 @@ public class Application {
 
         commands.put(command.getName(), command);
 
-        for (final String alias : command.getAliases()) {
+        for (String alias : command.getAliases()) {
             commands.put(alias, command);
         }
 
@@ -381,11 +387,11 @@ public class Application {
      *
      * @return A Command object
      *
-     * @throws Exception When command name given does not exist
+     * @throws IllegalArgumentException When command name given does not exist
      */
-    public Command get(final String name) throws Exception {
+    public Command get(String name) throws IllegalArgumentException {
         if (!commands.containsKey(name)) {
-            throw new Exception(String.format("The command \"%s\" does not exist.", name));
+            throw new IllegalArgumentException(String.format("The command \"%s\" does not exist.", name));
         }
 
         Command command = commands.get(name);
@@ -409,7 +415,7 @@ public class Application {
      *
      * @return True if the command exists, false otherwise
      */
-    public boolean has(final String name) {
+    public boolean has(String name) {
         return commands.containsKey(name);
     }
 
@@ -418,19 +424,19 @@ public class Application {
      *
      * It does not returns the global namespace which always exists.
      *
-     * @return An array of namespaces
+     * @return A set of namespaces
      */
-    public List<String> getNamespaces() {
-        List<String> namespaces = new ArrayList<String>();
-        for (final Command command : commands.values()) {
+    public Set<String> getNamespaces() {
+        Set<String> namespaces = new HashSet<String>();
+        for (Command command : commands.values()) {
             namespaces.add(extractNamespace(command.getName()));
 
-            for (final String alias : command.getAliases()) {
+            for (String alias : command.getAliases()) {
                 namespaces.add(extractNamespace(alias));
             }
         }
 
-        return namespaces; // TODO array_unique and array_filter
+        return namespaces;
     }
 
     /**
@@ -440,42 +446,51 @@ public class Application {
      *
      * @return A registered namespace
      *
-     * @throws Exception When namespace is incorrect or ambiguous
+     * @throws IllegalArgumentException When namespace is incorrect or ambiguous
      */
-    public String findNamespace(final String namespace) throws Exception {
-        Map<String, String[]> allNamespaces = new HashMap<String, String[]>();
-        for (final String n : getNamespaces()) {
-            allNamespaces.put(n, n.split(":"));
+    public String findNamespace(String namespace) throws IllegalArgumentException {
+        Map<String, List<String>> allNamespaces = new HashMap<String, List<String>>();
+        for (String n : getNamespaces()) {
+            allNamespaces.put(n, new ArrayList<String>(Arrays.asList(n.split(":"))));
         }
 
         List<String> found = new ArrayList<String>();
         int i = 0;
         for (String part : namespace.split(":")) {
-            // TODO array_unique(array_values(array_filter(array_map(void (p) use (i) { return isset(p[i]) ? p[i] : ""; }
-            Map<String, List<String>> abbrevs = new HashMap<String, List<String>>(); // = getAbbreviations(allNamespaces);
+        	Set<String> filteredNamespaces = new HashSet<String>();
 
+        	for (List<String> subNamespaces : allNamespaces.values()) {
+        		if (i < subNamespaces.size()) {
+        			filteredNamespaces.add(subNamespaces.get(i));
+        		}
+        	}
+
+        	Map<String, List<String>> abbrevs = getAbbreviations(filteredNamespaces);
+	
             if (!abbrevs.containsKey(part)) {
-                String message = String.format("There are no commands defined in the \"%s\" namespace.", namespace);
+            	StringBuilder message = new StringBuilder();
+                message.append(String.format("There are no commands defined in the \"%s\" namespace.", namespace));
 
                 if (1 <= i) {
-                    part = StringUtils.join(":", found) + ":" + part;
+                    part = String.format("%s:%s", StringUtils.join(":", found), part);
                 }
 
-                List<String> alternatives = new ArrayList<String>(); // = findAlternativeNamespace(part, abbrevs);
+                /*List<String> alternatives = findAlternativeNamespace(part, abbrevs);
 
                 if (null != alternatives) {
-                    message += "\n\nDid you mean one of these?\n    ";
-                    message += StringUtils.join("\n    ", alternatives);
-                }
+                    message.append("\n\nDid you mean one of these?\n    ");
+                    message.append(StringUtils.join("\n    ", alternatives));
+                }*/
 
-                throw new Exception(message);
+                throw new IllegalArgumentException(message.toString());
             }
 
             if (abbrevs.get(part).size() > 1) {
-                throw new Exception(String.format("The namespace \"%s\" is ambiguous.", namespace /*, getAbbreviationSuggestions(abbrevs.get(part))*/));
+                throw new IllegalArgumentException(String.format("The namespace \"%s\" is ambiguous (%s).", namespace, getAbbreviationSuggestions(abbrevs.get(part))));
             }
 
             found.add(abbrevs.get(part).get(0));
+            i++;
         }
 
         return StringUtils.join(":", found);
@@ -491,9 +506,9 @@ public class Application {
      *
      * @return A Command instance
      *
-     * @throws Exception When command name is incorrect or ambiguous
+     * @throws IllegalArgumentException When command name is incorrect or ambiguous
      */
-    public Command find(final String name) throws Exception {
+    public Command find(String name) throws IllegalArgumentException {
         // Namespace
         String namespace = "";
         String searchName = name;
@@ -504,52 +519,57 @@ public class Application {
         }
 
         // Name
-        HashMap<String, Command> locCommands = new HashMap<String, Command>();
-        for (final Command command : commands.values()) {
+        Set<String> commands = new HashSet<String>();
+        for (Command command : this.commands.values()) {
             if (extractNamespace(command.getName()).equals(namespace)) {
-                locCommands.put(command.getName(), command);
+            	commands.add(command.getName());
             }
         }
 
-        Map<String, List<String>> abbrevs = getAbbreviations(commands.keySet()); // TODO array_unique on commands
+        Map<String, List<String>> abbrevs = getAbbreviations(commands);
         if (abbrevs.containsKey(searchName) && 1 == abbrevs.get(searchName).size()) {
             return get(abbrevs.get(searchName).get(0));
         }
 
-        if (abbrevs.containsKey(searchName) && abbrevs.get(searchName).size() > 1) {
+        if (abbrevs.containsKey(searchName) && 1 < abbrevs.get(searchName).size()) {
             String suggestions = getAbbreviationSuggestions(abbrevs.get(searchName));
 
-            throw new Exception(String.format("Command \"%s\" is ambiguous (%s).", name, suggestions));
+            throw new IllegalArgumentException(String.format("Command \"%s\" is ambiguous (%s).", name, suggestions));
         }
 
         // Aliases
-        List<String> aliases = new ArrayList<String>();
-        for (final Command command : commands.values()) {
-            for (final String alias : command.getAliases()) {
+        Set<String> aliases = new HashSet<String>();
+        for (Command command : this.commands.values()) {
+            for (String alias : command.getAliases()) {
                 if (extractNamespace(alias).equals(namespace)) {
                     aliases.add(alias);
                 }
             }
         }
 
-        Map<String, List<String>> aliasesMap = getAbbreviations(aliases); // TODO array_unique on aliases
+        Map<String, List<String>> aliasesMap = getAbbreviations(aliases);
         if (!aliasesMap.containsKey(searchName)) {
-            String message = String.format("Command \"%s\" is not defined.", name);
+        	StringBuilder message = new StringBuilder();
+            message.append(String.format("Command \"%s\" is not defined.", name));
 
-            Set<String> alternatives = new HashSet<String>(); // TODO findAlternativeCommands(searchName, abbrevs);
+            /*Set<String> alternatives = findAlternativeCommands(searchName, abbrevs);
             if (!alternatives.isEmpty()) {
-                message += "\n\nDid you mean one of these?\n    ";
-                // message += StringUtils.join("\n    ", alternatives.);
-            }
+                message.append("\n\nDid you mean one of these?\n    ");
+                message.append(StringUtils.join("\n    ", alternatives));
+            }*/
 
-            throw new Exception(message);
+            throw new IllegalArgumentException(message.toString());
         }
 
         if (aliasesMap.get(searchName).size() > 1) {
-            throw new Exception(String.format("Command \"%s\" is ambiguous (%s).", name, getAbbreviationSuggestions(aliasesMap.get(searchName))));
+            throw new IllegalArgumentException(String.format("Command \"%s\" is ambiguous (%s).", name, getAbbreviationSuggestions(aliasesMap.get(searchName))));
         }
 
         return get(aliasesMap.get(searchName).get(0));
+    }
+    
+    public Map<String, Command> all() {
+    	return all(null);
     }
 
     /**
@@ -559,33 +579,33 @@ public class Application {
      *
      * @param namespace A namespace name
      *
-     * @return An array of Command instances
+     * @return A map of Command instances
      */
-    public Map<String, Command> all(final String namespace) {
-        Map<String, Command> returnedCommands = new HashMap<String, Command>();
-        for (final Command command : commands.values()) {
+    public Map<String, Command> all(String namespace) {
+    	if (null == namespace) {
+    		return commands;
+    	}
+
+        Map<String, Command> commands = new HashMap<String, Command>();
+        for (Command command : commands.values()) {
             if (namespace.equals(extractNamespace(command.getName(), Integer.valueOf(Util.substr_count(namespace, ":") + 1)))) {
-                returnedCommands.put(command.getName(), command);
+                commands.put(command.getName(), command);
             }
         }
 
-        return returnedCommands;
-    }
-
-    public Map<String, Command> all() {
         return commands;
     }
 
     /**
      * Returns an array of possible abbreviations given a set of names.
      *
-     * @param names An array of names
+     * @param names A collection of names
      *
-     * @return An array of abbreviations
+     * @return A map of abbreviations
      */
-    static public Map<String, List<String>> getAbbreviations(final Collection<String> names) {
+    static public Map<String, List<String>> getAbbreviations(Collection<String> names) {
         Map<String, List<String>> abbrevs = new HashMap<String, List<String>>();
-        for (final String name : names) {
+        for (String name : names) {
             for (int len = name.length() - 1; len > 0; --len) {
                 String abbrev = name.substring(0, len);
                 if (!abbrevs.containsKey(abbrev)) {
@@ -597,7 +617,7 @@ public class Application {
         }
 
         // Non-abbreviations always get entered, even if they aren't unique
-        for (final String name : names) {
+        for (String name : names) {
             abbrevs.put(name, new ArrayList<String>(Arrays.asList(name)));
         }
 
@@ -612,19 +632,19 @@ public class Application {
      *
      * @return A string representing the Application
      */
-    public String asText(final String namespace, final boolean raw) throws Exception {
+    public String asText(String namespace, boolean raw) throws Exception {
         Map<String, Command> locCommands = null != namespace ? all(findNamespace(namespace)) : commands;
 
         int width = 0;
-        for (final Command command : locCommands.values()) {
+        for (Command command : locCommands.values()) {
             width = command.getName().length() > width ? command.getName().length() : width;
         }
         width += 2;
 
         if (raw) {
             List<String> messages = new ArrayList<String>();
-            for (final Map<String, Command> commandsMap : sortCommands(locCommands).values()) {
-                for (final Command command : commandsMap.values()) {
+            for (Map<String, Command> commandsMap : sortCommands(locCommands).values()) {
+                for (Command command : commandsMap.values()) {
                     messages.add(String.format("%-{width}s %s", name, command.getDescription()));
                 }
             }
@@ -715,30 +735,19 @@ public class Application {
     }*/
 
     /**
-     * Renders a catched exception.
+     * Renders a caught exception.
      *
      * @param e      An exception instance
      * @param output An OutputInterface instance
      */
-    public void renderException(final Exception e, final OutputInterface output) throws Exception {
+    public void renderException(Exception e, OutputInterface output) throws RuntimeException {
         Throwable t = (Throwable) e;
-        /*strlen = void (string) {
-            if (!void_exists("mb_strlen")) {
-                return strlen(string);
-            }
-
-            if (false == encoding = mb_detect_encoding(string)) {
-                return strlen(string);
-            }
-
-            return mb_strlen(string, encoding);
-        };*/
 
         do {
-            String title = String.format("  [%s]  ", e.getClass().toString());
-            int len = title.length();
-            int width = null != getTerminalWidth() ? getTerminalWidth() - 1 : Integer.MAX_VALUE;
-            List<String> lines = new ArrayList<String>();
+            // String title = String.format("  [%s]  ", e.getClass().toString());
+            // int len = title.length();
+            // int width = null != getTerminalWidth() ? getTerminalWidth() - 1 : Integer.MAX_VALUE;
+            // List<String> lines = new ArrayList<String>();
             /*for (preg_split("{\r?\n}", e.getMessage()) as line) {
                 for (str_split(line, width - 4) as line) {
                     lines.add(String.format("  %s  ", line));
@@ -838,8 +847,8 @@ public class Application {
      *
      * @return The command name
      */
-    protected String getCommandName(final InputInterface input) {
-        return input.getFirstArgument(/*"command"*/);
+    protected String getCommandName(InputInterface input) {
+        return input.getFirstArgument();
     }
 
     /**
@@ -847,7 +856,7 @@ public class Application {
      *
      * @return An InputDefinition instance
      */
-    protected InputDefinition getDefaultInputDefinition() throws Exception {
+    protected InputDefinition getDefaultInputDefinition() {
         return new InputDefinition(Arrays.asList((Object)
             new InputArgument("command", InputArgument.REQUIRED, "The command to execute"),
             new InputOption("--help",           "-h", InputOption.VALUE_NONE, "Display this help message."),
@@ -864,8 +873,9 @@ public class Application {
      * Gets the default commands that should always be available.
      *
      * @return An array of default Command instances
+     * @throws Exception 
      */
-    protected List<Command> getDefaultCommands() throws Exception {
+    protected List<Command> getDefaultCommands() {
         return Arrays.asList((Command) new HelpCommand(), new ListCommand());
     }
 
@@ -886,8 +896,8 @@ public class Application {
      *
      * @return
      */
-    private String getSttyColumns() {
-        /*descriptorspec = array(1 => array("pipe", "w"), 2 => array("pipe", "w"));
+    /*private String getSttyColumns() {
+        descriptorspec = array(1 => array("pipe", "w"), 2 => array("pipe", "w"));
         process = proc_open("stty -a | grep columns", descriptorspec, pipes, null, null, array("suppress_errors" => true));
         if (is_resource(process)) {
             info = stream_get_contents(pipes[1]);
@@ -896,9 +906,9 @@ public class Application {
             proc_close(process);
 
             return info;
-        }*/
+        }
         return ""; // Not implemented
-    }
+    }*/
 
     /**
      * Sorts commands in alphabetical order.
@@ -916,7 +926,7 @@ public class Application {
             }
 
             Map<String, Command> mapToInsert = new HashMap<String, Command>();
-            mapToInsert.put(name, command);
+            mapToInsert.put(command.getName(), command);
             namespacedCommands.put(key, mapToInsert);
         }
         // ksort(namespacedCommands); TODO
@@ -948,11 +958,10 @@ public class Application {
      * @return The namespace of the command
      */
     private String extractNamespace(final String name, final Integer limit) {
-        String[] arrayParts = name.split(":");
-        List<String> parts = new ArrayList<String>(Arrays.asList(arrayParts));
-        parts.remove(parts.size() - 1);
+        String[] parts = name.split(":");
+        parts = ArrayUtils.subarray(parts, 0, parts.length - 1);
 
-        return StringUtils.join(":", null == limit ? parts : Util.array_slice(parts, 0, limit));
+        return StringUtils.join(":", null == limit ? parts : ArrayUtils.<String>subarray(parts, 0, limit));
     }
 
     private String extractNamespace(final String name) {
@@ -967,14 +976,14 @@ public class Application {
      *
      * @return A sorted array of similar commands
      */
-    private Set<String> findAlternativeCommands(final String name, final List<String> abbrevs) {
-        /*callback = void(item) {
+    /*private Set<String> findAlternativeCommands(String name, List<String> abbrevs) {
+        callback = void(item) {
             return item.getName();
-        };*/
+        };
 
-        // TODO return findAlternatives(name, commands.values(), abbrevs/*, callback*/);
+        // TODO return findAlternatives(name, commands.values(), abbrevs, callback);
         return new HashSet<String>();
-    }
+    }*/
 
     /**
      * Finds alternative namespace of name
@@ -984,9 +993,9 @@ public class Application {
      *
      * @return array A sorted array of similar namespace
      */
-    private Set<String> findAlternativeNamespace(final String name, final List<String> abbrevs) {
-        return findAlternatives(name, getNamespaces(), abbrevs);
-    }
+    /*private Set<String> findAlternativeNamespace(String name, final List<String> abbrevs) {
+        return new HashSet<String>(); // findAlternatives(name, getNamespaces(), abbrevs);
+    }*/
 
     /**
      * Finds alternative of name among collection,
@@ -999,21 +1008,21 @@ public class Application {
      *
      * @return A sorted set of similar string
      */
-    private Set<String> findAlternatives(final String name, List<String> collection, List<String> abbrevs/*, callback*/) {
+    /*private Set<String> findAlternatives(final String name, List<String> collection, List<String> abbrevs, callback) {
         Map<String, Integer> alternatives = new HashMap<String, Integer>();
 
         for (final Object item : collection) {
-            /*if (null != callback) {
+            if (null != callback) {
                 item = call_user_func(callback, item);
-            }*/
+            }
 
-            // lev = levenshtein(name, item);
-            /*if (lev <= name.length() / 3 || -1 != name.indexOf(item)) {
+            lev = levenshtein(name, item);
+            if (lev <= name.length() / 3 || -1 != name.indexOf(item)) {
                 alternatives.put(item, lev);
-            }*/
+            }
         }
 
-        /*if (alternatives.isEmpty()) {
+        if (alternatives.isEmpty()) {
             for (abbrevs as key => values) {
                 lev = levenshteinarray_keys(alternatives);(name, key);
                 if (lev <= strlen(name) / 3 || false != strpos(key, name)) {
@@ -1024,9 +1033,8 @@ public class Application {
             }
         }
 
-        asort(alternatives);*/
+        asort(alternatives);
 
         return alternatives.keySet();
-    }
-
+    }*/
 }

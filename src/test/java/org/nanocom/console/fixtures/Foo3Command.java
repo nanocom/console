@@ -6,7 +6,7 @@ import org.nanocom.console.output.OutputInterface;
 
 public class Foo3Command extends Command {
 
-    public Foo3Command() throws Exception {
+    public Foo3Command() {
         super("foo3:bar");
 
         setDescription("The foo3:bar command");
@@ -17,11 +17,11 @@ public class Foo3Command extends Command {
     }
 
     @Override
-    protected int execute(InputInterface input, OutputInterface output) throws Exception {
+    protected int execute(InputInterface input, OutputInterface output) {
         try {
-            throw new Exception("First exception");
-        } catch (Exception e) {
-            throw new Exception("Second exception", e);
+            throw new RuntimeException("First exception");
+        } catch (RuntimeException e) {
+            throw new RuntimeException("Second exception", e);
         }
     }
 }

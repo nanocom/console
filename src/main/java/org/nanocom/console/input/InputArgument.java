@@ -10,6 +10,8 @@ package org.nanocom.console.input;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.nanocom.console.exception.LogicException;
+
 /**
  * Represents a command line argument.
  * 
@@ -34,27 +36,27 @@ public class InputArgument {
      *
      * @throws Exception When argument mode is not valid
      */
-    public InputArgument(final String name, Integer mode, final String description, final Object defaultValue) throws Exception {
+    public InputArgument(final String name, Integer mode, final String description, final Object defaultValue) {
         init(name, mode, description, defaultValue);
     }
     
-    public InputArgument(final String name, Integer mode, final String description) throws Exception {
+    public InputArgument(final String name, Integer mode, final String description) {
         init(name, mode, description, null);
     }
     
-    public InputArgument(final String name, Integer mode) throws Exception {
+    public InputArgument(final String name, Integer mode) {
         init(name, mode, "", null);
     }
     
-    public InputArgument(final String name) throws Exception {
+    public InputArgument(final String name) {
         init(name, null, "", null);
     }
     
-    private void init(String name, Integer mode, String description, Object defaultValue) throws Exception {
+    private void init(String name, Integer mode, String description, Object defaultValue) {
         if (null == mode) {
             mode = OPTIONAL;
         } else if (mode > 7 || mode < 1) {
-            throw new Exception("Argument mode \"" + mode + "\" is not valid.");
+            throw new IllegalArgumentException("Argument mode \"" + mode + "\" is not valid.");
         }
 
         this.name        = name;
@@ -96,18 +98,18 @@ public class InputArgument {
      *
      * @param defaultValue The default value default null
      *
-     * @throws Exception When incorrect default value is given
+     * @throws LogicException When incorrect default value is given
      */
-    public final void setDefaultValue(Object defaultValue) throws Exception {
+    public final void setDefaultValue(Object defaultValue) {
         if (REQUIRED == mode && null != defaultValue) {
-            throw new Exception("Cannot set a default value except for Parameter.OPTIONAL mode.");
+            throw new LogicException("Cannot set a default value except for Parameter.OPTIONAL mode.");
         }
 
         if (isArray()) {
             if (null == defaultValue) {
                 defaultValue = new ArrayList<Object>();
             } else if (!(defaultValue instanceof List)) {
-                throw new Exception("A default value for an array argument must be an array.");
+                throw new LogicException("A default value for an array argument must be an array.");
             }
         }
 

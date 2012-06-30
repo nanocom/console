@@ -13,7 +13,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.nanocom.console.Util;
+import org.apache.commons.lang3.StringUtils;
+import org.nanocom.console.exception.LogicException;
 
 /**
  * An InputDefinition represents a set of valid command line arguments and options.
@@ -44,7 +45,7 @@ public class InputDefinition {
         setDefinition(definition);
     }
     
-    public InputDefinition() throws Exception {
+    public InputDefinition() {
         setDefinition(new ArrayList<Object>());
     }
 
@@ -88,6 +89,7 @@ public class InputDefinition {
      * Adds an array of InputArgument objects.
      *
      * @param arguments An array of InputArgument objects
+     * @throws Exception 
      */
     public void addArguments(final List<InputArgument> arguments) {
         if (null != arguments) {
@@ -102,19 +104,19 @@ public class InputDefinition {
      *
      * @param argument An InputArgument object
      *
-     * @throws Exception When incorrect argument is given
+     * @throws LogicException When incorrect argument is given
      */
-    public void addArgument(final InputArgument argument) throws Exception {
+    public void addArgument(final InputArgument argument) throws LogicException {
         if (arguments.containsKey(argument.getName())) {
-            throw new Exception(String.format("An argument with name \"%s\" already exist.", argument.getName()));
+            throw new LogicException(String.format("An argument with name \"%s\" already exist.", argument.getName()));
         }
 
         if (hasAnArrayArgument) {
-            throw new Exception("Cannot add an argument after an array argument.");
+            throw new LogicException("Cannot add an argument after an array argument.");
         }
 
         if (argument.isRequired() && hasOptional) {
-            throw new Exception("Cannot add a required argument after an optional one.");
+            throw new LogicException("Cannot add a required argument after an optional one.");
         }
 
         if (argument.isArray()) {
@@ -158,7 +160,7 @@ public class InputDefinition {
      */
     public InputArgument getArgument(final Integer position) throws IllegalArgumentException {
         if (!hasArgument(position)) {
-            throw new IllegalArgumentException(String.format("The \"%s\" argument does not exist.", position);
+            throw new IllegalArgumentException(String.format("The \"%s\" argument does not exist.", position));
         }
 
         /* 
@@ -262,16 +264,16 @@ public class InputDefinition {
      *
      * @param option An InputOption object
      *
-     * @throws Exception When option given already exist
+     * @throws LogicException When option given already exists
      */
-    public void addOption(final InputOption option) throws Exception {
+    public void addOption(final InputOption option) throws LogicException {
         if (options.containsKey(option.getName()) && !option.equals(options.get(option.getName()))) {
-            throw new Exception(String.format("An option named \"%s\" already exist.", option.getName()));
+            throw new LogicException(String.format("An option named \"%s\" already exist.", option.getName()));
         } else if (
                 shortcuts.containsKey(option.getShortcut())
                 && !option.equals(options.get(shortcuts.get(option.getShortcut())))
         ) {
-            throw new Exception(String.format("An option with shortcut \"%s\" already exist.", option.getShortcut()));
+            throw new LogicException(String.format("An option with shortcut \"%s\" already exist.", option.getShortcut()));
         }
 
         options.put(option.getName(), option);
@@ -284,11 +286,14 @@ public class InputDefinition {
      * Returns an InputOption by name.
      *
      * @param name The InputOption name
+     * 
      * @return An InputOption object
+     * 
+     * @throws IllegalArgumentException When option given doesn't exist
      */
-    public InputOption getOption(final String name) throws Exception {
+    public InputOption getOption(final String name) throws IllegalArgumentException {
         if (!hasOption(name)) {
-            throw new Exception("The \"--" + name + "\" option does not exist.");
+            throw new IllegalArgumentException("The \"--" + name + "\" option does not exist.");
         }
 
         return options.get(name);
@@ -330,7 +335,7 @@ public class InputDefinition {
      * 
      * @return An InputOption object
      */
-    public InputOption getOptionForShortcut(final String shortcut) throws Exception {
+    public InputOption getOptionForShortcut(final String shortcut) {
         return getOption(shortcutToName(shortcut));
     }
 
@@ -406,7 +411,8 @@ public class InputDefinition {
      *
      * @return A string representing the InputDefinition
      */
-    public String asText() {
+    @SuppressWarnings("unchecked")
+	public String asText() {
         // Find the largest option or argument name
         int max = 0;
         for (InputOption option : options.values()) {
@@ -431,7 +437,7 @@ public class InputDefinition {
                 if (null != argument.getDefaultValue()
                         && (
                                 !(argument.getDefaultValue() instanceof ArrayList)
-                                || ((ArrayList)argument.getDefaultValue()).isEmpty()
+                                || ((ArrayList<Object>)argument.getDefaultValue()).isEmpty()
                         )
                 ) {
                     defaultValue = "<comment> (default: " + formatDefaultValue(argument.getDefaultValue()) + ")</comment>";
@@ -457,7 +463,7 @@ public class InputDefinition {
                         && null != option.getDefaultValue()
                         && (
                                 !(option.getDefaultValue() instanceof ArrayList)
-                                || ((ArrayList)option.getDefaultValue()).isEmpty()
+                                || ((ArrayList<Object>)option.getDefaultValue()).isEmpty()
                         )
                 ) {
                     defaultValue = "<comment> (default: " + formatDefaultValue(option.getDefaultValue()) + ")</comment>";
@@ -470,7 +476,7 @@ public class InputDefinition {
                 String replaceBy = String.format("%1$-" + max + 2 + "s", ""); // PHP's str_pad (right) equivalent
                 String description = option.getDescription().replaceAll("\n", "\n" + replaceBy);
 
-                int optionMax = max - option.getName().length() - 2;
+                // int optionMax = max - option.getName().length() - 2;
                 sb.append(" <info>--" + option.getName() + "</info> ");
                 sb.append(null != option.getShortcut() ? "(-" + option.getShortcut() + ") " : "");
                 sb.append(description);
@@ -489,15 +495,15 @@ public class InputDefinition {
      *
      * @return string|DOMDocument An XML string representing the InputDefinition
      */
-    public String asXml(final boolean asDom) throws Exception {
+    /*public String asXml(final boolean asDom) throws Exception {
         throw new Exception("Not implemented yet.");
-    }
+    }*/
 
     @SuppressWarnings("unchecked")
-    private String formatDefaultValue(final Object defaultValue) {
-        if (defaultValue instanceof ArrayList) {
+	private String formatDefaultValue(final Object defaultValue) {
+        if (defaultValue instanceof List<?>) {
             return String.format("array('%s')",
-                    Util.implode("', '", (String[]) ((List<String>) defaultValue).toArray()));
+                    StringUtils.join((String[]) ((List<String>) defaultValue).toArray()), "', '");
         }
 
         //TODO implement this part

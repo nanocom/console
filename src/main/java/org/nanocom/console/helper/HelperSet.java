@@ -52,7 +52,7 @@ public class HelperSet {
      * @param helper The helper instance
      * @param alias  An alias
      */
-    public final void set(HelperInterface helper, final String alias) {
+    public void set(HelperInterface helper, String alias) {
         helpers.put(helper.getName(), helper);
         if (null != alias) {
             helpers.put(alias, helper);
@@ -61,7 +61,7 @@ public class HelperSet {
         helper.setHelperSet(this);
     }
 
-    public final void set(HelperInterface helper) {
+    public void set(HelperInterface helper) {
         set(helper, null);
     }
 
@@ -72,7 +72,7 @@ public class HelperSet {
      *
      * @return True if the helper is defined, false otherwise
      */
-    public boolean has(final String name) {
+    public boolean has(String name) {
         return helpers.containsKey(name);
     }
 
@@ -83,11 +83,11 @@ public class HelperSet {
      *
      * @return The helper instance
      *
-     * @throws Exception if the helper is not defined
+     * @throws IllegalArgumentException if the helper is not defined
      */
-    public HelperInterface get(final String name) throws Exception {
+    public HelperInterface get(String name) {
         if (!has(name)) {
-            throw new Exception("The helper \"" + name + "\" is not defined.");
+            throw new IllegalArgumentException(String.format("The helper \"%s\" is not defined.", name));
         }
 
         return helpers.get(name);

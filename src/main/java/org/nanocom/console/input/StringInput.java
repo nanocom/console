@@ -20,14 +20,15 @@ import java.util.ArrayList;
  */
 public class StringInput extends ArgvInput {
 
-    private final static String REGEX_STRING = "([^ ]+?)(?: |(?<!\\\\)\"|(?<!\\\\)\'|$)";
-    private final static String REGEX_QUOTED_STRING = "(?:\"([^\"\\\\]*(?:\\\\.[^\"\\\\]*)*)\"|\\'([^\'\\\\]*(?:\\\\.[^\'\\\\]*)*)\')";
+    // private final static String REGEX_STRING = "([^ ]+?)(?: |(?<!\\\\)\"|(?<!\\\\)\'|$)";
+    // private final static String REGEX_QUOTED_STRING = "(?:\"([^\"\\\\]*(?:\\\\.[^\"\\\\]*)*)\"|\\'([^\'\\\\]*(?:\\\\.[^\'\\\\]*)*)\')";
 
     /**
      * @param input An array of parameters from the CLI (in the argv format)
      * @param definition An InputDefinition instance
+     * @throws Exception 
      */
-    public StringInput(final String input, final InputDefinition definition) {
+    public StringInput(final String input, final InputDefinition definition) throws Exception {
         super(new String[0], definition);
 
         setTokens(tokenize(input));
@@ -49,8 +50,8 @@ public class StringInput extends ArgvInput {
         input.replaceAll("(\r\n|\r|\n|\t)", " ");
 
         tokens = new ArrayList<String>();
-        int length = input.length();
-        int cursor = 0;
+        // int length = input.length();
+        // int cursor = 0;
         // TODO Implement this part
         /* while (cursor < length) {
             if (preg_match('/\s+/A', $input, $match, null, $cursor)) {

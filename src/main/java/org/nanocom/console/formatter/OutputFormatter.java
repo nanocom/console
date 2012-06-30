@@ -21,7 +21,7 @@ public final class OutputFormatter implements OutputFormatterInterface {
     /**
      * The pattern to phrase the format.
      */
-    private static final String FORMAT_PATTERN = "#<([a-z][a-z0-9_=;-]+)>(.*?)</\\1?>#is";
+    // private static final String FORMAT_PATTERN = "#<([a-z][a-z0-9_=;-]+)>(.*?)</\\1?>#is";
 
     private Boolean decorated;
     private Map<String, OutputFormatterStyleInterface> styles = new HashMap<String, OutputFormatterStyleInterface>();
@@ -32,19 +32,19 @@ public final class OutputFormatter implements OutputFormatterInterface {
      * @param decorated  Whether this formatter should actually decorate strings
      * @param styles     Array of "name => FormatterStyle" instances
      */
-    public OutputFormatter(final boolean decorated, Map<String, OutputFormatterStyleInterface> styles) throws Exception  {
+    public OutputFormatter(final boolean decorated, Map<String, OutputFormatterStyleInterface> styles)  {
         init(decorated, styles);
     }
 
-    public OutputFormatter(final boolean decorated) throws Exception  {
+    public OutputFormatter(final boolean decorated)  {
         init(decorated, this.styles);
     }
 
-    public OutputFormatter() throws Exception  {
+    public OutputFormatter()  {
         init(false, this.styles);
     }
 
-    private void init(final boolean decorated, Map<String, OutputFormatterStyleInterface> styles) throws Exception {
+    private void init(final boolean decorated, Map<String, OutputFormatterStyleInterface> styles) {
         this.decorated = decorated;
 
         setStyle("error",    new OutputFormatterStyle("white", "red"));
@@ -107,12 +107,12 @@ public final class OutputFormatter implements OutputFormatterInterface {
      *
      * @return
      *
-     * @throws Exception When style isn't defined
+     * @throws IllegalArgumentException When style isn't defined
      */
     @Override
-    public OutputFormatterStyleInterface getStyle(final String name) throws Exception {
+    public OutputFormatterStyleInterface getStyle(String name) {
         if (!this.hasStyle(name)) {
-            throw new Exception("Undefined style: " + name);
+            throw new IllegalArgumentException("Undefined style: " + name);
         }
 
         return styles.get(name);
@@ -126,7 +126,7 @@ public final class OutputFormatter implements OutputFormatterInterface {
      * @return The styled message
      */
     @Override
-    public String format(final String message) {
+    public String format(String message) {
         // return preg_replace_callback(FORMAT_PATTERN, array(this, 'replaceStyle'), message);
         // TODO
         return message;
@@ -139,7 +139,7 @@ public final class OutputFormatter implements OutputFormatterInterface {
      *
      * @return The replaced style
      */
-    private String replaceStyle(final String match) {
+    /*private String replaceStyle(final String match) {
         if (!isDecorated()) {
             return String.valueOf(match.charAt(2));
         }
@@ -157,7 +157,7 @@ public final class OutputFormatter implements OutputFormatterInterface {
         }
 
         return locStyle.apply(format(String.valueOf(match.charAt(2))));
-    }
+    }*/
 
     /**
      * Tries to create new style instance from string.
@@ -166,10 +166,9 @@ public final class OutputFormatter implements OutputFormatterInterface {
      *
      * @return Null if string is not format string
      */
-    private OutputFormatterStyle createStyleFromString(final String string) {
+    /*private OutputFormatterStyle createStyleFromString(final String string) {
         // TODO
         return null;
-        /*
         if (!preg_match_all('/([^=]+)=([^;]+)(;|)/', strtolower(string), matches, PREG_SET_ORDER)) {
             return false; // return null;
         }
@@ -187,7 +186,6 @@ public final class OutputFormatter implements OutputFormatterInterface {
             }
         }
 
-        return style;*/
-    }
-
+        return style;
+    }*/
 }

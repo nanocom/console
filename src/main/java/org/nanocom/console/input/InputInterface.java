@@ -34,11 +34,11 @@ public interface InputInterface {
      *
      * @return True if the value is contained in the raw parameters
      */
-    boolean hasParameterOption(final String value);
+    boolean hasParameterOption(String value);
 
-    boolean hasParameterOption(final List<String> values);
+    boolean hasParameterOption(List<String> values);
 
-    boolean hasParameterOption(final Map<String, String> values);
+    boolean hasParameterOption(Map<String, String> values);
 
     /**
      * Returns the value of a raw option (not parsed).
@@ -51,20 +51,20 @@ public interface InputInterface {
      *
      * @return The option value
      */
-    Object getParameterOption(final String value, final Object defaultValue);
+    Object getParameterOption(String value, Object defaultValue);
 
-    Object getParameterOption(final List<String> values, final Object defaultValue);
+    Object getParameterOption(List<String> values, Object defaultValue);
 
-    Object getParameterOption(final String value);
+    Object getParameterOption(String value);
 
-    Object getParameterOption(final List<String> values);
+    Object getParameterOption(List<String> values);
 
     /**
      * Binds the current Input instance with the given arguments and options.
      *
      * @param definition A InputDefinition instance
      */
-    void bind(InputDefinition definition) throws Exception;
+    void bind(InputDefinition definition);
 
     /**
      * Validates if arguments given are correct.
@@ -87,7 +87,7 @@ public interface InputInterface {
      *
      * @return
      */
-    Object getArgument(final String name) throws Exception;
+    Object getArgument(String name);
 
     /**
      * Sets an argument value by name.
@@ -97,7 +97,7 @@ public interface InputInterface {
      *
      * @throws IllegalArgumentException When argument given doesn't exist
      */
-    void setArgument(final String name, final String value) throws IllegalArgumentException;
+    void setArgument(String name, String value) throws IllegalArgumentException;
 
     /**
      * Returns true if an InputArgument object exists by name.
@@ -106,7 +106,7 @@ public interface InputInterface {
      *
      * @return True if the InputArgument object exists, false otherwise
      */
-    boolean hasArgument(final String name);
+    boolean hasArgument(String name);
     
     /**
      * Returns true if an InputArgument object exists by position.
@@ -115,7 +115,7 @@ public interface InputInterface {
      *
      * @return True if the InputArgument object exists, false otherwise
      */
-    boolean hasArgument(final int position);
+    boolean hasArgument(int position);
 
     /**
      * Returns all the given options merged with the default values.
@@ -131,7 +131,7 @@ public interface InputInterface {
      *
      * @return mixed
      */
-    Object getOption(final String name) throws Exception;
+    Object getOption(String name);
 
     /**
      * Sets an option value by name.
@@ -141,7 +141,7 @@ public interface InputInterface {
      *
      * @throws IllegalArgumentException When option given doesn't exist
      */
-    void setOption(final String name, final String value) throws IllegalArgumentException;
+    void setOption(String name, String value) throws IllegalArgumentException;
 
     /**
      * Returns true if an InputOption object exists by name.
@@ -150,7 +150,7 @@ public interface InputInterface {
      *
      * @return True if the InputOption object exists, false otherwise
      */
-    boolean hasOption(final String name);
+    boolean hasOption(String name);
 
     /**
      * Is this input means interactive?
@@ -164,6 +164,6 @@ public interface InputInterface {
      *
      * @param interactive If the input should be interactive
      */
-    void setInteractive(final boolean interactive);
+    void setInteractive(boolean interactive);
 
 }

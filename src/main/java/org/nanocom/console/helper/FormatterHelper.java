@@ -10,7 +10,7 @@ package org.nanocom.console.helper;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.nanocom.console.Util;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * The Formatter class provides helpers to format messages.
@@ -66,7 +66,7 @@ public class FormatterHelper extends Helper {
             message = String.format("<%s>%s</%s>", style, message, style);
         }
 
-        return Util.implode("\n", (String[]) messages.toArray());
+        return StringUtils.join((String[]) messages.toArray(), "\n");
     }
 
     public String formatBlock(final String message, final String style, final boolean large) {

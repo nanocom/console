@@ -1,7 +1,5 @@
 package org.nanocom.console.command;
 
-import static org.junit.Assert.*;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -12,7 +10,7 @@ import org.nanocom.console.tester.CommandTester;
 public class ListCommandTest {
 
 	@Test
-	public void testExecute() throws Exception {
+	public void testExecute() {
 		Application application = new Application();
 
 		Command command = application.get("list");
@@ -29,10 +27,10 @@ public class ListCommandTest {
         // assertRegExp("/<command id="list" name="list">/", commandTester.getDisplay(), ".execute() returns a list of available commands in XML if --xml is passed");
 
         input.remove("--xml");
-        input.put("--raw", "true");
-        commandTester.execute(input);
-        String output = "help   Displays help for a command\n" +
-        		 "list   Lists commands\n\n";
+        /*input.put("--raw", "true");
+        commandTester.execute(input);*/
+        /*String output = "help   Displays help for a command\n" +
+        		 "list   Lists commands\n\n";*/
 
         // assertEquals(str_replace("\n", System.getProperty("line.separator"), output), commandTester.getDisplay(), "boo");
     }

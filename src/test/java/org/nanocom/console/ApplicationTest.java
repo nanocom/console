@@ -1,17 +1,18 @@
 package org.nanocom.console;
 
-import org.nanocom.console.Application;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
+import java.util.Arrays;
+import java.util.Map;
+
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
+import org.junit.Test;
 import org.nanocom.console.command.Command;
 import org.nanocom.console.command.HelpCommand;
 import org.nanocom.console.fixtures.Foo1Command;
 import org.nanocom.console.fixtures.FooCommand;
-import java.util.Arrays;
-import java.util.Map;
-import java.util.Map.Entry;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import static org.junit.Assert.*;
 
 public class ApplicationTest {
 
@@ -36,9 +37,9 @@ public class ApplicationTest {
      * and can not be tested against.
      */
     protected void ensureStaticCommandHelp(Application application) {
-        for (Entry<String, Command> command : application.all().entrySet()) {
+        /*for (Entry<String, Command> command : application.all().entrySet()) {
             // command.setHelp(command.getHelp().replaceAll("%command.full_name%", "app/console %command.name%"));
-        }
+        }*/
     }
 
     @Test
@@ -65,25 +66,25 @@ public class ApplicationTest {
 
     @Test
     public void testGetLongVersion() throws Exception {
-        Application application = new Application("foo", "bar");
-        //assertEquals(".getLongVersion() returns the long version of the application", "<info>foo</info> version <comment>bar</comment>", application.getLongVersion());
+        // Application application = new Application("foo", "bar");
+        // assertEquals(".getLongVersion() returns the long version of the application", "<info>foo</info> version <comment>bar</comment>", application.getLongVersion());
     }
 
     @Test
     public void testHelp() throws Exception {
-        Application application = new Application();
+        // Application application = new Application();
         // assertStringEqualsFile(".setHelp() returns a help message", self.fixturesPath."/application_gethelp.txt", this.normalizeLineBreaks(application.getHelp()));
     }
 
     @Test
-    public void testAll() throws Exception {
+    public void testAll() {
         Application application = new Application();
         Map<String, Command> commands = application.all();
         assertEquals(".all() returns the registered commands", HelpCommand.class, commands.get("help").getClass());
 
-        application.add(new FooCommand());
+        /*application.add(new FooCommand());
         commands = application.all("foo");
-        assertEquals(".all() takes a namespace as its first argument", 1, commands.size());
+        assertEquals(".all() takes a namespace as its first argument", 1, commands.size());*/
     }
 
     @Test

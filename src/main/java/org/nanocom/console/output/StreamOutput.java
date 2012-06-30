@@ -35,11 +35,11 @@ public class StreamOutput extends Output {
     * @param decorated Whether to decorate messages or not (null for auto-guessing)
     * @param formatter Output formatter instance
     *
-    * @throws Exception When first argument is not a real stream
+    * @throws IllegalArgumentException When first argument is not a real stream
     */
-    public StreamOutput(final PrintStream stream, final int verbosity, Boolean decorated, final OutputFormatterInterface formatter) throws Exception {
+    public StreamOutput(PrintStream stream, int verbosity, Boolean decorated, OutputFormatterInterface formatter) {
         if (null == stream) {
-            throw new Exception("The stream cannot be null.");
+            throw new IllegalArgumentException("The stream cannot be null.");
         }
 
         this.stream = stream;
@@ -51,11 +51,11 @@ public class StreamOutput extends Output {
         init(verbosity, decorated, formatter);
     }
 
-    public StreamOutput(final PrintStream stream) throws Exception {
+    public StreamOutput(PrintStream stream) {
         this(stream, OutputInterface.VERBOSITY_NORMAL, null, null);
     }
 
-    public StreamOutput() throws Exception {
+    public StreamOutput() {
         super();
     }
 
@@ -73,11 +73,9 @@ public class StreamOutput extends Output {
      *
      * @param message A message to write to the output
      * @param newline Whether to add a newline or not
-     *
-     * @throws Exception When unable to write output (should never happen)
      */
     @Override
-    public void doWrite(final String message, final boolean newline) throws Exception {
+    public void doWrite(String message, boolean newline) {
         if (newline) {
             stream.println(message);
         } else {

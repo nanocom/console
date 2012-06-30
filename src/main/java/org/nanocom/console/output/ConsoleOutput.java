@@ -21,26 +21,26 @@ public class ConsoleOutput extends StreamOutput implements ConsoleOutputInterfac
      * @param decorated Whether to decorate messages or not (null for auto-guessing)
      * @param formatter Output formatter instance
      */
-    public ConsoleOutput(final int verbosity, final Boolean decorated, final OutputFormatterInterface formatter) throws Exception {
+    public ConsoleOutput(int verbosity, Boolean decorated, OutputFormatterInterface formatter) {
         super(System.out, verbosity, decorated, formatter);
 
         stderr = new StreamOutput(System.err, verbosity, decorated, formatter);
     }
  
-    public ConsoleOutput(final int verbosity, final Boolean decorated) throws Exception {
+    public ConsoleOutput(int verbosity, Boolean decorated) {
         this(verbosity, decorated, null);
     }
 
-    public ConsoleOutput(final int verbosity) throws Exception {
+    public ConsoleOutput(int verbosity) {
         this(verbosity, null);
     }
  
-    public ConsoleOutput() throws Exception {
+    public ConsoleOutput() {
         this(OutputInterface.VERBOSITY_NORMAL);
     }
 
     @Override
-    public void setDecorated(final boolean decorated) {
+    public void setDecorated(boolean decorated) {
         super.setDecorated(decorated);
         stderr.setDecorated(decorated);
     }
@@ -52,7 +52,7 @@ public class ConsoleOutput extends StreamOutput implements ConsoleOutputInterfac
     }
 
     @Override
-    public void setVerbosity(final int level) {
+    public void setVerbosity(int level) {
         super.setVerbosity(level);
         stderr.setVerbosity(level);
     }

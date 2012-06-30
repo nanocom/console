@@ -118,8 +118,8 @@ public class Shell {
      * @param The last segment of the entered text
      * @return Boolean|array A list of guessed strings or true
      */
-    private void autocompleter(final String text) {
-        /*info = readline_info();
+    /*private void autocompleter(final String text) {
+        info = readline_info();
         text = substr(info["line_buffer"], 0, info["end"]);
 
         if (info["point"] != info["end"]) {
@@ -143,8 +143,8 @@ public class Shell {
             list[] = "--".option.getName();
         }
 
-        return list; */
-    }
+        return list;
+    }*/
 
     /**
      * Reads a single line from standard input.

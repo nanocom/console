@@ -20,7 +20,7 @@ import org.apache.commons.lang3.StringUtils;
  * 
  * @author Arnaud Kleinpeter <arnaud.kleinpeter at gmail dot com>
  */
-public final class OutputFormatterStyle implements OutputFormatterStyleInterface {
+public class OutputFormatterStyle implements OutputFormatterStyleInterface {
 
     private static Map<String, Integer> availableForegroundColors = getAvailableForegroundColors();
     private static Map<String, Integer> availableBackgroundColors = getAvailableBackgroundColors();
@@ -76,23 +76,23 @@ public final class OutputFormatterStyle implements OutputFormatterStyleInterface
      * @param background style background color name
      * @param options style options
      */
-    public OutputFormatterStyle(final String foreground, final String background, final List<String> options) throws Exception {
+    public OutputFormatterStyle(String foreground, String background, List<String> options) {
         init(foreground, background, options);
     }
 
-    public OutputFormatterStyle(final String foreground, final String background) throws Exception {
+    public OutputFormatterStyle(String foreground, String background) {
         init(foreground, background, new ArrayList<String>());
     }
 
-    public OutputFormatterStyle(final String foreground) throws Exception {
+    public OutputFormatterStyle(String foreground) {
         init(foreground, null, new ArrayList<String>());
     }
 
-    public OutputFormatterStyle() throws Exception {
+    public OutputFormatterStyle() {
         init(null, null, new ArrayList<String>());
     }
 
-    private void init(final String foreground, final String background, final List<String> options) throws Exception {
+    private void init(String foreground, String background, List<String> options) {
         if (null != foreground) {
             setForeground(foreground);
         }
@@ -112,7 +112,7 @@ public final class OutputFormatterStyle implements OutputFormatterStyleInterface
      * @throws Exception When the color name isn't defined
      */
     @Override
-    public void setForeground(final String color) throws Exception {
+    public void setForeground(String color) {
         if (null == color) {
             this.foreground = null;
 
@@ -123,7 +123,7 @@ public final class OutputFormatterStyle implements OutputFormatterStyleInterface
             Set<String> foregroundNames = availableForegroundColors.keySet();
             List<String> foregroundNamesList = new ArrayList<String>();
             foregroundNamesList.addAll(foregroundNames);
-            throw new Exception(String.format(
+            throw new IllegalArgumentException(String.format(
                 "Invalid foreground color specified: \"%s\". Expected one of (%s)",
                 color,
                 StringUtils.join((String[]) foregroundNamesList.toArray(), ", ")
@@ -138,10 +138,10 @@ public final class OutputFormatterStyle implements OutputFormatterStyleInterface
      *
      * @param color  color name
      *
-     * @throws Exception When the color name isn't defined
+     * @throws IllegalArgumentException When the color name isn't defined
      */
     @Override
-    public void setBackground(final String color) throws Exception {
+    public void setBackground(String color) {
         if (null == color) {
             this.background = null;
 
@@ -152,7 +152,7 @@ public final class OutputFormatterStyle implements OutputFormatterStyleInterface
             Set<String> backgroundNames = availableBackgroundColors.keySet();
             List<String> backgroundNamesList = new ArrayList<String>();
             backgroundNamesList.addAll(backgroundNames);
-            throw new Exception(String.format(
+            throw new IllegalArgumentException(String.format(
                 "Invalid background color specified: \"%s\". Expected one of (%s)",
                 color,
                 StringUtils.join((String[]) backgroundNamesList.toArray(), ", ")
@@ -167,15 +167,15 @@ public final class OutputFormatterStyle implements OutputFormatterStyleInterface
      *
      * @param option option name
      *
-     * @throws Exception When the option name isn't defined
+     * @throws IllegalArgumentException When the option name isn't defined
      */
     @Override
-    public void setOption(final String option) throws Exception {
+    public void setOption(String option) {
         if (!availableOptions.containsKey(option)) {
             Set<String> optionNames = availableOptions.keySet();
             List<String> optionNamesList = new ArrayList<String>();
             optionNamesList.addAll(optionNames);
-            throw new Exception(String.format(
+            throw new IllegalArgumentException(String.format(
                 "Invalid option specified: \"%s\". Expected one of (%s)",
                 option,
                 StringUtils.join((String[]) optionNamesList.toArray(), ", ")
@@ -192,15 +192,15 @@ public final class OutputFormatterStyle implements OutputFormatterStyleInterface
      *
      * @param option option name
      *
-     * @throws Exception When the option name isn't defined
+     * @throws IllegalArgumentException When the option name isn't defined
      */
     @Override
-    public void unsetOption(final String option) throws Exception {
+    public void unsetOption(String option) {
         if (!availableOptions.containsKey(option)) {
             Set<String> optionNames = availableOptions.keySet();
             List<String> optionNamesList = new ArrayList<String>();
             optionNamesList.addAll(optionNames);
-            throw new Exception(String.format(
+            throw new IllegalArgumentException(String.format(
                 "Invalid option specified: \"%s\". Expected one of (%s)",
                 option,
                 StringUtils.join((String[]) optionNamesList.toArray(), ", ")
@@ -219,7 +219,7 @@ public final class OutputFormatterStyle implements OutputFormatterStyleInterface
      * @param option
      */
     @Override
-    public void setOptions(final List<String> options) throws Exception {
+    public void setOptions(List<String> options) {
         this.options = new ArrayList<Integer>();
 
         for (String option : options) {
@@ -235,7 +235,7 @@ public final class OutputFormatterStyle implements OutputFormatterStyleInterface
      * @return
      */
     @Override
-    public String apply(final String text) {
+    public String apply(String text) {
         List<String> codes = new ArrayList<String>();
 
         if (null != foreground) {

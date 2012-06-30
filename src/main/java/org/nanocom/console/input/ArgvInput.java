@@ -31,25 +31,25 @@ public class ArgvInput extends Input {
     protected ArrayList<String> tokens;
     private LinkedList<String> parsed;
 
-    /**
-     * @param argv An array of parameters from the CLI (in the argv format)
-     * @param definition A InputDefinition instance
-     */
-    public ArgvInput(String[] argv, final InputDefinition definition) {
+    public ArgvInput() {
         tokens = new ArrayList<String>();
-        tokens.addAll(Arrays.asList(argv));
-        init(definition);
+        init(null);
     }
-
+    
     public ArgvInput(String[] argv) {
         tokens = new ArrayList<String>();
         tokens.addAll(Arrays.asList(argv));
         init(null);
     }
 
-    public ArgvInput() {
+    /**
+     * @param argv       An array of parameters from the CLI (in the argv format)
+     * @param definition A InputDefinition instance
+     */
+    public ArgvInput(String[] argv, InputDefinition definition) {
         tokens = new ArrayList<String>();
-        init(null);
+        tokens.addAll(Arrays.asList(argv));
+        super.init(definition);
     }
 
     protected void setTokens(String[] tokens) {
@@ -131,7 +131,7 @@ public class ArgvInput extends Input {
      *
      * @param token The current token
      */
-    private void parseLongOption(final String token) throws Exception
+    private void parseLongOption(final String token)
     {
         String name = token.substring(2);
 

@@ -34,23 +34,23 @@ public abstract class Output implements OutputInterface {
      * @param decorated Whether to decorate messages or not (null for auto-guessing)
      * @param formatter Output formatter instance
      */
-    public Output(final Integer verbosity, final boolean decorated, final OutputFormatterInterface formatter) throws Exception {
+    public Output(Integer verbosity, boolean decorated, OutputFormatterInterface formatter) {
         init(verbosity, decorated, formatter);
     }
 
-    public Output(final Integer verbosity, final boolean decorated) throws Exception {
+    public Output(Integer verbosity, boolean decorated) {
         this(verbosity, decorated, null);
     }
 
-    public Output(final Integer verbosity) throws Exception {
+    public Output(Integer verbosity) {
         this(verbosity, false);
     }
 
-    public Output() throws Exception {
+    public Output() {
         this(OutputInterface.VERBOSITY_NORMAL);
     }
 
-    protected final void init(final Integer verbosity, final boolean decorated, final OutputFormatterInterface formatter) throws Exception {
+    protected void init(Integer verbosity, boolean decorated, OutputFormatterInterface formatter) {
         this.verbosity = null == verbosity ? OutputInterface.VERBOSITY_NORMAL : verbosity;
         this.formatter = null == formatter ? new OutputFormatter() : formatter;
         this.formatter.setDecorated(decorated);
@@ -82,7 +82,7 @@ public abstract class Output implements OutputInterface {
      * @param decorated Whether to decorate the messages or not
      */
     @Override
-    public void setDecorated(final boolean decorated) {
+    public void setDecorated(boolean decorated) {
         formatter.setDecorated(decorated);
     }
 
@@ -123,22 +123,22 @@ public abstract class Output implements OutputInterface {
      * @param type     The type of output
      */
     @Override
-    public void writeln(List<String> messages, int type) throws Exception {
+    public void writeln(List<String> messages, int type) {
         write(messages, true, type);
     }
 
     @Override
-    public void writeln(String message, int type) throws Exception {
+    public void writeln(String message, int type) {
         write(message, true, type);
     }
 
     @Override
-    public void writeln(List<String> messages) throws Exception {
+    public void writeln(List<String> messages) {
         write(messages, true, 0);
     }
 
     @Override
-    public void writeln(String message) throws Exception {
+    public void writeln(String message) {
         write(message, true, 0);
     }
 
@@ -152,7 +152,7 @@ public abstract class Output implements OutputInterface {
      * @throws Exception When unknown output type is given
      */
     @Override
-    public void write(final List<String> messages, final boolean newline, final int type) throws Exception {
+    public void write(List<String> messages, boolean newline, int type) {
         if (VERBOSITY_QUIET == verbosity) {
             return;
         }
@@ -168,7 +168,7 @@ public abstract class Output implements OutputInterface {
                     message = /*strip_tags(*/formatter.format(message)/*)*/; // TODO
                     break;
                 default:
-                    throw new Exception("Unknown output type given (" + type + ")");
+                    throw new IllegalArgumentException(String.format("Unknown output type given (%s)", type));
             }
 
             doWrite(message, newline);
@@ -176,27 +176,27 @@ public abstract class Output implements OutputInterface {
     }
 
     @Override
-    public void write(final String message, final boolean newline, final int type) throws Exception {
+    public void write(String message, boolean newline, int type) {
         write(Arrays.asList(message), newline, type);
     }
 
     @Override
-    public void write(final List<String> messages, final boolean newline) throws Exception {
+    public void write(List<String> messages, boolean newline) {
         write(messages, newline, 0);
     }
 
     @Override
-    public void write(final String message, final boolean newline) throws Exception {
+    public void write(String message, boolean newline) {
         write(message, newline, 0);
     }
 
     @Override
-    public void write(final List<String> messages) throws Exception {
+    public void write(List<String> messages) {
         write(messages, false, 0);
     }
 
     @Override
-    public void write(final String message) throws Exception {
+    public void write(String message) {
         write(message, false, 0);
     }
 
@@ -206,6 +206,6 @@ public abstract class Output implements OutputInterface {
      * @param message A message to write to the output
      * @param newline Whether to add a newline or not
      */
-    abstract public void doWrite(final String message, final boolean newline) throws Exception;
+    abstract public void doWrite(String message, boolean newline);
 
 }

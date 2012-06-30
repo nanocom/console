@@ -17,19 +17,19 @@ public class TestCommand extends Command {
     }
 
     @Override
-    protected void configure() throws Exception {
+    protected void configure() {
         
     }
 
     @Override
-    protected int execute(InputInterface input, OutputInterface output) throws Exception {
+    protected int execute(InputInterface input, OutputInterface output) {
         output.writeln("execute called");
 
         return 1;
     }
 
     @Override
-    protected void interact(InputInterface input, OutputInterface output) throws Exception {
+    protected void interact(InputInterface input, OutputInterface output) {
         output.writeln("interact called");
     }
 

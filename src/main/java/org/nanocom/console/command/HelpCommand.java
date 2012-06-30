@@ -23,11 +23,11 @@ public class HelpCommand extends Command {
 
     private Command command;
 
-    public HelpCommand(final String name) throws Exception {
+    public HelpCommand(String name) {
         super(name);
     }
 
-    public HelpCommand() throws Exception {
+    public HelpCommand() {
         super("help");
     }
 
@@ -66,15 +66,15 @@ public class HelpCommand extends Command {
      * {@inheritdoc}
      */
     @Override
-    protected int execute(InputInterface input, OutputInterface output) throws Exception {
+    protected int execute(InputInterface input, OutputInterface output) {
         if (null == command) {
             command = getApplication().get((String) input.getArgument("command_name"));
         }
 
         if (null != input.getOption("xml")) {
-            output.writeln(Arrays.asList(command.asXml(false)), OutputInterface.OUTPUT_RAW);
+            // output.writeln(Arrays.asList(command.asXml(false)), OutputInterface.OUTPUT_RAW);
         } else {
-            output.writeln(Arrays.asList(command.asText()), OutputInterface.OUTPUT_NORMAL);
+            // output.writeln(Arrays.asList(command.asText()), OutputInterface.OUTPUT_NORMAL);
         }
 
         command = null;

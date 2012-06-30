@@ -12,6 +12,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.nanocom.console.Application;
+import org.nanocom.console.exception.LogicException;
 import org.nanocom.console.helper.HelperSet;
 import org.nanocom.console.input.InputArgument;
 import org.nanocom.console.input.InputDefinition;
@@ -41,17 +42,17 @@ public class Command extends Executable {
     /**
      * @param name The name of the command
      *
-     * @throws Exception When the command name is empty
+     * @throws LogicException When the command name is empty
      */
-    public Command(final String name) throws Exception {
+    public Command(String name) {
         init(name);
     }
 
-    public Command() throws Exception {
+    public Command() {
         init(null);
     }
 
-    private void init(final String name) throws Exception {
+    private void init(String name) {
         definition = new InputDefinition();
         ignoreValidationErrors = false;
         applicationDefinitionMerged = false;
@@ -64,7 +65,7 @@ public class Command extends Executable {
         configure();
 
         if (null == this.name || this.name.isEmpty()) {
-            throw new Exception("The command name cannot be empty.");
+            throw new LogicException("The command name cannot be empty.");
         }
     }
 
@@ -133,7 +134,7 @@ public class Command extends Executable {
     /**
      * Configures the current command.
      */
-    protected void configure() throws Exception
+    protected void configure() throws RuntimeException
     {
     }
 
@@ -150,12 +151,12 @@ public class Command extends Executable {
      *
      * @return 0 if everything went fine, or an error code
      *
-     * @throws Exception When this abstract method is not implemented
+     * @throws LogicException When this abstract method is not implemented
      * @see    setCode()
      */
 	@Override
-    protected int execute(InputInterface input, OutputInterface output) throws Exception {
-        throw new Exception("You must override the execute() method in the concrete command class.");
+    protected int execute(InputInterface input, OutputInterface output) {
+        throw new LogicException("You must override the execute() method in the concrete command class.");
     }
 
     /**
@@ -164,8 +165,7 @@ public class Command extends Executable {
      * @param input  An InputInterface instance
      * @param output An OutputInterface instance
      */
-    protected void interact(InputInterface input, OutputInterface output) throws Exception
-    {
+    protected void interact(InputInterface input, OutputInterface output) {
     }
 
     /**
@@ -177,8 +177,7 @@ public class Command extends Executable {
      * @param input  An InputInterface instance
      * @param output An OutputInterface instance
      */
-    protected void initialize(InputInterface input, OutputInterface output)
-    {
+    protected void initialize(InputInterface input, OutputInterface output) {
     }
 
     /**
@@ -194,7 +193,7 @@ public class Command extends Executable {
      * @see setCode()
      * @see execute()
      */
-    public int run(InputInterface input, OutputInterface output) throws Exception {
+    public int run(InputInterface input, OutputInterface output) {
         // Force the creation of the synopsis before the merge with the app definition
         getSynopsis();
 
@@ -204,7 +203,7 @@ public class Command extends Executable {
         // Bind the input against the command specific arguments/options
         try {
             input.bind(this.definition);
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             if (!ignoreValidationErrors) {
                 throw e;
             }
@@ -247,7 +246,7 @@ public class Command extends Executable {
     /**
      * Merges the application definition with the command definition.
      */
-    private void mergeApplicationDefinition() throws Exception {
+    private void mergeApplicationDefinition() {
         if (null == application || true == applicationDefinitionMerged) {
             return;
         }
@@ -274,7 +273,7 @@ public class Command extends Executable {
      * @return The current instance
      */
     @SuppressWarnings("unchecked")
-    public Command setDefinition(final Object definition) throws Exception {
+    public Command setDefinition(Object definition) {
         if (definition instanceof InputDefinition) {
             this.definition = (InputDefinition) definition;
         } else if (definition instanceof List) {
@@ -303,7 +302,7 @@ public class Command extends Executable {
      *
      * @return An InputDefinition instance
      */
-    protected InputDefinition getNativeDefinition() throws Exception {
+    protected InputDefinition getNativeDefinition() {
         return getDefinition();
     }
 
@@ -317,21 +316,21 @@ public class Command extends Executable {
      *
      * @return The current instance
      */
-    public Command addArgument(final String name, final Integer mode, final String description, final Object defaultValue) throws Exception {
+    public Command addArgument(String name, Integer mode, String description, Object defaultValue) {
         definition.addArgument(new InputArgument(name, mode, description, defaultValue));
 
         return this;
     }
 
-    public Command addArgument(final String name, final Integer mode, final String description) throws Exception {
+    public Command addArgument(String name, Integer mode, String description) {
         return addArgument(name, mode, description, null);
     }
 
-    public Command addArgument(final String name, final Integer mode) throws Exception {
+    public Command addArgument(String name, Integer mode) {
         return addArgument(name, mode, "", null);
     }
 
-    public Command addArgument(final String name) throws Exception {
+    public Command addArgument(String name) {
         return addArgument(name, null, "", null);
     }
 
@@ -346,25 +345,25 @@ public class Command extends Executable {
      *
      * @return The current instance
      */
-    public Command addOption(final String name, final String shortcut, final Integer mode, final String description, final Object defaultValue) throws Exception {
+    public Command addOption(String name, String shortcut, Integer mode, String description, Object defaultValue) {
         definition.addOption(new InputOption(name, shortcut, mode, description, defaultValue));
 
         return this;
     }
 
-    public Command addOption(final String name, final String shortcut, final Integer mode, final String description) throws Exception {
+    public Command addOption(String name, String shortcut, Integer mode, String description) {
         return addOption(name, shortcut, mode, description, null);
     }
 
-    public Command addOption(final String name, final String shortcut, final Integer mode) throws Exception {
+    public Command addOption(String name, String shortcut, Integer mode) {
         return addOption(name, shortcut, mode, "");
     }
 
-    public Command addOption(final String name, final String shortcut) throws Exception {
+    public Command addOption(String name, String shortcut) {
         return addOption(name, shortcut, null);
     }
 
-    public Command addOption(final String name) throws Exception {
+    public Command addOption(String name) {
         return addOption(name, null);
     }
 
@@ -382,7 +381,7 @@ public class Command extends Executable {
      *
      * @throws Exception When command name given is empty
      */
-    public Command setName(final String name) throws Exception {
+    public Command setName(String name) {
         validateName(name);
 
         this.name = name;
@@ -406,7 +405,7 @@ public class Command extends Executable {
      *
      * @return The current instance
      */
-    public Command setDescription(final String description) {
+    public Command setDescription(String description) {
         this.description = description;
 
         return this;
@@ -428,7 +427,7 @@ public class Command extends Executable {
      *
      * @return The current instance
      */
-    public Command setHelp(final String help) {
+    public Command setHelp(String help) {
         this.help = help;
 
         return this;
@@ -460,7 +459,7 @@ public class Command extends Executable {
      *
      * @return The current instance
      */
-    public Command setAliases(final List<String> aliases) throws Exception {
+    public Command setAliases(List<String> aliases) {
         for (String alias : aliases) {
             validateName(alias);
         }
@@ -501,7 +500,7 @@ public class Command extends Executable {
      *
      * @throws Exception if the helper is not defined
      */
-    public Object getHelper(final String name) throws Exception {
+    public Object getHelper(String name) {
         return helperSet.get(name);
     }
 
@@ -510,7 +509,7 @@ public class Command extends Executable {
      *
      * @return A string representing the command
      */
-    public String asText() throws Exception {
+    public String asText() {
         List<String> messages = Arrays.asList(
             "<comment>Usage:</comment>",
             " " + this.getSynopsis(),
@@ -548,9 +547,7 @@ public class Command extends Executable {
      *
      * @return An XML string representing the command
      */
-    public String asXml(final boolean asDom) throws Exception {
-        throw new Exception("Not yet implemented.");
-        /*
+    /*public String asXml(boolean asDom) {
         dom = new \DOMDocument('1.0', 'UTF-8');
         dom.formatOutput = true;
         dom.appendChild(commandXML = dom.createElement('command'));
@@ -577,12 +574,12 @@ public class Command extends Executable {
         commandXML.appendChild(dom.importNode(definition.getElementsByTagName('arguments').item(0), true));
         commandXML.appendChild(dom.importNode(definition.getElementsByTagName('options').item(0), true));
 
-        return asDom ? dom : dom.saveXml();*/
-    }
+        return asDom ? dom : dom.saveXml();
+    }*/
 
-    private void validateName(final String name) throws Exception {
+    private void validateName(String name) throws IllegalArgumentException {
         if (name.isEmpty() || !name.matches("^[^\\:]+(\\:[^\\:]+)*$")) {
-            throw new Exception("Command name \"" + name + "\" is invalid.");
+            throw new IllegalArgumentException("Command name \"" + name + "\" is invalid.");
         }
     }
 

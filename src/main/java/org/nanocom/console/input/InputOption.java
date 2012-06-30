@@ -10,6 +10,8 @@ package org.nanocom.console.input;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.nanocom.console.exception.LogicException;
+
 /**
  * Represents a command line option.
  * 
@@ -35,29 +37,29 @@ public class InputOption {
      * @param description  A description text
      * @param defaultValue The default value (must be null for VALUE_REQUIRED or VALUE_NONE)
      *
-     * @throws Exception If option mode is invalid or incompatible, or if name is null
+     * @throws IllegalArgumentException If option mode is invalid or incompatible
      */
-    public InputOption(String name, String shortcut, Integer mode, final String description, final Object defaultValue) throws Exception {
+    public InputOption(String name, String shortcut, Integer mode, final String description, final Object defaultValue) {
         init(name, shortcut, mode, description, defaultValue);
     }
 
-    public InputOption(String name, String shortcut, Integer mode, final String description) throws Exception {
+    public InputOption(String name, String shortcut, Integer mode, final String description) {
         init(name, shortcut, mode, description, null);
     }
 
-    public InputOption(String name, String shortcut, Integer mode) throws Exception {
+    public InputOption(String name, String shortcut, Integer mode) {
         init(name, shortcut, mode, "", null);
     }
 
-    public InputOption(String name, String shortcut) throws Exception {
+    public InputOption(String name, String shortcut) {
         init(name, shortcut, null, "", null);
     }
     
-    public InputOption(String name) throws Exception {
+    public InputOption(String name) {
         init(name, null, null, "", null);
     }
 
-    private void init(String name, String shortcut, Integer mode, final String description, final Object defaultValue) throws Exception {
+    private void init(String name, String shortcut, Integer mode, final String description, final Object defaultValue) {
         if (null != name) {
             if (name.startsWith("--")) {
                 name = name.substring(2);
@@ -78,7 +80,7 @@ public class InputOption {
         if (null == mode) {
             mode = VALUE_NONE;
         } else if (mode > 15 || mode < 1) {
-            throw new Exception("Option mode \"" + mode + "\" is not valid.");
+            throw new IllegalArgumentException("Option mode \"" + mode + "\" is not valid.");
         }
 
         this.name        = name;
@@ -87,7 +89,7 @@ public class InputOption {
         this.description = description;
 
         if (isArray() && !acceptValue()) {
-            throw new Exception("Impossible to have an option mode VALUE_IS_ARRAY if the option does not accept a value.");
+            throw new IllegalArgumentException("Impossible to have an option mode VALUE_IS_ARRAY if the option does not accept a value.");
         }
 
         setDefaultValue(defaultValue);
@@ -152,18 +154,18 @@ public class InputOption {
      *
      * @param defaultValue The default value
      *
-     * @throws Exception When incorrect default value is given
+     * @throws LogicException When incorrect default value is given
      */
-    public void setDefaultValue(Object defaultValue) throws Exception {
+    public void setDefaultValue(Object defaultValue) {
         if (VALUE_NONE == (VALUE_NONE & mode) && null != defaultValue) {
-            throw new Exception("Cannot set a default value when using Option.VALUE_NONE mode.");
+            throw new LogicException("Cannot set a default value when using Option.VALUE_NONE mode.");
         }
 
         if (isArray()) {
             if (null == defaultValue) {
                 defaultValue = new ArrayList<Object>();
             } else if (!(defaultValue instanceof List)) {
-                throw new Exception("A default value for an array option must be an array.");
+                throw new LogicException("A default value for an array option must be an array.");
             }
         }
 

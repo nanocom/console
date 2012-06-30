@@ -15,11 +15,11 @@ import org.nanocom.console.output.OutputInterface;
  */
 public class ListCommand extends Command {
 
-    public ListCommand(final String name) throws Exception {
+    public ListCommand(String name) {
         super(name);
     }
 
-    public ListCommand() throws Exception {
+    public ListCommand() {
         super("list");
     }
 
@@ -47,7 +47,7 @@ public class ListCommand extends Command {
      * {@inheritDoc}
      */
     @Override
-    protected InputDefinition getNativeDefinition() throws Exception {
+    protected InputDefinition getNativeDefinition() {
         return createDefinition();
     }
 
@@ -55,7 +55,7 @@ public class ListCommand extends Command {
      * {@inheritDoc}
      */
     @Override
-    protected int execute(InputInterface input, OutputInterface output) throws Exception {
+    protected int execute(InputInterface input, OutputInterface output) {
         if (null != input.getOption("xml")) {
             // TODO
             // output.writeln(this.getApplication().asXml(input.getArgument("namespace")), OutputInterface.OUTPUT_RAW);
@@ -67,7 +67,7 @@ public class ListCommand extends Command {
         return 1;
     }
 
-    private InputDefinition createDefinition() throws Exception {
+    private InputDefinition createDefinition() {
         return new InputDefinition(Arrays.asList(
             new InputArgument("namespace", InputArgument.OPTIONAL, "The namespace name"),
             new InputOption("xml", null, InputOption.VALUE_NONE, "To output help as XML")

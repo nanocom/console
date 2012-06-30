@@ -28,7 +28,7 @@ public class OutputFormatterTest {
 
     @Test
     public void testBundledStyles() throws Exception {
-        OutputFormatter formatter = new OutputFormatter(true);
+        //OutputFormatter formatter = new OutputFormatter(true);
 
         /*Assert.assertTrue(formatter.hasStyle("error"));
         Assert.assertTrue(formatter.hasStyle("info"));
@@ -55,7 +55,7 @@ public class OutputFormatterTest {
 
     @Test
     public void testNestedStyles() throws Exception {
-        OutputFormatter formatter = new OutputFormatter(true);
+        //OutputFormatter formatter = new OutputFormatter(true);
 
         /*Assert.assertEquals(
             "\033[37;41msome \033[0m\033[32msome info\033[0m\033[37;41m error\033[0m",
@@ -65,7 +65,7 @@ public class OutputFormatterTest {
 
     @Test
     public void testDeepNestedStyles() throws Exception {
-        OutputFormatter formatter = new OutputFormatter(true);
+        // OutputFormatter formatter = new OutputFormatter(true);
 
         /*Assert.assertEquals(
             "\033[37;41merror\033[0m\033[32minfo\033[0m\033[33mcomment\033[0m\033[37;41merror\033[0m",
@@ -98,7 +98,7 @@ public class OutputFormatterTest {
 
     @Test
     public void testInlineStyle() throws Exception {
-        OutputFormatter formatter = new OutputFormatter(true);
+        // OutputFormatter formatter = new OutputFormatter(true);
 
         // Assert.assertEquals("\033[34;41msome text\033[0m", formatter.format("<fg=blue;bg=red>some text</>"));
         // Assert.assertEquals("\033[34;41msome text\033[0m", formatter.format("<fg=blue;bg=red>some text</fg=blue;bg=red>"));
@@ -144,7 +144,7 @@ public class OutputFormatterTest {
 
     @Test
     public void testContentWithLineBreaks() throws Exception {
-        OutputFormatter formatter = new OutputFormatter(true);
+        // OutputFormatter formatter = new OutputFormatter(true);
 
         /*
         Assert.assertEquals("\033[32m\nsome text\n\033[0m", formatter.format("<info>\nsome text\n</info>"));

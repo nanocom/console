@@ -10,7 +10,7 @@ public class FooCommand extends Command {
     public InputInterface input;
     public OutputInterface output;
 
-    public FooCommand() throws Exception {
+    public FooCommand() {
         super("foo:bar");
 
         setDescription("The foo:bar command")
@@ -23,12 +23,12 @@ public class FooCommand extends Command {
     }
 
     @Override
-    protected void interact(InputInterface input, OutputInterface output) throws Exception {
+    protected void interact(InputInterface input, OutputInterface output) {
         output.writeln("interact called");
     }
 
     @Override
-    protected int execute(InputInterface input, OutputInterface output) throws Exception {
+    protected int execute(InputInterface input, OutputInterface output) {
         this.input = input;
         this.output = output;
 

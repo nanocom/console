@@ -46,7 +46,7 @@ public class CommandTester {
      *
      * @return The command exit code
      */
-    public int execute(Map<String, String> input, Map<String, Object> options) throws Exception {
+    public int execute(Map<String, String> input, Map<String, Object> options) {
         this.input = new ArrayInput(input);
         if (options.containsKey("interactive")) {
             this.input.setInteractive((Boolean) options.get("interactive"));
@@ -65,7 +65,7 @@ public class CommandTester {
         return command.run(this.input, (OutputInterface) output);
     }
 
-    public int execute(Map<String, String> input) throws Exception {
+    public int execute(Map<String, String> input) {
         return execute(input, new HashMap<String, Object>());
     }
 

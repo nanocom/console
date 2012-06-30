@@ -25,18 +25,17 @@ public class ArrayInput extends Input {
 
     private Map<String, String> parameters;
 
+    public ArrayInput(Map<String, String> parameters) {
+        this(parameters, null);
+    }
+    
     /**
      * @param parameters An array of parameters
      * @param definition A InputDefinition instance
      */
-    public ArrayInput(final Map<String, String> parameters, final InputDefinition definition) {
+    public ArrayInput(Map<String, String> parameters, InputDefinition definition) {
         this.parameters = parameters;
         init(definition);
-    }
-
-    public ArrayInput(final Map<String, String> parameters) {
-        this.parameters = parameters;
-        init(null);
     }
 
     /**
@@ -68,7 +67,7 @@ public class ArrayInput extends Input {
      * @return True if the value is contained in the raw parameters
      */
     @Override
-    public boolean hasParameterOption(final String value) {
+    public boolean hasParameterOption(String value) {
 
         for (Entry<String, String> parameter : parameters.entrySet()) {
             if (parameter.getKey().equals(value)) {
@@ -80,7 +79,7 @@ public class ArrayInput extends Input {
     }
 
     @Override
-    public boolean hasParameterOption(final List<String> values) {
+    public boolean hasParameterOption(List<String> values) {
         for (Entry<String, String> parameter : parameters.entrySet()) {
             if (values.contains(parameter.getValue())) {
                 return true;
@@ -91,7 +90,7 @@ public class ArrayInput extends Input {
     }
     
     @Override
-    public boolean hasParameterOption(final Map<String, String> values) {
+    public boolean hasParameterOption(Map<String, String> values) {
         for (Entry<String, String> parameter : parameters.entrySet()) {
             if (values.containsKey(parameter.getKey())) {
                 return true;
@@ -113,7 +112,7 @@ public class ArrayInput extends Input {
      * @return The option value
      */
     @Override
-    public Object getParameterOption(final List<String> values, final Object defaultValue) {
+    public Object getParameterOption(List<String> values, Object defaultValue) {
         List<String> listValues = (List<String>)values;
         for (Entry<String, String> parameter : parameters.entrySet()) {
             if (listValues.contains(parameter.getValue())) {
@@ -125,17 +124,17 @@ public class ArrayInput extends Input {
     }
 
     @Override
-    public Object getParameterOption(final List<String> values) {
+    public Object getParameterOption(List<String> values) {
         return getParameterOption(values, false);
     }
 
     @Override
-    public Object getParameterOption(final String value, final Object defaultValue) {
+    public Object getParameterOption(String value, Object defaultValue) {
         return getParameterOption(Arrays.asList(value), defaultValue);
     }
 
     @Override
-    public Object getParameterOption(final String value) {
+    public Object getParameterOption(String value) {
         return getParameterOption(value, false);
     }
 
@@ -163,7 +162,7 @@ public class ArrayInput extends Input {
      *
      * @throws RuntimeException When option given doesn't exist
      */
-    private void addShortOption(final String shortcut, final Object value) throws RuntimeException {
+    private void addShortOption(String shortcut, Object value) throws RuntimeException {
         if (!definition.hasShortcut(shortcut)) {
             throw new IllegalArgumentException(String.format("The \"-%s\" option does not exist."));
         }
@@ -180,7 +179,7 @@ public class ArrayInput extends Input {
      * @throws IllegalArgumentException When option given doesn't exist
      * @throws IllegalArgumentException When a required value is missing
      */
-    private void addLongOption(final String name, Object value) throws IllegalArgumentException {
+    private void addLongOption(String name, Object value) throws IllegalArgumentException {
         if (!definition.hasOption(name)) {
             throw new IllegalArgumentException(String.format("The \"--%s\" option does not exist.", name));
         }
@@ -206,7 +205,7 @@ public class ArrayInput extends Input {
      *
      * @throws IllegalArgumentException When argument given doesn't exist
      */
-    private void addArgument(final String name, final Object value) throws IllegalArgumentException {
+    private void addArgument(String name, Object value) throws IllegalArgumentException {
         if (!definition.hasArgument(name)) {
             throw new IllegalArgumentException(String.format("The \"%s\" argument does not exist.", name));
         }

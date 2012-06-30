@@ -106,7 +106,7 @@ public class DialogHelper extends Helper {
                 output.writeln(((FormatterHelper) getHelperSet().get("formatter")).formatBlock(error.getMessage(), "error"));
             }
 
-            String value = ask(output, question, defaultAnswer);
+            // String value = ask(output, question, defaultAnswer);
 
             try {
                 // TODO Imitate this behavior
@@ -116,7 +116,8 @@ public class DialogHelper extends Helper {
             }
         }
 
-        throw error;
+        return null;
+        // throw error;
     }
 
     /**
