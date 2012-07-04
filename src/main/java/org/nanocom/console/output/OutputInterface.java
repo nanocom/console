@@ -13,7 +13,7 @@ import org.nanocom.console.formatter.OutputFormatterInterface;
 
 /**
  * OutputInterface is the interface implemented by all Output classes.
- * 
+ *
  * @author Arnaud Kleinpeter <arnaud.kleinpeter at gmail dot com>
  */
 public interface OutputInterface {
@@ -102,5 +102,4 @@ public interface OutputInterface {
      * @return
      */
     OutputFormatterInterface getFormatter();
-
 }

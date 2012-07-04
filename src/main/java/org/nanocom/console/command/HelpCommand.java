@@ -31,15 +31,12 @@ public class HelpCommand extends Command {
         ignoreValidationErrors();
 
         setName("help");
-        setDefinition(Arrays.asList(
-                new InputArgument("command_name", InputArgument.OPTIONAL, "The command name", "help"),
-                new InputOption("xml", null, InputOption.VALUE_NONE, "To output help as XML")
+        setDefinition(Arrays.<Object>asList(
+                new InputArgument("command_name", InputArgument.OPTIONAL, "The command name", "help")
         ));
         setDescription("Displays help for a command");
         setHelp("The <info>help</info> command displays help for a given command:\n"
-            + "<info>php app/console help list</info>\n"
-            + "You can also output the help as XML by using the <comment>--xml</comment> option:\n"
-            + "<info>help --xml list</info>");
+            + "<info>php app/console help list</info>\n");
     }
 
     /**
@@ -60,11 +57,7 @@ public class HelpCommand extends Command {
             command = getApplication().get((String) input.getArgument("command_name"));
         }
 
-        if (null != input.getOption("xml")) {
-            // output.writeln(Arrays.asList(command.asXml(false)), OutputInterface.OUTPUT_RAW);
-        } else {
-            // output.writeln(Arrays.asList(command.asText()), OutputInterface.OUTPUT_NORMAL);
-        }
+        output.writeln(Arrays.asList(command.asText()), OutputInterface.OUTPUT_NORMAL);
 
         command = null;
 
