@@ -89,7 +89,7 @@ public class Application {
             add(command);
         }
     }
-    
+
     public int run(InputInterface input) throws RuntimeException {
     	return run(input, null);
     }
@@ -102,7 +102,7 @@ public class Application {
      *
      * @return 0 if everything went fine, or an error code
      *
-     * @throws Exception When doRun returns Exception
+     * @throws RuntimeException When doRun returns Exception
      */
     public int run(InputInterface input, OutputInterface output) throws RuntimeException {
         if (null == input) {
@@ -254,10 +254,14 @@ public class Application {
         );
 
         for (InputOption option : getDefinition().getOptions().values()) {
-            messages.add(String.format("  %-29s %s %s",
-                String.format("<info>--%s</info>", option.getName()),
-                null != option.getShortcut() ? String.format("<info>-%s</info>", option.getShortcut()) : "  ",
-                option.getDescription()
+            option.getName();
+            option.getShortcut();
+            option.getDescription();
+            messages.add(
+                    String.format("  %s %s %s",
+                            String.format("<info>--%s</info>", option.getName()),
+                            null != option.getShortcut() ? String.format("<info>-%s</info>", option.getShortcut()) : "  ",
+                            option.getDescription()
             ));
         }
 
@@ -338,7 +342,7 @@ public class Application {
      *
      * @return The newly created command
      */
-    public Command register(String name) throws Exception {
+    public Command register(String name) {
         return add(new Command(name));
     }
 
@@ -466,7 +470,7 @@ public class Application {
         	}
 
         	Map<String, List<String>> abbrevs = getAbbreviations(filteredNamespaces);
-	
+
             if (!abbrevs.containsKey(part)) {
             	StringBuilder message = new StringBuilder();
                 message.append(String.format("There are no commands defined in the \"%s\" namespace.", namespace));
@@ -567,7 +571,7 @@ public class Application {
 
         return get(aliasesMap.get(searchName).get(0));
     }
-    
+
     public Map<String, Command> all() {
     	return all(null);
     }
@@ -632,7 +636,7 @@ public class Application {
      *
      * @return A string representing the Application
      */
-    public String asText(String namespace, boolean raw) throws Exception {
+    public String asText(String namespace, boolean raw) {
         Map<String, Command> locCommands = null != namespace ? all(findNamespace(namespace)) : commands;
 
         int width = 0;
@@ -673,11 +677,11 @@ public class Application {
         return StringUtils.join(System.getProperty("line.separator"), messages);
     }
 
-    public String asText(final String namespace) throws Exception {
+    public String asText(final String namespace) {
         return asText(namespace, false);
     }
 
-    public String asText() throws Exception {
+    public String asText() {
         return asText(null, false);
     }
 
@@ -742,6 +746,8 @@ public class Application {
      */
     public void renderException(Exception e, OutputInterface output) throws RuntimeException {
         Throwable t = (Throwable) e;
+
+		output.writeln(e.getMessage());
 
         do {
             // String title = String.format("  [%s]  ", e.getClass().toString());
@@ -873,10 +879,9 @@ public class Application {
      * Gets the default commands that should always be available.
      *
      * @return An array of default Command instances
-     * @throws Exception 
      */
     protected List<Command> getDefaultCommands() {
-        return Arrays.asList((Command) new HelpCommand(), new ListCommand());
+        return Arrays.asList(new HelpCommand(), new ListCommand());
     }
 
     /**
@@ -961,7 +966,11 @@ public class Application {
         String[] parts = name.split(":");
         parts = ArrayUtils.subarray(parts, 0, parts.length - 1);
 
-        return StringUtils.join(":", null == limit ? parts : ArrayUtils.<String>subarray(parts, 0, limit));
+		if (0 == parts.length) {
+			return "";
+		} else {
+			return 0 == parts.length ? "" : StringUtils.join(":", null == limit ? parts : ArrayUtils.<String>subarray(parts, 0, limit));
+		}
     }
 
     private String extractNamespace(final String name) {

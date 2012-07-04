@@ -10,37 +10,25 @@ import org.nanocom.console.output.OutputInterface;
 
 /**
  * ListCommand displays the list of all available commands for the application.
- * 
+ *
  * @author Arnaud Kleinpeter <arnaud.kleinpeter at gmail dot com>
  */
 public class ListCommand extends Command {
-
-    public ListCommand(String name) {
-        super(name);
-    }
-
-    public ListCommand() {
-        super("list");
-    }
 
     /**
      * {@inheritDoc}
      */
     @Override
     protected void configure() {
-        try {
-            setDefinition(createDefinition())
-            .setName("list");
-            setDescription("Lists commands")
-            .setHelp("The <info>list</info> command lists all commands:"
-                + "<info>php app/console list</info>"
-                + "You can also display the commands for a specific namespace:"
-                + "<info>php app/console list test</info>"
-                + "You can also output the information as XML by using the <comment>--xml</comment> option:"
-                + "<info>php app/console list --xml</info>");
-        } catch (Exception ex) {
-            // Does not happen
-        }
+        setName("list");
+        setDefinition(createDefinition());
+        setDescription("Lists commands");
+        setHelp("The <info>list</info> command lists all commands:"
+            + "<info>php app/console list</info>"
+            + "You can also display the commands for a specific namespace:"
+            + "<info>php app/console list test</info>"
+            + "You can also output the information as XML by using the <comment>--xml</comment> option:"
+            + "<info>php app/console list --xml</info>");
     }
 
     /**
@@ -56,15 +44,14 @@ public class ListCommand extends Command {
      */
     @Override
     protected int execute(InputInterface input, OutputInterface output) {
-        if (null != input.getOption("xml")) {
+        /*if (true == input.getOption("xml")) {
             // TODO
             // output.writeln(this.getApplication().asXml(input.getArgument("namespace")), OutputInterface.OUTPUT_RAW);
-        } else {
-            // TODO
-            // output.writeln(this.getApplication().asText(input.getArgument("namespace")));
-        }
-        
-        return 1;
+        } else {*/
+            output.writeln(getApplication().asText((String) input.getArgument("namespace"), false));
+        //}
+
+        return 0;
     }
 
     private InputDefinition createDefinition() {

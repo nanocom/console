@@ -144,7 +144,7 @@ public class Command extends Executable {
      * This method is not abstract because you can use this class
      * as a concrete class. In this case, instead of defining the
      * execute() method, you set the code to execute by passing
-     * a Closure to the setCode() method.
+     * an Executable instance to the setCode() method.
      *
      * @param input  An InputInterface instance
      * @param output An OutputInterface instance
@@ -212,13 +212,13 @@ public class Command extends Executable {
         initialize(input, output);
 
         if (input.isInteractive()) {
-            this.interact(input, output);
+            interact(input, output);
         }
 
         input.validate();
 
-		if (null != this.code) {
-            return this.code.execute(input, output);
+		if (null != code) {
+            return code.execute(input, output);
         }
 
         return execute(input, output);
