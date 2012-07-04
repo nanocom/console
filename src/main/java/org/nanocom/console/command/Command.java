@@ -224,7 +224,7 @@ public class Command extends Executable {
         return execute(input, output);
     }
 
-	
+
    /**
 	* Sets the code to execute when running this command.
 	*
@@ -235,7 +235,7 @@ public class Command extends Executable {
 	*
 	* @return Command The current instance
 	*
-	* @see #execute 
+	* @see #execute
 	*/
     public Command setCode(Executable code) {
         this.code = code;
@@ -313,25 +313,21 @@ public class Command extends Executable {
      * @param mode         The argument mode: InputArgument::REQUIRED or InputArgument::OPTIONAL
      * @param description  A description text
      * @param defaultValue The default value (for InputArgument::OPTIONAL mode only)
-     *
-     * @return The current instance
      */
-    public Command addArgument(String name, Integer mode, String description, Object defaultValue) {
+    public void addArgument(String name, Integer mode, String description, Object defaultValue) {
         definition.addArgument(new InputArgument(name, mode, description, defaultValue));
-
-        return this;
     }
 
-    public Command addArgument(String name, Integer mode, String description) {
-        return addArgument(name, mode, description, null);
+    public void addArgument(String name, Integer mode, String description) {
+        addArgument(name, mode, description, null);
     }
 
-    public Command addArgument(String name, Integer mode) {
-        return addArgument(name, mode, "", null);
+    public void addArgument(String name, Integer mode) {
+        addArgument(name, mode, "", null);
     }
 
-    public Command addArgument(String name) {
-        return addArgument(name, null, "", null);
+    public void addArgument(String name) {
+        addArgument(name, null, "", null);
     }
 
     /**
@@ -342,29 +338,25 @@ public class Command extends Executable {
      * @param mode         The option mode: One of the InputOption::VALUE_* constants
      * @param description  A description text
      * @param defaultValue The default value (must be null for InputOption::VALUE_REQUIRED or InputOption::VALUE_NONE)
-     *
-     * @return The current instance
      */
-    public Command addOption(String name, String shortcut, Integer mode, String description, Object defaultValue) {
+    public void addOption(String name, String shortcut, Integer mode, String description, Object defaultValue) {
         definition.addOption(new InputOption(name, shortcut, mode, description, defaultValue));
-
-        return this;
     }
 
-    public Command addOption(String name, String shortcut, Integer mode, String description) {
-        return addOption(name, shortcut, mode, description, null);
+    public void addOption(String name, String shortcut, Integer mode, String description) {
+        addOption(name, shortcut, mode, description, null);
     }
 
-    public Command addOption(String name, String shortcut, Integer mode) {
-        return addOption(name, shortcut, mode, "");
+    public void addOption(String name, String shortcut, Integer mode) {
+        addOption(name, shortcut, mode, "");
     }
 
-    public Command addOption(String name, String shortcut) {
-        return addOption(name, shortcut, null);
+    public void addOption(String name, String shortcut) {
+        addOption(name, shortcut, null);
     }
 
-    public Command addOption(String name) {
-        return addOption(name, null);
+    public void addOption(String name) {
+        addOption(name, null);
     }
 
     /**
@@ -381,12 +373,9 @@ public class Command extends Executable {
      *
      * @throws Exception When command name given is empty
      */
-    public Command setName(String name) {
+    public void setName(String name) {
         validateName(name);
-
         this.name = name;
-
-        return this;
     }
 
     /**
@@ -405,10 +394,8 @@ public class Command extends Executable {
      *
      * @return The current instance
      */
-    public Command setDescription(String description) {
+    public void setDescription(String description) {
         this.description = description;
-
-        return this;
     }
 
     /**
@@ -427,10 +414,8 @@ public class Command extends Executable {
      *
      * @return The current instance
      */
-    public Command setHelp(String help) {
+    public void setHelp(String help) {
         this.help = help;
-
-        return this;
     }
 
     /**
@@ -459,14 +444,12 @@ public class Command extends Executable {
      *
      * @return The current instance
      */
-    public Command setAliases(List<String> aliases) {
+    public void setAliases(List<String> aliases) {
         for (String alias : aliases) {
             validateName(alias);
         }
 
         this.aliases = aliases;
-
-        return this;
     }
 
     /**
@@ -582,5 +565,4 @@ public class Command extends Executable {
             throw new IllegalArgumentException("Command name \"" + name + "\" is invalid.");
         }
     }
-
 }

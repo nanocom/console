@@ -16,20 +16,12 @@ import org.nanocom.console.output.OutputInterface;
 
 /**
  * HelpCommand displays the help for a given command.
- * 
+ *
  * @author Arnaud Kleinpeter <arnaud.kleinpeter at gmail dot com>
  */
 public class HelpCommand extends Command {
 
     private Command command;
-
-    public HelpCommand(String name) {
-        super(name);
-    }
-
-    public HelpCommand() {
-        super("help");
-    }
 
     /**
      * {@inheritdoc}
@@ -38,19 +30,16 @@ public class HelpCommand extends Command {
     protected void configure() {
         ignoreValidationErrors();
 
-        try {
-            setDefinition(Arrays.asList(
-                    new InputArgument("command_name", InputArgument.OPTIONAL, "The command name", "help"),
-                    new InputOption("xml", null, InputOption.VALUE_NONE, "To output help as XML")
-            ))
-            .setDescription("Displays help for a command")
-            .setHelp("The <info>help</info> command displays help for a given command:\n"
-                + "<info>php app/console help list</info>\n"
-                + "You can also output the help as XML by using the <comment>--xml</comment> option:\n"
-                + "<info>help --xml list</info>");
-        } catch (Exception e) {
-            
-        }
+        setName("help");
+        setDefinition(Arrays.asList(
+                new InputArgument("command_name", InputArgument.OPTIONAL, "The command name", "help"),
+                new InputOption("xml", null, InputOption.VALUE_NONE, "To output help as XML")
+        ));
+        setDescription("Displays help for a command");
+        setHelp("The <info>help</info> command displays help for a given command:\n"
+            + "<info>php app/console help list</info>\n"
+            + "You can also output the help as XML by using the <comment>--xml</comment> option:\n"
+            + "<info>help --xml list</info>");
     }
 
     /**
@@ -78,8 +67,7 @@ public class HelpCommand extends Command {
         }
 
         command = null;
-        
+
         return 1;
     }
-
 }

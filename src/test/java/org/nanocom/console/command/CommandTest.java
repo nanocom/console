@@ -64,16 +64,14 @@ public class CommandTest {
     @Test
     public void testAddArgument() throws Exception {
         Command command = new TestCommand();
-        Command ret = command.addArgument("foo");
-        assertEquals(".addArgument() implements a fluent interface", command, ret);
+        command.addArgument("foo");
         assertTrue(".addArgument() adds an argument to the command", command.getDefinition().hasArgument("foo"));
     }
 
     @Test
     public void testAddOption() throws Exception {
         Command command = new TestCommand();
-        Command ret = command.addOption("foo");
-        assertEquals(".addOption() implements a fluent interface", command, ret);
+        command.addOption("foo");
         assertTrue(".addOption() adds an option to the command", command.getDefinition().hasOption("foo"));
     }
 
@@ -108,8 +106,7 @@ public class CommandTest {
     public void testGetSetDescription() throws Exception {
         Command command = new TestCommand();
         assertEquals(".getDescription() returns the description", "description", command.getDescription());
-        Command ret = command.setDescription("description1");
-        assertEquals(".setDescription() implements a fluent interface", command, ret);
+        command.setDescription("description1");
         assertEquals(".setDescription() sets the description", "description1", command.getDescription());
     }
 
@@ -117,8 +114,7 @@ public class CommandTest {
     public void testGetSetHelp() throws Exception {
         Command command = new TestCommand();
         assertEquals(".getHelp() returns the help", "help", command.getHelp());
-        Command ret = command.setHelp("help1");
-        assertEquals(".setHelp() implements a fluent interface", command, ret);
+        command.setHelp("help1");
         assertEquals(".setHelp() sets the help", "help1", command.getHelp());
     }
 
@@ -134,8 +130,7 @@ public class CommandTest {
     public void testGetSetAliases() throws Exception {
         Command command = new TestCommand();
         assertEquals(".getAliases() returns the aliases", Arrays.asList("name"), command.getAliases());
-        Command ret = command.setAliases(Arrays.asList("name1"));
-        assertEquals(".setAliases() implements a fluent interface", command, ret);
+        command.setAliases(Arrays.asList("name1"));
         assertEquals(".setAliases() sets the aliases", Arrays.asList("name1"), command.getAliases());
     }
 
@@ -242,7 +237,7 @@ public class CommandTest {
     }
 
     /*@Test
-    public void testAsText() throws Exception {
+    public void testAsText() {
         Command command = new TestCommand();
         command.setApplication(new Application());
         CommandTester tester = new CommandTester(command);
@@ -260,5 +255,4 @@ public class CommandTest {
         tester.execute(array("command" => command.getName()));
         assertXmlStringEqualsXmlFile(fixturesPath + "/command_asxml.txt", command.asXml(), ".asXml() returns an XML representation of the command");
     }*/
-
 }

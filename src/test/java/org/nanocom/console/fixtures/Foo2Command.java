@@ -7,22 +7,15 @@ import java.util.Arrays;
 
 public class Foo2Command extends Command {
 
-    public Foo2Command() throws Exception {
-        super("foo1:bar");
-
-        setDescription("The foo1:bar command")
-        .setAliases(Arrays.asList("afoobar2"))
-        ;
-    }
-
     @Override
     protected void configure() {
-        
+        setName("foo1:bar");
+        setDescription("The foo1:bar command");
+        setAliases(Arrays.asList("afoobar2"));
     }
 
     @Override
     protected int execute(InputInterface input, OutputInterface output) {
         return 1;
     }
-
 }
