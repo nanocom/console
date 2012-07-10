@@ -10,16 +10,11 @@ public class FooCommand extends Command {
     public InputInterface input;
     public OutputInterface output;
 
-    public FooCommand() {
-        super("foo:bar");
-
-        setDescription("The foo:bar command")
-        .setAliases(Arrays.asList("afoobar"))
-        ;
-    }
-
     @Override
     protected void configure() {
+        setName("foo:bar");
+        setDescription("The foo:bar command");
+        setAliases(Arrays.asList("afoobar"));
     }
 
     @Override

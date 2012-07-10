@@ -7,18 +7,12 @@ import java.util.Arrays;
 
 public class TestCommand extends Command {
 
-    public TestCommand() throws Exception {
-        super("namespace:name");
-
-        setAliases(Arrays.asList("name"))
-        .setDescription("description")
-        .setHelp("help")
-        ;
-    }
-
     @Override
     protected void configure() {
-        
+        setName("namespace:name");
+        setAliases(Arrays.asList("name"));
+        setDescription("description");
+        setHelp("help");
     }
 
     @Override
@@ -32,5 +26,4 @@ public class TestCommand extends Command {
     protected void interact(InputInterface input, OutputInterface output) {
         output.writeln("interact called");
     }
-
 }

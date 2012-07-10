@@ -26,9 +26,7 @@ public class ListCommand extends Command {
         setHelp("The <info>list</info> command lists all commands:"
             + "<info>php app/console list</info>"
             + "You can also display the commands for a specific namespace:"
-            + "<info>php app/console list test</info>"
-            + "You can also output the information as XML by using the <comment>--xml</comment> option:"
-            + "<info>php app/console list --xml</info>");
+            + "<info>php app/console list test</info>");
     }
 
     /**
@@ -44,21 +42,14 @@ public class ListCommand extends Command {
      */
     @Override
     protected int execute(InputInterface input, OutputInterface output) {
-        /*if (true == input.getOption("xml")) {
-            // TODO
-            // output.writeln(this.getApplication().asXml(input.getArgument("namespace")), OutputInterface.OUTPUT_RAW);
-        } else {*/
-            output.writeln(getApplication().asText((String) input.getArgument("namespace"), false));
-        //}
+        output.writeln(getApplication().asText((String) input.getArgument("namespace"), false));
 
         return 0;
     }
 
     private InputDefinition createDefinition() {
-        return new InputDefinition(Arrays.asList(
-            new InputArgument("namespace", InputArgument.OPTIONAL, "The namespace name"),
-            new InputOption("xml", null, InputOption.VALUE_NONE, "To output help as XML")
+        return new InputDefinition(Arrays.<Object>asList(
+            new InputArgument("namespace", InputArgument.OPTIONAL, "The namespace name")
         ));
     }
-
 }
