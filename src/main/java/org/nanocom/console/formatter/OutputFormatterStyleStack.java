@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * @author Arnaud Kleinpeter <arnaud.kleinpeter at gmail dot com>
  */
-final class OutputFormatterStyleStack {
+class OutputFormatterStyleStack {
 
     private List<OutputFormatterStyle> styles;
 
@@ -24,7 +24,7 @@ final class OutputFormatterStyleStack {
     /**
      * Resets stack (ie. empty internal arrays).
      */
-    public void reset() {
+    public final void reset() {
         styles = new ArrayList<OutputFormatterStyle>();
     }
 
@@ -46,7 +46,7 @@ final class OutputFormatterStyleStack {
      *
      * @throws Exception  When style tags incorrectly nested
      */
-    public OutputFormatterStyleInterface pop(OutputFormatterStyleInterface style) throws Exception {
+    public OutputFormatterStyleInterface pop(OutputFormatterStyleInterface style) {
         if (styles.isEmpty()) {
             return new OutputFormatterStyle();
         }
@@ -63,7 +63,7 @@ final class OutputFormatterStyleStack {
             }
         }*/
 
-        throw new Exception("Incorrectly nested style tag found.");
+        throw new IllegalArgumentException("Incorrectly nested style tag found.");
     }
 
     public OutputFormatterStyleInterface pop() throws Exception {

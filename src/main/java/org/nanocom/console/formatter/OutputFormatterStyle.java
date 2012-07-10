@@ -17,7 +17,7 @@ import org.apache.commons.lang3.StringUtils;
 
 /**
  * Formatter style class for defining styles.
- * 
+ *
  * @author Arnaud Kleinpeter <arnaud.kleinpeter at gmail dot com>
  */
 public class OutputFormatterStyle implements OutputFormatterStyleInterface {
@@ -53,7 +53,7 @@ public class OutputFormatterStyle implements OutputFormatterStyleInterface {
 
         return backgrounds;
     }
-    
+
     private static Map<String, Integer> getAvailableOptions() {
         Map<String, Integer> options = new HashMap<String, Integer>();
         options.put("bold", 1);
@@ -74,7 +74,7 @@ public class OutputFormatterStyle implements OutputFormatterStyleInterface {
      *
      * @param foreground style foreground color name
      * @param background style background color name
-     * @param options style options
+     * @param options    style options
      */
     public OutputFormatterStyle(String foreground, String background, List<String> options) {
         init(foreground, background, options);
@@ -100,7 +100,7 @@ public class OutputFormatterStyle implements OutputFormatterStyleInterface {
             setBackground(background);
         }
         if (options.size() > 0) {
-            this.setOptions(options);
+            setOptions(options);
         }
     }
 
@@ -114,7 +114,7 @@ public class OutputFormatterStyle implements OutputFormatterStyleInterface {
     @Override
     public void setForeground(String color) {
         if (null == color) {
-            this.foreground = null;
+            foreground = null;
 
             return;
         }

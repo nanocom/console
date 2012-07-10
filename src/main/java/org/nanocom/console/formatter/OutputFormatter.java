@@ -13,15 +13,15 @@ import java.util.Map.Entry;
 
 /**
  * Formatter class for console output.
- * 
+ *
  * @author Arnaud Kleinpeter <arnaud.kleinpeter at gmail dot com>
  */
-public final class OutputFormatter implements OutputFormatterInterface {
+public class OutputFormatter implements OutputFormatterInterface {
 
     /**
      * The pattern to phrase the format.
      */
-    // private static final String FORMAT_PATTERN = "#<([a-z][a-z0-9_=;-]+)>(.*?)</\\1?>#is";
+    // private static String FORMAT_PATTERN = "#<([a-z][a-z0-9_=;-]+)>(.*?)</\\1?>#is";
 
     private Boolean decorated;
     private Map<String, OutputFormatterStyleInterface> styles = new HashMap<String, OutputFormatterStyleInterface>();
@@ -32,19 +32,19 @@ public final class OutputFormatter implements OutputFormatterInterface {
      * @param decorated  Whether this formatter should actually decorate strings
      * @param styles     Array of "name => FormatterStyle" instances
      */
-    public OutputFormatter(final boolean decorated, Map<String, OutputFormatterStyleInterface> styles)  {
+    public OutputFormatter(boolean decorated, Map<String, OutputFormatterStyleInterface> styles)  {
         init(decorated, styles);
     }
 
-    public OutputFormatter(final boolean decorated)  {
-        init(decorated, this.styles);
+    public OutputFormatter(boolean decorated)  {
+        init(decorated, new HashMap<String, OutputFormatterStyleInterface>());
     }
 
     public OutputFormatter()  {
-        init(false, this.styles);
+        init(false, new HashMap<String, OutputFormatterStyleInterface>());
     }
 
-    private void init(final boolean decorated, Map<String, OutputFormatterStyleInterface> styles) {
+    private void init(boolean decorated, Map<String, OutputFormatterStyleInterface> styles) {
         this.decorated = decorated;
 
         setStyle("error",    new OutputFormatterStyle("white", "red"));
@@ -63,7 +63,7 @@ public final class OutputFormatter implements OutputFormatterInterface {
      * @param decorated Whether to decorate the messages or not
      */
     @Override
-    public void setDecorated(final boolean decorated) {
+    public void setDecorated(boolean decorated) {
         this.decorated = decorated;
     }
 
@@ -84,7 +84,7 @@ public final class OutputFormatter implements OutputFormatterInterface {
      * @param style The style instance
      */
     @Override
-    public void setStyle(final String name, final OutputFormatterStyleInterface style) {
+    public void setStyle(String name, OutputFormatterStyleInterface style) {
         styles.put(name, style);
     }
 
@@ -96,7 +96,7 @@ public final class OutputFormatter implements OutputFormatterInterface {
      * @return
      */
     @Override
-    public boolean hasStyle(final String name) {
+    public boolean hasStyle(String name) {
         return styles.containsKey(name);
     }
 
@@ -139,7 +139,7 @@ public final class OutputFormatter implements OutputFormatterInterface {
      *
      * @return The replaced style
      */
-    /*private String replaceStyle(final String match) {
+    /*private String replaceStyle(String match) {
         if (!isDecorated()) {
             return String.valueOf(match.charAt(2));
         }
@@ -166,7 +166,7 @@ public final class OutputFormatter implements OutputFormatterInterface {
      *
      * @return Null if string is not format string
      */
-    /*private OutputFormatterStyle createStyleFromString(final String string) {
+    /*private OutputFormatterStyle createStyleFromString(String string) {
         // TODO
         return null;
         if (!preg_match_all('/([^=]+)=([^;]+)(;|)/', strtolower(string), matches, PREG_SET_ORDER)) {
