@@ -10,6 +10,7 @@ package org.nanocom.console.command;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import org.apache.commons.lang3.StringUtils;
 
 import org.nanocom.console.Application;
 import org.nanocom.console.exception.LogicException;
@@ -493,22 +494,14 @@ public class Command extends Executable {
      * @return A string representing the command
      */
     public String asText() {
-        List<String> messages = Arrays.asList(
+        List<String> messages = new ArrayList<String>(Arrays.asList(
             "<comment>Usage:</comment>",
             " " + this.getSynopsis(),
             ""
-        );
+        ));
 
         if (null != getAliases() && !getAliases().isEmpty()) {
-            StringBuilder sb = new StringBuilder();
-            sb.append(getAliases().get(0));
-
-            for (int i = 1; i < getAliases().size(); i++) {
-                sb.append(", ");
-                sb.append(getAliases().get(i));
-            }
-
-            messages.add("<comment>Aliases:</comment> <info>" + sb.toString() + "</info>");
+            messages.add("<comment>Aliases:</comment> <info>" + StringUtils.join(getAliases(), ", ") + "</info>");
         }
 
         messages.add(getNativeDefinition().asText());

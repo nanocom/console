@@ -245,23 +245,21 @@ public class Application {
      * @return A help message.
      */
     public String getHelp() {
-        List<String> messages = Arrays.asList(
-            getLongVersion(),
-            "",
-            "<comment>Usage:</comment>",
-            String.format("  [options] command [arguments]\n"),
-            "<comment>Options:</comment>"
-        );
+        List<String> messages = new ArrayList<String>();
+        messages.add(getLongVersion());
+        messages.add("");
+        messages.add("<comment>Usage:</comment>");
+        messages.add(String.format("  [options] command [arguments]\n"));
+        messages.add("<comment>Options:</comment>");
 
         for (InputOption option : getDefinition().getOptions().values()) {
             option.getName();
             option.getShortcut();
             option.getDescription();
-            messages.add(
-                    String.format("  %s %s %s",
-                            String.format("<info>--%s</info>", option.getName()),
-                            null != option.getShortcut() ? String.format("<info>-%s</info>", option.getShortcut()) : "  ",
-                            option.getDescription()
+            messages.add(String.format("  %s %s %s",
+                    String.format("<info>--%s</info>", option.getName()),
+                    null != option.getShortcut() ? String.format("<info>-%s</info>", option.getShortcut()) : "  ",
+                    option.getDescription()
             ));
         }
 
@@ -649,14 +647,15 @@ public class Application {
             List<String> messages = new ArrayList<String>();
             for (Map<String, Command> commandsMap : sortCommands(locCommands).values()) {
                 for (Command command : commandsMap.values()) {
-                    messages.add(String.format("%-{width}s %s", name, command.getDescription()));
+                    messages.add(String.format("%s %s", name, command.getDescription()));
+                    // messages.add(String.format("%-{width}s %s", name, command.getDescription()));
                 }
             }
 
             return StringUtils.join(System.getProperty("line.separator"), messages);
         }
 
-        List<String> messages = Arrays.asList(getHelp(), "");
+        List<String> messages = new ArrayList<String>(Arrays.asList(getHelp(), ""));
         if (null != namespace) {
             messages.add(String.format("<comment>Available commands for the \"%s\" namespace:</comment>", namespace));
         } else {
@@ -670,7 +669,8 @@ public class Application {
             }
 
             for (final Command command : commandsMap.getValue().values()) {
-                messages.add(String.format("  <info>%-{width}s</info> %s", name, command.getDescription()));
+                messages.add(String.format("  <info>%s</info> %s", name, command.getDescription()));
+                // messages.add(String.format("  <info>%-{width}s</info> %s", name, command.getDescription()));
             }
         }
 

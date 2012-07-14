@@ -21,7 +21,7 @@ public class OutputFormatter implements OutputFormatterInterface {
     /**
      * The pattern to phrase the format.
      */
-    // private static String FORMAT_PATTERN = "#<([a-z][a-z0-9_=;-]+)>(.*?)</\\1?>#is";
+    private static String FORMAT_PATTERN = "<([a-z][a-z0-9_=;-]+)>(.*?)</\\1?>";
 
     private Boolean decorated;
     private Map<String, OutputFormatterStyleInterface> styles = new HashMap<String, OutputFormatterStyleInterface>();
