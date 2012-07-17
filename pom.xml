@@ -6,7 +6,7 @@
 	<artifactId>console</artifactId>
 	<packaging>jar</packaging>
 	<version>1.0-SNAPSHOT</version>
-	<name>Console</name>
+	<name>console</name>
 	<url>https://github.com/Nanocom/console</url>
 	<description>Console eases the creation of beautiful and testable command line interfaces.
 It is a port from Symfony2's Console component.

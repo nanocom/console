@@ -438,6 +438,7 @@ public class Application {
             }
         }
 
+        namespaces.remove(""); // deletes global namespace
         return namespaces;
     }
 
@@ -585,17 +586,17 @@ public class Application {
      */
     public Map<String, Command> all(String namespace) {
     	if (null == namespace) {
-    		return commands;
+    		return new HashMap<String, Command>(commands);
     	}
 
-        Map<String, Command> commands = new HashMap<String, Command>();
+        Map<String, Command> namespacedCommands = new HashMap<String, Command>();
         for (Command command : commands.values()) {
-            if (namespace.equals(extractNamespace(command.getName(), Integer.valueOf(Util.substr_count(namespace, ":") + 1)))) {
-                commands.put(command.getName(), command);
+            if (namespace.equals(extractNamespace(command.getName(), Integer.valueOf(namespace.split(":").length)))) {
+                namespacedCommands.put(command.getName(), command);
             }
         }
 
-        return commands;
+        return namespacedCommands;
     }
 
     /**
@@ -964,13 +965,9 @@ public class Application {
      */
     private String extractNamespace(final String name, final Integer limit) {
         String[] parts = name.split(":");
-        parts = ArrayUtils.subarray(parts, 0, parts.length - 1);
+        parts = ArrayUtils.<String>subarray(parts, 0, parts.length - 1);
 
-		if (0 == parts.length) {
-			return "";
-		} else {
-			return 0 == parts.length ? "" : StringUtils.join(":", null == limit ? parts : ArrayUtils.<String>subarray(parts, 0, limit));
-		}
+        return 0 == parts.length ? "" : StringUtils.join(null == limit ? parts : ArrayUtils.<String>subarray(parts, 0, limit), ':');
     }
 
     private String extractNamespace(final String name) {

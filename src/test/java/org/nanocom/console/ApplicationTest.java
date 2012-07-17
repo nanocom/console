@@ -1,14 +1,14 @@
 package org.nanocom.console;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
 import org.junit.Test;
+import static org.junit.Assert.*;
 import org.nanocom.console.command.Command;
 import org.nanocom.console.command.HelpCommand;
 import org.nanocom.console.fixtures.Foo1Command;
@@ -17,14 +17,6 @@ import org.nanocom.console.fixtures.FooCommand;
 public class ApplicationTest {
 
     public ApplicationTest() {
-    }
-
-    @BeforeClass
-    public static void setUpClass() throws Exception {
-    }
-
-    @AfterClass
-    public static void tearDownClass() throws Exception {
     }
 
     protected void normalizeLineBreaks(final String text) {
@@ -37,116 +29,122 @@ public class ApplicationTest {
      * and can not be tested against.
      */
     protected void ensureStaticCommandHelp(Application application) {
-        /*for (Entry<String, Command> command : application.all().entrySet()) {
-            // command.setHelp(command.getHelp().replaceAll("%command.full_name%", "app/console %command.name%"));
+        /*for (Command command : application.all().values()) {
+            command.setHelp(command.getHelp().replaceAll("%command.full_name%", "app/console %command.name%"));
         }*/
     }
 
     @Test
-    public void testConstructor() throws Exception {
+    public void testConstructor() {
         Application application = new Application("foo", "bar");
-        assertEquals("__construct() takes the application name as its first argument", "foo", application.getName());
-        assertEquals("__construct() takes the application version as its first argument", "bar", application.getVersion());
-        assertTrue("__construct() registered the help and list commands by default", application.all().containsKey("help") && application.all().containsKey("list"));
+        assertEquals("Application() takes the application name as its first argument", "foo", application.getName());
+        assertEquals("Application() takes the application version as its first argument", "bar", application.getVersion());
+        assertTrue("Application() registered the help and list commands by default", application.all().containsKey("help") && application.all().containsKey("list"));
     }
 
     @Test
-    public void testSetGetName() throws Exception {
+    public void testSetGetName() {
         Application application = new Application();
         application.setName("foo");
-        assertEquals(".setName() sets the name of the application", "foo", application.getName());
+        assertEquals("setName() sets the name of the application", "foo", application.getName());
     }
 
     @Test
-    public void testSetGetVersion() throws Exception {
+    public void testSetGetVersion() {
         Application application = new Application();
         application.setVersion("bar");
-        assertEquals(".setVersion() sets the version of the application", "bar", application.getVersion());
+        assertEquals("setVersion() sets the version of the application", "bar", application.getVersion());
     }
 
     @Test
-    public void testGetLongVersion() throws Exception {
-        // Application application = new Application("foo", "bar");
-        // assertEquals(".getLongVersion() returns the long version of the application", "<info>foo</info> version <comment>bar</comment>", application.getLongVersion());
+    public void testGetLongVersion() {
+        Application application = new Application("foo", "bar");
+        assertEquals("getLongVersion() returns the long version of the application", "<info>foo</info> version <comment>bar</comment>", application.getLongVersion());
     }
 
     @Test
-    public void testHelp() throws Exception {
-        // Application application = new Application();
-        // assertStringEqualsFile(".setHelp() returns a help message", self.fixturesPath."/application_gethelp.txt", this.normalizeLineBreaks(application.getHelp()));
+    public void testHelp() {
+//        Application application = new Application();
+//        assertStringEqualsFile("setHelp() returns a help message", self.fixturesPath."/application_gethelp.txt", this.normalizeLineBreaks(application.getHelp()));
     }
 
     @Test
     public void testAll() {
         Application application = new Application();
         Map<String, Command> commands = application.all();
-        assertEquals(".all() returns the registered commands", HelpCommand.class, commands.get("help").getClass());
+        assertEquals("all() returns the registered commands", HelpCommand.class, commands.get("help").getClass());
 
-        /*application.add(new FooCommand());
+        application.add(new FooCommand());
         commands = application.all("foo");
-        assertEquals(".all() takes a namespace as its first argument", 1, commands.size());*/
+        assertEquals("all() takes a namespace as its first argument", 1, commands.size());
     }
 
     @Test
-    public void testRegister() throws Exception {
+    public void testRegister() {
         Application application = new Application();
         Command command = application.register("foo");
-        assertEquals(".register() registers a new command", "foo", command.getName());
+        assertEquals("register() registers a new command", "foo", command.getName());
     }
 
     @Test
-    public void testAdd() throws Exception {
+    public void testAdd() {
         Application application = new Application();
         Command foo = new FooCommand();
         application.add(foo);
         Map<String, Command> commands = application.all();
-        assertEquals(".add() registers a command", foo, commands.get("foo:bar"));
+        assertEquals("add() registers a command", foo, commands.get("foo:bar"));
 
         application = new Application();
         foo = new FooCommand();
         Command foo1 = new Foo1Command();
         application.addCommands(Arrays.asList(foo, foo1));
         commands = application.all();
-        assertEquals(".addCommands() registers an array of commands", Arrays.asList(foo, foo1), Arrays.asList(commands.get("foo:bar"), commands.get("foo:bar1")));
+        assertEquals("addCommands() registers an array of commands", Arrays.asList(foo, foo1), Arrays.asList(commands.get("foo:bar"), commands.get("foo:bar1")));
     }
 
-    /*public void testHasGet() throws Exception {
+    @Test
+    public void testHasGet() throws NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
         Application application = new Application();
-        assertTrue(application.has("list"), ".has() returns true if a named command is registered");
-        assertFalse(application.has("afoobar"), ".has() returns false if a named command is not registered");
+        assertTrue("has() returns true if a named command is registered", application.has("list"));
+        assertFalse("has() returns false if a named command is not registered", application.has("afoobar"));
 
-        application.add(foo = new FooCommand());
-        assertTrue(application.has("afoobar"), ".has() returns true if an alias is registered");
-        assertEquals(foo, application.get("foo:bar"), ".get() returns a command by name");
-        assertEquals(foo, application.get("afoobar"), ".get() returns a command by alias");
+        FooCommand foo = new FooCommand();
+        application.add(foo);
+        assertTrue("has() returns true if an alias is registered", application.has("afoobar"));
+        assertEquals("get() returns a command by name", foo, application.get("foo:bar"));
+        assertEquals("get() returns a command by alias", foo, application.get("afoobar"));
 
         try {
             application.get("foofoo");
-            fail(".get() throws an \InvalidArgumentException if the command does not exist");
-        } .catch (Exception e) {
-            assertInstanceOf("\InvalidArgumentException", e, ".get() throws an \InvalidArgumentException if the command does not exist");
-            assertEquals("The command \"foofoo\" does not exist.", e.getMessage(), ".get() throws an \InvalidArgumentException if the command does not exist");
+            fail("get() throws an IllegalArgumentException if the command does not exist");
+        } catch (Exception e) {
+            assertTrue("get() throws an IllegalArgumentException if the command does not exist", e instanceof IllegalArgumentException);
+            assertEquals("get() throws an IllegalArgumentException if the command does not exist", "The command \"foofoo\" does not exist.", e.getMessage());
         }
 
         application = new Application();
-        application.add(foo = new \FooCommand());
+        foo = new FooCommand();
+        application.add(foo);
         // simulate --help
-        r = new \ReflectionObject(application);
-        p = r.getProperty("wantHelps");
-        p.setAccessible(true);
-        p.setValue(application, true);
-        command = application.get("foo:bar");
-        assertEquals("Symfony\Component\Console\Command\HelpCommand", get_class(command), ".get() returns the help command if --help is provided as the input");
+        Class<Application> cls = Application.class;
+        Field f = cls.getDeclaredField("wantHelps");
+        f.setAccessible(true);
+        f.set(application, true);
+        Command command = application.get("foo:bar");
+        assertEquals("get() returns the help command if --help is provided as the input", HelpCommand.class, command.getClass());
     }
 
+    @Test
     public void testGetNamespaces() {
         Application application = new Application();
-        application.add(new \FooCommand());
-        application.add(new \Foo1Command());
-        assertEquals(array("foo"), application.getNamespaces(), ".getNamespaces() returns an array of unique used namespaces");
+        application.add(new FooCommand());
+        application.add(new Foo1Command());
+        Set<String> foo = new HashSet<String>(1);
+        foo.add("foo");
+        assertEquals("getNamespaces() returns an array of unique used namespaces", foo, application.getNamespaces());
     }
 
-    public void testFindNamespace() {
+    /*public void testFindNamespace() {
         Application application = new Application();
         application.add(new \FooCommand());
         assertEquals("foo", application.findNamespace("foo"), ".findNamespace() returns the given namespace if it exists");

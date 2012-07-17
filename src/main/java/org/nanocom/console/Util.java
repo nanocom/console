@@ -7,15 +7,4 @@ package org.nanocom.console;
  */
 public class Util {
 
-    /**
-     * @param text
-     * @param search
-     * @return 
-     */
-    public static int substr_count(String text, String search) {
-        int count = text.split(search).length - 1;
-
-        return count;
-    }
-
 }

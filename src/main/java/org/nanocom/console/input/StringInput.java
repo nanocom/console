@@ -15,7 +15,7 @@ import java.util.ArrayList;
  * Usage:
  *
  *     StringInput input = new StringInput("foo --bar=\"foobar\"");
- * 
+ *
  * @author Arnaud Kleinpeter <arnaud.kleinpeter at gmail dot com>
  */
 public class StringInput extends ArgvInput {
@@ -26,14 +26,14 @@ public class StringInput extends ArgvInput {
     /**
      * @param input An array of parameters from the CLI (in the argv format)
      * @param definition An InputDefinition instance
-     * @throws Exception 
+     * @throws Exception
      */
     public StringInput(final String input, final InputDefinition definition) throws Exception {
         super(new String[0], definition);
 
         setTokens(tokenize(input));
     }
- 
+
     public StringInput(final String input) throws Exception {
         this(input, null);
     }
@@ -49,7 +49,7 @@ public class StringInput extends ArgvInput {
     private String[] tokenize(String input) throws IllegalArgumentException {
         input.replaceAll("(\r\n|\r|\n|\t)", " ");
 
-        tokens = new ArrayList<String>();
+        // tokens = new ArrayList<String>();
         // int length = input.length();
         // int cursor = 0;
         // TODO Implement this part
@@ -71,7 +71,7 @@ public class StringInput extends ArgvInput {
             cursor += match.get(0).length();
         }*/
 
-        return (String[]) tokens.toArray();
+        return new String[0];
     }
 
 }
