@@ -7,15 +7,8 @@
 
 package org.nanocom.console;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Set;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -81,7 +74,7 @@ public class Application {
         this.version = version;
         catchExceptions = true;
         autoExit = true;
-        commands = new HashMap<String, Command>();
+        commands = new LinkedHashMap<String, Command>();
         helperSet = getDefaultHelperSet();
         definition = getDefaultInputDefinition();
 
@@ -429,7 +422,7 @@ public class Application {
      * @return A set of namespaces
      */
     public Set<String> getNamespaces() {
-        Set<String> namespaces = new HashSet<String>();
+        Set<String> namespaces = new LinkedHashSet<String>();
         for (Command command : commands.values()) {
             namespaces.add(extractNamespace(command.getName()));
 
@@ -451,8 +444,8 @@ public class Application {
      *
      * @throws IllegalArgumentException When namespace is incorrect or ambiguous
      */
-    public String findNamespace(String namespace) throws IllegalArgumentException {
-        Map<String, List<String>> allNamespaces = new HashMap<String, List<String>>();
+    public String findNamespace(String namespace) {
+        Map<String, List<String>> allNamespaces = new LinkedHashMap<String, List<String>>();
         for (String n : getNamespaces()) {
             allNamespaces.put(n, new ArrayList<String>(Arrays.asList(n.split(":"))));
         }
@@ -460,7 +453,7 @@ public class Application {
         List<String> found = new ArrayList<String>();
         int i = 0;
         for (String part : namespace.split(":")) {
-        	Set<String> filteredNamespaces = new HashSet<String>();
+        	Set<String> filteredNamespaces = new LinkedHashSet<String>();
 
         	for (List<String> subNamespaces : allNamespaces.values()) {
         		if (i < subNamespaces.size()) {
@@ -468,14 +461,14 @@ public class Application {
         		}
         	}
 
-        	Map<String, List<String>> abbrevs = getAbbreviations(filteredNamespaces);
+        	Map<String, List<String>> abbrevs = getAbbreviations(new ArrayList<String>(filteredNamespaces));
 
             if (!abbrevs.containsKey(part)) {
             	StringBuilder message = new StringBuilder();
                 message.append(String.format("There are no commands defined in the \"%s\" namespace.", namespace));
 
                 if (1 <= i) {
-                    part = String.format("%s:%s", StringUtils.join(":", found), part);
+                    part = String.format("%s:%s", StringUtils.join(found, ':'), part);
                 }
 
                 /*List<String> alternatives = findAlternativeNamespace(part, abbrevs);
@@ -496,7 +489,7 @@ public class Application {
             i++;
         }
 
-        return StringUtils.join(":", found);
+        return StringUtils.join(found, ':');
     }
 
     /**
@@ -522,14 +515,14 @@ public class Application {
         }
 
         // Name
-        Set<String> commands = new HashSet<String>();
+        Set<String> commands = new LinkedHashSet<String>();
         for (Command command : this.commands.values()) {
             if (extractNamespace(command.getName()).equals(namespace)) {
             	commands.add(command.getName());
             }
         }
 
-        Map<String, List<String>> abbrevs = getAbbreviations(commands);
+        Map<String, List<String>> abbrevs = getAbbreviations(new ArrayList<String>(commands));
         if (abbrevs.containsKey(searchName) && 1 == abbrevs.get(searchName).size()) {
             return get(abbrevs.get(searchName).get(0));
         }
@@ -550,16 +543,16 @@ public class Application {
             }
         }
 
-        Map<String, List<String>> aliasesMap = getAbbreviations(aliases);
+        Map<String, List<String>> aliasesMap = getAbbreviations(new ArrayList<String>(aliases));
         if (!aliasesMap.containsKey(searchName)) {
         	StringBuilder message = new StringBuilder();
             message.append(String.format("Command \"%s\" is not defined.", name));
 
-            /*Set<String> alternatives = findAlternativeCommands(searchName, abbrevs);
+            Set<String> alternatives = findAlternativeCommands(searchName, abbrevs);
             if (!alternatives.isEmpty()) {
                 message.append("\n\nDid you mean one of these?\n    ");
-                message.append(StringUtils.join("\n    ", alternatives));
-            }*/
+                message.append(StringUtils.join(alternatives, "\n    "));
+            }
 
             throw new IllegalArgumentException(message.toString());
         }
@@ -606,8 +599,8 @@ public class Application {
      *
      * @return A map of abbreviations
      */
-    static public Map<String, List<String>> getAbbreviations(Collection<String> names) {
-        Map<String, List<String>> abbrevs = new HashMap<String, List<String>>();
+    static public Map<String, List<String>> getAbbreviations(List<String> names) {
+        Map<String, List<String>> abbrevs = new LinkedHashMap<String, List<String>>();
         for (String name : names) {
             for (int len = name.length() - 1; len > 0; --len) {
                 String abbrev = name.substring(0, len);
@@ -951,8 +944,8 @@ public class Application {
      *
      * @return A formatted string of abbreviated suggestions
      */
-    private String getAbbreviationSuggestions(final Collection<String> abbrevs) {
-        return String.format("%s, %s%s", abbrevs.toArray()[0], abbrevs.toArray()[1], abbrevs.size() > 2 ? String.format(" and %d more", abbrevs.size() - 2) : "");
+    private String getAbbreviationSuggestions(List<String> abbrevs) {
+        return String.format("%s, %s%s", abbrevs.get(0), abbrevs.get(1), abbrevs.size() > 2 ? String.format(" and %d more", abbrevs.size() - 2) : "");
     }
 
     /**
@@ -963,36 +956,31 @@ public class Application {
      *
      * @return The namespace of the command
      */
-    private String extractNamespace(final String name, final Integer limit) {
+    private String extractNamespace(String name, Integer limit) {
         String[] parts = name.split(":");
         parts = ArrayUtils.<String>subarray(parts, 0, parts.length - 1);
 
         return 0 == parts.length ? "" : StringUtils.join(null == limit ? parts : ArrayUtils.<String>subarray(parts, 0, limit), ':');
     }
 
-    private String extractNamespace(final String name) {
+    private String extractNamespace(String name) {
         return extractNamespace(name, null);
     }
 
     /**
-     * Finds alternative commands of name
+     * Finds alternative commands of name.
      *
      * @param name    The full name of the command
      * @param abbrevs The abbreviations
      *
      * @return A sorted array of similar commands
      */
-    /*private Set<String> findAlternativeCommands(String name, List<String> abbrevs) {
-        callback = void(item) {
-            return item.getName();
-        };
-
-        // TODO return findAlternatives(name, commands.values(), abbrevs, callback);
-        return new HashSet<String>();
-    }*/
+    private Set<String> findAlternativeCommands(String name, Map<String, List<String>> abbrevs) {
+        return findAlternatives(name, new ArrayList<String>(commands.keySet()), abbrevs);
+    }
 
     /**
-     * Finds alternative namespace of name
+     * Finds alternative namespace of name.
      *
      * @param name    The full name of the namespace
      * @param abbrevs The abbreviations
@@ -1005,42 +993,39 @@ public class Application {
 
     /**
      * Finds alternative of name among collection,
-     * if nothing is found in collection, try in abbrevs
+     * if nothing is found in collection, try in abbrevs.
      *
      * @param name       The string
-     * @param array|Traversable     collection The collection
-     * @param array                 abbrevs    The abbreviations
-     * @param Closure|string|array  callback   The callable to transform collection item before comparison
+     * @param collection The collection
+     * @param abbrevs    The abbreviations
      *
      * @return A sorted set of similar string
      */
-    /*private Set<String> findAlternatives(final String name, List<String> collection, List<String> abbrevs, callback) {
+    private Set<String> findAlternatives(String name, List<String> collection, Map<String, List<String>> abbrevs) {
         Map<String, Integer> alternatives = new HashMap<String, Integer>();
 
-        for (final Object item : collection) {
-            if (null != callback) {
-                item = call_user_func(callback, item);
-            }
-
-            lev = levenshtein(name, item);
-            if (lev <= name.length() / 3 || -1 != name.indexOf(item)) {
+        for (String item : collection) {
+            int lev = StringUtils.getLevenshteinDistance(name, item);
+            if (lev <= name.length() / 3 || -1 < name.indexOf(item)) {
                 alternatives.put(item, lev);
             }
         }
 
         if (alternatives.isEmpty()) {
-            for (abbrevs as key => values) {
-                lev = levenshteinarray_keys(alternatives);(name, key);
-                if (lev <= strlen(name) / 3 || false != strpos(key, name)) {
-                    foreach (values as value) {
-                        alternatives[value] = lev;
+            int i = 0;
+            for (Entry<String, List<String>> values : abbrevs.entrySet()) {
+                int lev = StringUtils.getLevenshteinDistance(name, values.getKey());
+                if (lev <= name.length() / 3 || values.getKey().indexOf(name) > -1) {
+                    for (String value : values.getValue()) {
+                        alternatives.put(value, lev);
                     }
                 }
+                i++;
             }
         }
 
-        asort(alternatives);
+        // asort(alternatives); // Trie par ordre de distance
 
         return alternatives.keySet();
-    }*/
+    }
 }

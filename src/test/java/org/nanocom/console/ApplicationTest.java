@@ -12,6 +12,7 @@ import static org.junit.Assert.*;
 import org.nanocom.console.command.Command;
 import org.nanocom.console.command.HelpCommand;
 import org.nanocom.console.fixtures.Foo1Command;
+import org.nanocom.console.fixtures.Foo2Command;
 import org.nanocom.console.fixtures.FooCommand;
 
 public class ApplicationTest {
@@ -144,106 +145,113 @@ public class ApplicationTest {
         assertEquals("getNamespaces() returns an array of unique used namespaces", foo, application.getNamespaces());
     }
 
-    /*public void testFindNamespace() {
+    @Test
+    public void testFindNamespace() {
         Application application = new Application();
-        application.add(new \FooCommand());
-        assertEquals("foo", application.findNamespace("foo"), ".findNamespace() returns the given namespace if it exists");
-        assertEquals("foo", application.findNamespace("f"), ".findNamespace() finds a namespace given an abbreviation");
-        application.add(new \Foo2Command());
-        assertEquals("foo", application.findNamespace("foo"), ".findNamespace() returns the given namespace if it exists");
+        application.add(new FooCommand());
+        assertEquals("findNamespace() returns the given namespace if it exists", "foo", application.findNamespace("foo"));
+        assertEquals("findNamespace() finds a namespace given an abbreviation", "foo", application.findNamespace("f"));
+        application.add(new Foo2Command());
+        assertEquals("findNamespace() returns the given namespace if it exists", "foo", application.findNamespace("foo"));
         try {
             application.findNamespace("f");
-            fail(".findNamespace() throws an \InvalidArgumentException if the abbreviation is ambiguous");
-        } .catch (Exception e) {
-            assertInstanceOf("\InvalidArgumentException", e, ".findNamespace() throws an \InvalidArgumentException if the abbreviation is ambiguous");
-            assertEquals("The namespace \"f\" is ambiguous (foo, foo1).", e.getMessage(), ".findNamespace() throws an \InvalidArgumentException if the abbreviation is ambiguous");
+            fail("findNamespace() throws an IllegalArgumentException if the abbreviation is ambiguous");
+        } catch (Exception e) {
+            assertTrue("findNamespace() throws an IllegalArgumentException if the abbreviation is ambiguous", e instanceof IllegalArgumentException);
+            assertEquals("findNamespace() throws an IllegalArgumentException if the abbreviation is ambiguous", "The namespace \"f\" is ambiguous (foo, foo1).", e.getMessage());
         }
 
         try {
             application.findNamespace("bar");
-            fail(".findNamespace() throws an \InvalidArgumentException if no command is in the given namespace");
-        } .catch (Exception e) {
-            assertInstanceOf("\InvalidArgumentException", e, ".findNamespace() throws an \InvalidArgumentException if no command is in the given namespace");
-            assertEquals("There are no commands defined in the \"bar\" namespace.", e.getMessage(), ".findNamespace() throws an \InvalidArgumentException if no command is in the given namespace");
+            fail("findNamespace() throws an IllegalArgumentException if no command is in the given namespace");
+        } catch (Exception e) {
+            assertTrue("findNamespace() throws an IllegalArgumentException if no command is in the given namespace", e instanceof IllegalArgumentException);
+            assertEquals("findNamespace() throws an IllegalArgumentException if no command is in the given namespace", "There are no commands defined in the \"bar\" namespace.", e.getMessage());
         }
     }
 
+    @Test
     public void testFind() {
         Application application = new Application();
-        application.add(new \FooCommand());
-        assertEquals("FooCommand", get_class(application.find("foo:bar")), ".find() returns a command if its name exists");
-        assertEquals("Symfony\Component\Console\Command\HelpCommand", get_class(application.find("h")), ".find() returns a command if its name exists");
-        assertEquals("FooCommand", get_class(application.find("f:bar")), ".find() returns a command if the abbreviation for the namespace exists");
-        assertEquals("FooCommand", get_class(application.find("f:b")), ".find() returns a command if the abbreviation for the namespace and the command name exist");
-        assertEquals("FooCommand", get_class(application.find("a")), ".find() returns a command if the abbreviation exists for an alias");
+        application.add(new FooCommand());
+        assertEquals("find() returns a command if its name exists", FooCommand.class, application.find("foo:bar").getClass());
+        assertEquals("find() returns a command if its name exists", HelpCommand.class, application.find("h").getClass());
+        assertEquals("find() returns a command if the abbreviation for the namespace exists", FooCommand.class, application.find("f:bar").getClass());
+        assertEquals("find() returns a command if the abbreviation for the namespace and the command name exist", FooCommand.class, application.find("f:b").getClass());
+        assertEquals("find() returns a command if the abbreviation exists for an alias", FooCommand.class, application.find("a").getClass());
 
-        application.add(new \Foo1Command());
-        application.add(new \Foo2Command());
+        application.add(new Foo1Command());
+        application.add(new Foo2Command());
 
         try {
             application.find("f");
-            fail(".find() throws an \InvalidArgumentException if the abbreviation is ambiguous for a namespace");
+            fail("find() throws an IllegalArgumentException if the abbreviation is ambiguous for a namespace");
         } catch (Exception e) {
-            assertInstanceOf("\InvalidArgumentException", e, ".find() throws an \InvalidArgumentException if the abbreviation is ambiguous for a namespace");
-            assertRegExp("/Command \"f\" is not defined./", e.getMessage(), ".find() throws an \InvalidArgumentException if the abbreviation is ambiguous for a namespace");
+            assertTrue("find() throws an IllegalArgumentException if the abbreviation is ambiguous for a namespace", e instanceof IllegalArgumentException);
+            assertEquals("find() throws an IllegalArgumentException if the abbreviation is ambiguous for a namespace", "Command \"f\" is not defined.", e.getMessage());
         }
 
         try {
             application.find("a");
-            fail(".find() throws an \InvalidArgumentException if the abbreviation is ambiguous for an alias");
+            fail("find() throws an IllegalArgumentException if the abbreviation is ambiguous for an alias");
         } catch (Exception e) {
-            assertInstanceOf("\InvalidArgumentException", e, ".find() throws an \InvalidArgumentException if the abbreviation is ambiguous for an alias");
-            assertEquals("Command \"a\" is ambiguous (afoobar, afoobar1 and 1 more).", e.getMessage(), ".find() throws an \InvalidArgumentException if the abbreviation is ambiguous for an alias");
+            assertTrue("find() throws an IllegalArgumentException if the abbreviation is ambiguous for an alias", e instanceof IllegalArgumentException);
+            assertEquals("find() throws an IllegalArgumentException if the abbreviation is ambiguous for an alias", "Command \"a\" is ambiguous (afoobar, afoobar1 and 1 more).", e.getMessage());
         }
 
         try {
             application.find("foo:b");
-            fail(".find() throws an \InvalidArgumentException if the abbreviation is ambiguous for a command");
+            fail("find() throws an IllegalArgumentException if the abbreviation is ambiguous for a command");
         } catch (Exception e) {
-            assertInstanceOf("\InvalidArgumentException", e, ".find() throws an \InvalidArgumentException if the abbreviation is ambiguous for a command");
-            assertEquals("Command \"foo:b\" is ambiguous (foo:bar, foo:bar1).", e.getMessage(), ".find() throws an \InvalidArgumentException if the abbreviation is ambiguous for a command");
+            assertTrue("find() throws an IllegalArgumentException if the abbreviation is ambiguous for a command", e instanceof IllegalArgumentException);
+            assertEquals("find() throws an IllegalArgumentException if the abbreviation is ambiguous for a command", "Command \"foo:b\" is ambiguous (foo:bar, foo:bar1).", e.getMessage());
         }
     }
 
+    @Test
     public void testFindAlternativeCommands() {
         Application application = new Application();
 
-        application.add(new \FooCommand());
-        application.add(new \Foo1Command());
-        application.add(new \Foo2Command());
+        application.add(new FooCommand());
+        application.add(new Foo1Command());
+        application.add(new Foo2Command());
+        String commandName = null;
 
         try {
-            application.find(commandName = "Unknow command");
-            fail(".find() throws an \InvalidArgumentException if command does not exist");
+            commandName = "Unknow command";
+            application.find(commandName);
+            fail("find() throws an IllegalArgumentException if command does not exist");
         } catch (Exception e) {
-            assertInstanceOf("\InvalidArgumentException", e, ".find() throws an \InvalidArgumentException if command does not exist");
-            assertEquals(sprintf("Command \"%s\" is not defined.", commandName), e.getMessage(), ".find() throws an \InvalidArgumentException if command does not exist, without alternatives");
+            assertTrue("find() throws an IllegalArgumentException if command does not exist", e instanceof IllegalArgumentException);
+            assertEquals("find() throws an IllegalArgumentException if command does not exist, without alternatives", String.format("Command \"%s\" is not defined.", commandName), e.getMessage());
         }
 
         try {
-            application.find(commandName = "foo");
-            fail(".find() throws an \InvalidArgumentException if command does not exist");
+            commandName = "foo";
+            application.find(commandName);
+            fail("find() throws an IllegalArgumentException if command does not exist");
         } catch (Exception e) {
-            assertInstanceOf("\InvalidArgumentException", e, ".find() throws an \InvalidArgumentException if command does not exist");
-            assertRegExp(sprintf("/Command \"%s\" is not defined./", commandName), e.getMessage(), ".find() throws an \InvalidArgumentException if command does not exist, with alternatives");
-            assertRegExp("/foo:bar/", e.getMessage(), ".find() throws an \InvalidArgumentException if command does not exist, with alternative : \"foo:bar\"");
-            assertRegExp("/foo1:bar/", e.getMessage(), ".find() throws an \InvalidArgumentException if command does not exist, with alternative : \"foo1:bar\"");
-            assertRegExp("/foo:bar1/", e.getMessage(), ".find() throws an \InvalidArgumentException if command does not exist, with alternative : \"foo:bar1\"");
+            assertTrue("find() throws an IllegalArgumentException if command does not exist", e instanceof IllegalArgumentException);
+            assertEquals("find() throws an IllegalArgumentException if command does not exist, with alternatives", String.format("Command \"%s\" is not defined.", commandName), e.getMessage());
+//            assertTrue("find() throws an IllegalArgumentException if command does not exist, with alternative : \"foo:bar\"", e.getMessage().indexOf("foo:bar") > -1);
+//            assertEquals("find() throws an IllegalArgumentException if command does not exist, with alternative : \"foo1:bar\"", "/foo1:bar/", e.getMessage());
+//            assertEquals("find() throws an IllegalArgumentException if command does not exist, with alternative : \"foo:bar1\"", "/foo:bar1/", e.getMessage());
         }
 
-        // Test if \"foo1\" command throw an \"\InvalidArgumentException\" and does not contain
-        // \"foo:bar\" as alternative because \"foo1\" is too far from \"foo:bar\"
+        // Test if "foo1" command throws an "IllegalArgumentException" and does not contain
+        // "foo:bar" as alternative because "foo1" is too far from "foo:bar"
         try {
-            application.find(commandName = "foo1");
-            fail(".find() throws an \InvalidArgumentException if command does not exist");
+            commandName = "foo1";
+            application.find(commandName);
+            fail("find() throws an IllegalArgumentException if command does not exist");
         } catch (Exception e) {
-            assertInstanceOf("\InvalidArgumentException", e, ".find() throws an \InvalidArgumentException if command does not exist");
-            assertRegExp(sprintf("/Command \"%s\" is not defined./", commandName), e.getMessage(), ".find() throws an \InvalidArgumentException if command does not exist, with alternatives");
-            assertFalse(strpos(e.getMessage(), "foo:bar"), ".find() throws an \InvalidArgumentException if command does not exist, without \"foo:bar\" alternative");
+            assertTrue("find() throws an IllegalArgumentException if command does not exist", e instanceof IllegalArgumentException);
+            assertEquals("find() throws an IllegalArgumentException if command does not exist, with alternatives", String.format("Command \"%s\" is not defined.", commandName), e.getMessage());
+            assertFalse("find() throws an IllegalArgumentException if command does not exist, without \"foo:bar\" alternative", e.getMessage().indexOf("foo:bar") > -1);
         }
     }
 
-    public void testFindAlternativeNamespace() {
+    /*public void testFindAlternativeNamespace() {
         Application application = new Application();
 
         application.add(new \FooCommand());
