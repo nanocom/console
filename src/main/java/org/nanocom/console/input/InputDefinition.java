@@ -7,11 +7,7 @@
 
 package org.nanocom.console.input;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import org.apache.commons.lang3.StringUtils;
 import org.nanocom.console.exception.LogicException;
@@ -25,7 +21,7 @@ import org.nanocom.console.exception.LogicException;
  *       new InputArgument("name", InputArgument.REQUIRED),
  *       new InputOption("foo", "f", InputOption.VALUE_REQUIRED),
  *     ));
- * 
+ *
  * @author Arnaud Kleinpeter <arnaud.kleinpeter at gmail dot com>
  */
 
@@ -44,7 +40,7 @@ public class InputDefinition {
     public InputDefinition(final List<Object> definition) {
         setDefinition(definition);
     }
-    
+
     public InputDefinition() {
         setDefinition(new ArrayList<Object>());
     }
@@ -89,7 +85,7 @@ public class InputDefinition {
      * Adds an array of InputArgument objects.
      *
      * @param arguments An array of InputArgument objects
-     * @throws Exception 
+     * @throws Exception
      */
     public void addArguments(final List<InputArgument> arguments) {
         if (null != arguments) {
@@ -148,7 +144,7 @@ public class InputDefinition {
 
         return arguments.get(name);
     }
-    
+
     /**
      * Returns an InputArgument by position.
      *
@@ -163,7 +159,7 @@ public class InputDefinition {
             throw new IllegalArgumentException(String.format("The \"%s\" argument does not exist.", position));
         }
 
-        /* 
+        /*
          * TODO Optimize this part if possible
          * Maybe change Map<String, InputArgument> to something more adapted?
          */
@@ -184,7 +180,7 @@ public class InputDefinition {
     public boolean hasArgument(final String name) {
         return arguments.containsKey(name);
     }
-    
+
     /**
      * Returns true if an InputArgument object exists by position.
      *
@@ -243,8 +239,8 @@ public class InputDefinition {
      * @param options An array of InputOption objects
      */
     public void setOptions(final List<InputOption> options) {
-        this.options = new HashMap<String, InputOption>();
-        shortcuts = new HashMap<String, String>();
+        this.options = new LinkedHashMap<String, InputOption>();
+        shortcuts = new LinkedHashMap<String, String>();
         addOptions(options);
     }
 
@@ -286,9 +282,9 @@ public class InputDefinition {
      * Returns an InputOption by name.
      *
      * @param name The InputOption name
-     * 
+     *
      * @return An InputOption object
-     * 
+     *
      * @throws IllegalArgumentException When option given doesn't exist
      */
     public InputOption getOption(final String name) throws IllegalArgumentException {
@@ -332,7 +328,7 @@ public class InputDefinition {
      * Gets an InputOption by shortcut.
      *
      * @param shortcut The shortcut name
-     * 
+     *
      * @return An InputOption object
      */
     public InputOption getOptionForShortcut(final String shortcut) {

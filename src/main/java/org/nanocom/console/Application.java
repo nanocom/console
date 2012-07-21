@@ -242,21 +242,19 @@ public class Application {
         messages.add(getLongVersion());
         messages.add("");
         messages.add("<comment>Usage:</comment>");
-        messages.add(String.format("  [options] command [arguments]\n"));
+        messages.add("  [options] command [arguments]\n");
         messages.add("<comment>Options:</comment>");
 
         for (InputOption option : getDefinition().getOptions().values()) {
-            option.getName();
-            option.getShortcut();
-            option.getDescription();
-            messages.add(String.format("  %s %s %s",
+            messages.add(
+                    String.format("  %-29s %s %s",
                     String.format("<info>--%s</info>", option.getName()),
                     null != option.getShortcut() ? String.format("<info>-%s</info>", option.getShortcut()) : "  ",
                     option.getDescription()
             ));
         }
 
-        return StringUtils.join(System.getProperty("line.separator"), messages);
+        return StringUtils.join(messages, System.getProperty("line.separator"));
     }
 
     /**
@@ -646,7 +644,7 @@ public class Application {
                 }
             }
 
-            return StringUtils.join(System.getProperty("line.separator"), messages);
+            return StringUtils.join(messages, System.getProperty("line.separator"));
         }
 
         List<String> messages = new ArrayList<String>(Arrays.asList(getHelp(), ""));
@@ -668,7 +666,7 @@ public class Application {
             }
         }
 
-        return StringUtils.join(System.getProperty("line.separator"), messages);
+        return StringUtils.join(messages, System.getProperty("line.separator"));
     }
 
     public String asText(final String namespace) {

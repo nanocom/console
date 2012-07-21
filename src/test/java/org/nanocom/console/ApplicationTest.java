@@ -1,11 +1,14 @@
 package org.nanocom.console;
 
+import java.io.*;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -20,8 +23,9 @@ public class ApplicationTest {
     public ApplicationTest() {
     }
 
-    protected void normalizeLineBreaks(final String text) {
-        text.replaceAll(System.getProperty("line.separator"), "\n");
+    protected String normalizeLineBreaks(final String text) {
+        //return text;
+        return text.replaceAll(System.getProperty("line.separator"), "\n");
     }
 
     /**
@@ -30,9 +34,9 @@ public class ApplicationTest {
      * and can not be tested against.
      */
     protected void ensureStaticCommandHelp(Application application) {
-        /*for (Command command : application.all().values()) {
-            command.setHelp(command.getHelp().replaceAll("%command.full_name%", "app/console %command.name%"));
-        }*/
+        for (Command command : application.all().values()) {
+            // command.setHelp(command.getHelp().replaceAll("%command.full_name%", "app/console %command.name%"));
+        }
     }
 
     @Test
@@ -299,17 +303,42 @@ public class ApplicationTest {
             assertInstanceOf("\Exception", e, ".setCatchExceptions() sets the catch exception flag");
             assertEquals("Command \"foo\" is not defined.", e.getMessage(), ".setCatchExceptions() sets the catch exception flag");
         }
+    }*/
+
+    public String getResource(String file) {
+        StringBuilder contents = new StringBuilder();
+
+        try {
+            BufferedReader input = new BufferedReader(
+                    new InputStreamReader(
+                            getClass().getClassLoader().getResourceAsStream(file)));
+            try {
+                String line = null;
+                while ((line = input.readLine()) != null) {
+                    contents.append(line);
+                    contents.append(System.getProperty("line.separator"));
+                }
+            } finally {
+                input.close();
+            }
+        } catch (IOException ex){
+            ex.printStackTrace();
+            fail();
+        }
+
+        return contents.toString();
     }
 
-    public void testAsText() throws Exception {
+    @Test
+    public void testAsText() {
         Application application = new Application();
         application.add(new FooCommand());
-        this.ensureStaticCommandHelp(application);
-        assertStringEqualsFile(self.fixturesPath."/application_astext1.txt", this.normalizeLineBreaks(application.asText()), ".asText() returns a text representation of the application");
-        assertStringEqualsFile(self.fixturesPath."/application_astext2.txt", this.normalizeLineBreaks(application.asText("foo")), ".asText() returns a text representation of the application");
+        ensureStaticCommandHelp(application);
+        assertEquals("asText() returns a text representation of the application", getResource("application_astext1.txt"), normalizeLineBreaks(application.asText()));
+        assertEquals("asText() returns a text representation of the application", getResource("application_astext2.txt"), normalizeLineBreaks(application.asText("foo")));
     }
 
-    public void testAsXml() throws Exception {
+    /*public void testAsXml() throws Exception {
         Application application = new Application();
         application.add(new FooCommand());
         this.ensureStaticCommandHelp(application);
