@@ -1,14 +1,23 @@
+/*
+ * This file is part of the Console package.
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 package org.nanocom.console;
 
 import java.io.*;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.net.URI;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.apache.commons.io.FileUtils;
 
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -321,6 +330,7 @@ public class ApplicationTest {
             } finally {
                 input.close();
             }
+            contents.deleteCharAt(contents.lastIndexOf(System.getProperty("line.separator")));
         } catch (IOException ex){
             ex.printStackTrace();
             fail();
@@ -344,9 +354,9 @@ public class ApplicationTest {
         this.ensureStaticCommandHelp(application);
         assertXmlStringEqualsXmlFile(self.fixturesPath."/application_asxml1.txt", application.asXml(), ".asXml() returns an XML representation of the application");
         assertXmlStringEqualsXmlFile(self.fixturesPath."/application_asxml2.txt", application.asXml("foo"), ".asXml() returns an XML representation of the application");
-    }
+    }*/
 
-    public void testRenderException() {
+    /*public void testRenderException() {
         Application application = this.getMock("Symfony\Component\Console\Application", array("getTerminalWidth"));
         application.setAutoExit(false);
         application.expects(this.any())
@@ -384,9 +394,9 @@ public class ApplicationTest {
 
         tester.run(array("command" => "foo"), array("decorated" => false));
         assertStringEqualsFile(self.fixturesPath."/application_renderexception4.txt", this.normalizeLineBreaks(tester.getDisplay()), ".renderException() wraps messages when they are bigger than the terminal");
-    }
+    }*/
 
-    public void testRun() throws Exception {
+    /*public void testRun() throws Exception {
         Application application = new Application();
         application.setAutoExit(false);
         application.setCatchExceptions(false);
@@ -485,5 +495,4 @@ public class ApplicationTest {
             array(new InputOption("query", "q", InputOption.VALUE_NONE)),
         );
     }*/
-
 }

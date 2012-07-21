@@ -627,20 +627,19 @@ public class Application {
      * @return A string representing the Application
      */
     public String asText(String namespace, boolean raw) {
-        Map<String, Command> locCommands = null != namespace ? all(findNamespace(namespace)) : commands;
+        Map<String, Command> cmds = null != namespace ? all(findNamespace(namespace)) : commands;
 
         int width = 0;
-        for (Command command : locCommands.values()) {
+        for (Command command : cmds.values()) {
             width = command.getName().length() > width ? command.getName().length() : width;
         }
         width += 2;
 
         if (raw) {
             List<String> messages = new ArrayList<String>();
-            for (Map<String, Command> commandsMap : sortCommands(locCommands).values()) {
+            for (Map<String, Command> commandsMap : sortCommands(cmds).values()) {
                 for (Command command : commandsMap.values()) {
-                    messages.add(String.format("%s %s", name, command.getDescription()));
-                    // messages.add(String.format("%-{width}s %s", name, command.getDescription()));
+                    messages.add(String.format("%-" + String.valueOf(width) + "s %s", name, command.getDescription()));
                 }
             }
 
@@ -655,14 +654,13 @@ public class Application {
         }
 
         // Add commands by namespace
-        for (Entry<String, Map<String, Command>> commandsMap : sortCommands(locCommands).entrySet()) {
+        for (Entry<String, Map<String, Command>> commandsMap : sortCommands(cmds).entrySet()) {
             if (null == namespace && !"_global".equals(commandsMap.getKey())) {
                 messages.add("<comment>" + commandsMap.getKey() + "</comment>");
             }
 
-            for (final Command command : commandsMap.getValue().values()) {
-                messages.add(String.format("  <info>%s</info> %s", name, command.getDescription()));
-                // messages.add(String.format("  <info>%-{width}s</info> %s", name, command.getDescription()));
+            for (Entry<String, Command> command : commandsMap.getValue().entrySet()) {
+                messages.add(String.format("  <info>%-" + String.valueOf(width) + "s</info> %s", command.getKey(), command.getValue().getDescription()));
             }
         }
 
@@ -915,22 +913,19 @@ public class Application {
      * @return A sorted array of commands
      */
     private Map<String, Map<String, Command>> sortCommands(Map<String, Command> commands) {
-        Map<String, Map<String, Command>> namespacedCommands = new HashMap<String, Map<String, Command>>();
-        for (final Command command : commands.values()) {
-            String key = extractNamespace(command.getName(), 1);
-            if (null == key) {
+        Map<String, Map<String, Command>> namespacedCommands = new TreeMap<String, Map<String, Command>>();
+        for (Entry<String, Command> command : commands.entrySet()) {
+            String key = extractNamespace(command.getKey(), 1);
+            if (key.isEmpty()) {
                 key = "_global";
             }
 
-            Map<String, Command> mapToInsert = new HashMap<String, Command>();
-            mapToInsert.put(command.getName(), command);
-            namespacedCommands.put(key, mapToInsert);
-        }
-        // ksort(namespacedCommands); TODO
+            if (null == namespacedCommands.get(key)) {
+                namespacedCommands.put(key, new TreeMap<String, Command>());
+            }
 
-        /*for (Command commandsMap : namespacedCommands.values()) {
-            ksort(commandsMap);
-        }*/
+            namespacedCommands.get(key).put(command.getKey(), command.getValue());
+        }
 
         return namespacedCommands;
     }
