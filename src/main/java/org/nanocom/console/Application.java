@@ -83,6 +83,10 @@ public class Application {
         }
     }
 
+    public int run() throws RuntimeException {
+    	return run(null);
+    }
+
     public int run(InputInterface input) throws RuntimeException {
     	return run(input, null);
     }

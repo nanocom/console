@@ -48,7 +48,7 @@ public class ApplicationTester {
      *
      * @return The command exit code
      */
-    public int run(final Map<String, String> input, final Map<String, Object> options) throws Exception {
+    public int run(Map<String, String> input, Map<String, Object> options) throws Exception {
         this.input = new ArrayInput(input);
         if (options.containsKey("interactive")) {
             this.input.setInteractive((Boolean) options.get("interactive"));
@@ -60,7 +60,7 @@ public class ApplicationTester {
 
             @Override
             public void write(int i) throws IOException {
-                
+
             }
         }));
         if (options.containsKey("decorated")) {
@@ -102,5 +102,4 @@ public class ApplicationTester {
     public OutputInterface getOutput() {
         return output;
     }
-
 }

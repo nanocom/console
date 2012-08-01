@@ -26,6 +26,9 @@ import org.nanocom.console.command.HelpCommand;
 import org.nanocom.console.fixtures.Foo1Command;
 import org.nanocom.console.fixtures.Foo2Command;
 import org.nanocom.console.fixtures.FooCommand;
+import org.nanocom.console.input.ArgvInput;
+import org.nanocom.console.output.ConsoleOutput;
+import org.nanocom.console.tester.ApplicationTester;
 
 public class ApplicationTest {
 
@@ -396,28 +399,25 @@ public class ApplicationTest {
         assertStringEqualsFile(self.fixturesPath."/application_renderexception4.txt", this.normalizeLineBreaks(tester.getDisplay()), ".renderException() wraps messages when they are bigger than the terminal");
     }*/
 
-    /*public void testRun() throws Exception {
+    @Test
+    public void testRun() throws Exception {
         Application application = new Application();
         application.setAutoExit(false);
         application.setCatchExceptions(false);
-        application.add(command = new \Foo1Command());
-        _SERVER["argv"] = array("cli.php", "foo:bar1");
+        Foo1Command command = new Foo1Command();
+        application.add(command);
+        application.run(new ArgvInput(new String[]{"foo:bar1"}));
 
-        ob_start();
-        application.run();
-        ob_end_clean();
-
-        assertSame("Symfony\Component\Console\Input\ArgvInput", get_class(command.input), ".run() creates an ArgvInput by default if none is given");
-        assertSame("Symfony\Component\Console\Output\ConsoleOutput", get_class(command.output), ".run() creates a ConsoleOutput by default if none is given");
+        assertEquals("run() creates a ConsoleOutput by default if none is given", ConsoleOutput.class, command.output.getClass());
 
         application = new Application();
         application.setAutoExit(false);
         application.setCatchExceptions(false);
 
-        this.ensureStaticCommandHelp(application);
-        tester = new ApplicationTester(application);
+        ensureStaticCommandHelp(application);
+        /*ApplicationTester tester = new ApplicationTester(application);
 
-        tester.run(array(), array("decorated" => false));
+        tester.run(new ArgvInput(), array("decorated" => false));
         assertStringEqualsFile(self.fixturesPath."/application_run1.txt", this.normalizeLineBreaks(tester.getDisplay()), ".run() runs the list command if no argument is passed");
 
         tester.run(array("--help" => true), array("decorated" => false));
@@ -454,20 +454,20 @@ public class ApplicationTest {
         assertSame(Output.VERBOSITY_VERBOSE, tester.getOutput().getVerbosity(), ".run() sets the output to verbose if --verbose is passed");
 
         tester.run(array("command" => "list", "-v" => true));
-        assertSame(Output.VERBOSITY_VERBOSE, tester.getOutput().getVerbosity(), ".run() sets the output to verbose if -v is passed");
+        assertSame(Output.VERBOSITY_VERBOSE, tester.getOutput().getVerbosity(), ".run() sets the output to verbose if -v is passed");*/
 
         application = new Application();
         application.setAutoExit(false);
         application.setCatchExceptions(false);
-        application.add(new \FooCommand());
-        tester = new ApplicationTester(application);
+        application.add(new FooCommand());
+        /*tester = new ApplicationTester(application);
 
         tester.run(array("command" => "foo:bar", "--no-interaction" => true), array("decorated" => false));
         assertSame("called".PHP_EOL, tester.getDisplay(), ".run() does not call interact() if --no-interaction is passed");
 
         tester.run(array("command" => "foo:bar", "-n" => true), array("decorated" => false));
-        assertSame("called".PHP_EOL, tester.getDisplay(), ".run() does not call interact() if -n is passed");
-    }*/
+        assertSame("called".PHP_EOL, tester.getDisplay(), ".run() does not call interact() if -n is passed");*/
+    }
 
     /**
      * @expectedException \LogicException

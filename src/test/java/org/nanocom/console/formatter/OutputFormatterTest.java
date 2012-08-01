@@ -8,7 +8,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class OutputFormatterTest {
-    
+
     public OutputFormatterTest() {
     }
 
@@ -144,14 +144,14 @@ public class OutputFormatterTest {
 
     @Test
     public void testContentWithLineBreaks() throws Exception {
-        // OutputFormatter formatter = new OutputFormatter(true);
+         OutputFormatter formatter = new OutputFormatter(true);
 
-        /*
+
         Assert.assertEquals("\033[32m\nsome text\n\033[0m", formatter.format("<info>\nsome text\n</info>"));
         Assert.assertEquals("\033[32m\nsome text\n\033[0m", formatter.format("<info>\nsome text\n</info>"));
         Assert.assertEquals("\033[32m\nsome text\n\033[0m", formatter.format("<info>\nsome text\n</info>"));
         Assert.assertEquals("\033[32m\nsome text\nmore text\n\033[0m", formatter.format("<info>\nsome text\nmore text\n</info>"));
-        */
+        
     }
 
 }

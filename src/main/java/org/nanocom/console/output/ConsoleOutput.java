@@ -26,7 +26,7 @@ public class ConsoleOutput extends StreamOutput implements ConsoleOutputInterfac
 
         stderr = new StreamOutput(System.err, verbosity, decorated, formatter);
     }
- 
+
     public ConsoleOutput(int verbosity, Boolean decorated) {
         this(verbosity, decorated, null);
     }
@@ -34,7 +34,7 @@ public class ConsoleOutput extends StreamOutput implements ConsoleOutputInterfac
     public ConsoleOutput(int verbosity) {
         this(verbosity, null);
     }
- 
+
     public ConsoleOutput() {
         this(OutputInterface.VERBOSITY_NORMAL);
     }
@@ -66,5 +66,4 @@ public class ConsoleOutput extends StreamOutput implements ConsoleOutputInterfac
     public void setErrorOutput(OutputInterface error) {
         stderr = error;
     }
-
 }

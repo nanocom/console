@@ -22,7 +22,7 @@ import org.nanocom.console.formatter.OutputFormatterInterface;
  * As `StreamOutput` can use any stream, you can also use a file:
  *
  * OutputInterface output = new StreamOutput(fopen('/path/to/output.log', 'a', false));
- * 
+ *
  * @author Arnaud Kleinpeter <arnaud.kleinpeter at jump-informatique dot com>
  */
 public class StreamOutput extends Output {
@@ -89,20 +89,18 @@ public class StreamOutput extends Output {
      * Returns true if the stream supports colorization.
      *
      * Colorization is disabled if not supported by the stream:
-     * - windows without ansicon
-     * - non tty consoles
      *
-     * @return True if the stream supports colorization, false otherwise
+     *  -  windows without ansicon
+     *  -  non tty consoles
+     *
+     * @return true if the stream supports colorization, false otherwise
      */
-    protected final boolean hasColorSupport() {
-        if ("\\".equals(File.separator)) {
-            // Install AnsiCon on Windows to get colors in the command line
-            return !"false".equals(System.getenv("ANSICON"));
+    protected boolean hasColorSupport() {
+        String os = System.getProperty("os.name").toLowerCase();
+        if (os.indexOf("win") >= 0) {
+            return null != System.getenv("ANSICON");
         }
 
-        // return function_exists('posix_isatty') && @posix_isatty(this.stream);
-        // TODO check that this is equivalent to
-        return System.console() != null;
+        return null != System.console();
     }
-
 }

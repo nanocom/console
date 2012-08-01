@@ -21,7 +21,7 @@ public class OutputFormatter implements OutputFormatterInterface {
     /**
      * The pattern to phrase the format.
      */
-    private static String FORMAT_PATTERN = "<([a-z][a-z0-9_=;-]+)>(.*?)</\\1?>";
+    private static String FORMAT_PATTERN = "#<(/?)([a-z][a-z0-9_=;-]+)?>([^<]*)#is";
 
     private Boolean decorated;
     private Map<String, OutputFormatterStyleInterface> styles = new HashMap<String, OutputFormatterStyleInterface>();
@@ -129,6 +129,8 @@ public class OutputFormatter implements OutputFormatterInterface {
     public String format(String message) {
         // return preg_replace_callback(FORMAT_PATTERN, array(this, 'replaceStyle'), message);
         // TODO
+        StringUtils.
+                String
         return message;
     }
 
