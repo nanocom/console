@@ -18,7 +18,7 @@ See README.md for more information.
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<version>4.10</version>
-            <scope>test</scope>
+			<scope>test</scope>
 		</dependency>
 
 		<dependency>
@@ -27,11 +27,11 @@ See README.md for more information.
 			<version>3.1</version>
 		</dependency>
 
-        <dependency>
-            <groupId>commons-io</groupId>
+		<dependency>
+			<groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
-            <version>2.4</version>
-        </dependency>
+			<version>2.4</version>
+		</dependency>
 	</dependencies>
 
 	<build>

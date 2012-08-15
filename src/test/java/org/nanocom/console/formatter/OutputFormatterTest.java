@@ -1,6 +1,6 @@
 package org.nanocom.console.formatter;
 
-import org.junit.Assert;
+import static org.junit.Assert.*;
 import org.junit.Test;
 
 public class OutputFormatterTest {
@@ -11,54 +11,54 @@ public class OutputFormatterTest {
     @Test
     public void testEmptyTag() {
         OutputFormatter formatter = new OutputFormatter(true);
-        Assert.assertEquals("foo<>bar", formatter.format("foo<>bar"));
+        assertEquals("foo<>bar", formatter.format("foo<>bar"));
     }
 
     @Test
     public void testBundledStyles() {
-        //OutputFormatter formatter = new OutputFormatter(true);
+        OutputFormatter formatter = new OutputFormatter(true);
 
-        /*Assert.assertTrue(formatter.hasStyle("error"));
-        Assert.assertTrue(formatter.hasStyle("info"));
-        Assert.assertTrue(formatter.hasStyle("comment"));
-        Assert.assertTrue(formatter.hasStyle("question"));
+        assertTrue(formatter.hasStyle("error"));
+        assertTrue(formatter.hasStyle("info"));
+        assertTrue(formatter.hasStyle("comment"));
+        assertTrue(formatter.hasStyle("question"));
 
-        Assert.assertEquals(
+        assertEquals(
             "\033[37;41msome error\033[0m",
             formatter.format("<error>some error</error>")
         );
-        Assert.assertEquals(
+        assertEquals(
             "\033[32msome info\033[0m",
             formatter.format("<info>some info</info>")
         );
-        Assert.assertEquals(
+        assertEquals(
             "\033[33msome comment\033[0m",
             formatter.format("<comment>some comment</comment>")
         );
-        Assert.assertEquals(
+        assertEquals(
             "\033[30;46msome question\033[0m",
             formatter.format("<question>some question</question>")
-        );*/
+        );
     }
 
     @Test
     public void testNestedStyles() {
-        //OutputFormatter formatter = new OutputFormatter(true);
+        OutputFormatter formatter = new OutputFormatter(true);
 
-        /*Assert.assertEquals(
+        assertEquals(
             "\033[37;41msome \033[0m\033[32msome info\033[0m\033[37;41m error\033[0m",
             formatter.format("<error>some <info>some info</info> error</error>")
-        );*/
+        );
     }
 
     @Test
     public void testDeepNestedStyles() {
-        // OutputFormatter formatter = new OutputFormatter(true);
+        OutputFormatter formatter = new OutputFormatter(true);
 
-        /*Assert.assertEquals(
+        assertEquals(
             "\033[37;41merror\033[0m\033[32minfo\033[0m\033[33mcomment\033[0m\033[37;41merror\033[0m",
             formatter.format("<error>error<info>info<comment>comment</info>error</error>")
-        );*/
+        );
     }
 
     @Test
@@ -68,10 +68,10 @@ public class OutputFormatterTest {
         OutputFormatterStyle style = new OutputFormatterStyle("blue", "white");
         formatter.setStyle("test", style);
 
-        Assert.assertEquals(style, formatter.getStyle("test"));
-        Assert.assertNotSame(style, formatter.getStyle("info"));
+        assertEquals(style, formatter.getStyle("test"));
+        assertNotSame(style, formatter.getStyle("info"));
 
-        // Assert.assertEquals("\033[34;47msome custom msg\033[0m", formatter.format("<test>some custom msg</test>"));
+        assertEquals("\033[34;47msome custom msg\033[0m", formatter.format("<test>some custom msg</test>"));
     }
 
     @Test
@@ -81,62 +81,62 @@ public class OutputFormatterTest {
         OutputFormatterStyle style = new OutputFormatterStyle("blue", "white");
         formatter.setStyle("info", style);
 
-        // Assert.assertEquals("\033[34;47msome custom msg\033[0m", formatter.format("<info>some custom msg</info>"));
+        assertEquals("\033[34;47msome custom msg\033[0m", formatter.format("<info>some custom msg</info>"));
     }
 
     @Test
     public void testInlineStyle() {
-        // OutputFormatter formatter = new OutputFormatter(true);
+        OutputFormatter formatter = new OutputFormatter(true);
 
-        // Assert.assertEquals("\033[34;41msome text\033[0m", formatter.format("<fg=blue;bg=red>some text</>"));
-        // Assert.assertEquals("\033[34;41msome text\033[0m", formatter.format("<fg=blue;bg=red>some text</fg=blue;bg=red>"));
+        assertEquals("\033[34;41msome text\033[0m", formatter.format("<fg=blue;bg=red>some text</>"));
+        assertEquals("\033[34;41msome text\033[0m", formatter.format("<fg=blue;bg=red>some text</fg=blue;bg=red>"));
     }
 
     @Test
     public void testNotDecoratedFormatter() {
         OutputFormatter formatter = new OutputFormatter(false);
 
-        Assert.assertTrue(formatter.hasStyle("error"));
-        Assert.assertTrue(formatter.hasStyle("info"));
-        Assert.assertTrue(formatter.hasStyle("comment"));
-        Assert.assertTrue(formatter.hasStyle("question"));
+        assertTrue(formatter.hasStyle("error"));
+        assertTrue(formatter.hasStyle("info"));
+        assertTrue(formatter.hasStyle("comment"));
+        assertTrue(formatter.hasStyle("question"));
 
-        /*Assert.assertEquals(
+        assertEquals(
             "some error", formatter.format("<error>some error</error>")
         );
-        Assert.assertEquals(
+        assertEquals(
             "some info", formatter.format("<info>some info</info>")
         );
-        Assert.assertEquals(
+        assertEquals(
             "some comment", formatter.format("<comment>some comment</comment>")
         );
-        Assert.assertEquals(
+        assertEquals(
             "some question", formatter.format("<question>some question</question>")
-        );*/
+        );
 
         formatter.setDecorated(true);
 
-        /*Assert.assertEquals(
+        assertEquals(
             "\033[37;41msome error\033[0m", formatter.format("<error>some error</error>")
         );
-        Assert.assertEquals(
+        assertEquals(
             "\033[32msome info\033[0m", formatter.format("<info>some info</info>")
         );
-        Assert.assertEquals(
+        assertEquals(
             "\033[33msome comment\033[0m", formatter.format("<comment>some comment</comment>")
         );
-        Assert.assertEquals(
+        assertEquals(
             "\033[30;46msome question\033[0m", formatter.format("<question>some question</question>")
-        );*/
+        );
     }
 
     @Test
     public void testContentWithLineBreaks() {
         OutputFormatter formatter = new OutputFormatter(true);
 
-        Assert.assertEquals("\033[32m\nsome text\n\033[0m", formatter.format("<info>\nsome text\n</info>"));
-        Assert.assertEquals("\033[32m\nsome text\n\033[0m", formatter.format("<info>\nsome text\n</info>"));
-        Assert.assertEquals("\033[32m\nsome text\n\033[0m", formatter.format("<info>\nsome text\n</info>"));
-        Assert.assertEquals("\033[32m\nsome text\nmore text\n\033[0m", formatter.format("<info>\nsome text\nmore text\n</info>"));
+        assertEquals("\033[32m\nsome text\n\033[0m", formatter.format("<info>\nsome text\n</info>"));
+        assertEquals("\033[32m\nsome text\n\033[0m", formatter.format("<info>\nsome text\n</info>"));
+        assertEquals("\033[32m\nsome text\n\033[0m", formatter.format("<info>\nsome text\n</info>"));
+        assertEquals("\033[32m\nsome text\nmore text\n\033[0m", formatter.format("<info>\nsome text\nmore text\n</info>"));
     }
 }

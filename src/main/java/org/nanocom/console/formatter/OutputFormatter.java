@@ -151,37 +151,42 @@ public class OutputFormatter implements OutputFormatterInterface {
      * @return The replaced style
      */
     private String replaceStyle(MatchResult matchResult) {
-        if ("".equals(matchResult.group(2))) {
-            if ("/".equals(matchResult.group(1))) {
+        String match0 = StringUtils.defaultString(matchResult.group(0));
+        String match1 = StringUtils.defaultString(matchResult.group(1));
+        String match2 = StringUtils.defaultString(matchResult.group(2));
+        String match3 = StringUtils.defaultString(matchResult.group(3));
+
+        if ("".equals(match2)) {
+            if ("/".equals(match1)) {
                 // Closing tag ("</>")
                 styleStack.pop();
 
-                return applyStyle(styleStack.getCurrent(), matchResult.group(3));
+                return applyStyle(styleStack.getCurrent(), match3);
             }
 
             // Opening tag ("<>")
-            return "<>" + matchResult.group(3);
+            return "<>" + match3;
         }
 
         OutputFormatterStyleInterface locStyle;
 
-        if (null != styles.get(matchResult.group(2).toLowerCase())) {
-            locStyle = styles.get(matchResult.group(2).toLowerCase());
+        if (null != styles.get(match2.toLowerCase())) {
+            locStyle = styles.get(match2.toLowerCase());
         } else {
-            locStyle = createStyleFromString(matchResult.group(2));
+            locStyle = createStyleFromString(match2);
 
             if (null == locStyle) {
-                return matchResult.group(0);
+                return match0;
             }
         }
 
-        if ("/".equals(matchResult.group(1))) {
+        if ("/".equals(match1)) {
             styleStack.pop(locStyle);
         } else {
             styleStack.push(locStyle);
         }
 
-        return applyStyle(styleStack.getCurrent(), matchResult.group(3));
+        return applyStyle(styleStack.getCurrent(), match3);
     }
 
     /**
@@ -192,24 +197,29 @@ public class OutputFormatter implements OutputFormatterInterface {
      * @return Null if string is not format string
      */
     private OutputFormatterStyle createStyleFromString(String string) {
-        /*if (!preg_match_all('/([^=]+)=([^;]+)(;|$)/', strtolower($string), $matches, PREG_SET_ORDER)) {
-            return null;
-        }*/
+        Pattern pattern = Pattern.compile("([^=]+)=([^;]+)(;|$)");
+        Matcher matcher = pattern.matcher(string.toLowerCase());
 
         OutputFormatterStyle locStyle = new OutputFormatterStyle();
-        /*for ($matches as $match) {
-            array_shift($match);
+        MatchResult result;
+        boolean foundMatch = false;
 
-            if ("fg".equals($match[0])) {
-                locStyle.setForeground($match[1]);
-            } else if ("bg".equals($match[0])) {
-                locStyle.setBackground($match[1]);
+        while (matcher.find()) {
+            foundMatch = true;
+            result = matcher.toMatchResult();
+            String match1 = result.group(1); // fg
+            String match2 = result.group(2); // blue
+
+            if ("fg".equals(result.group(1))) {
+                locStyle.setForeground(result.group(2));
+            } else if ("bg".equals(result.group(1))) {
+                locStyle.setBackground(result.group(2));
             } else {
-                locStyle.setOption($match[1]);
+                locStyle.setOption(result.group(2));
             }
-        }*/
+        }
 
-        return locStyle;
+        return foundMatch ? locStyle : null;
     }
 
     /**
@@ -241,8 +251,14 @@ public class OutputFormatter implements OutputFormatterInterface {
             while (matcher.find()) {
                 MatchResult matchResult = matcher.toMatchResult();
                 String replacement = callback.foundMatch(matchResult);
-                stringToMatch = stringToMatch.substring(0, matchResult.start()) +
+                String fullReplacement = stringToMatch.substring(0, matchResult.start()) +
                          replacement + stringToMatch.substring(matchResult.end());
+
+                if (stringToMatch.equals(fullReplacement)) {
+                    break; // TODO Check this behavior
+                }
+
+                stringToMatch = fullReplacement;
                 matcher.reset(stringToMatch);
             }
 
