@@ -9,10 +9,10 @@ package org.nanocom.console.formatter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
 import org.apache.commons.lang3.StringUtils;
 
 /**
@@ -27,7 +27,7 @@ public class OutputFormatterStyle implements OutputFormatterStyleInterface {
     private static Map<String, Integer> availableOptions = getAvailableOptions();
 
     private static Map<String, Integer> getAvailableForegroundColors() {
-        Map<String, Integer> foregrounds = new HashMap<String, Integer>();
+        Map<String, Integer> foregrounds = new LinkedHashMap<String, Integer>();
         foregrounds.put("black", 30);
         foregrounds.put("red", 31);
         foregrounds.put("green", 32);
@@ -41,7 +41,7 @@ public class OutputFormatterStyle implements OutputFormatterStyleInterface {
     }
 
     private static Map<String, Integer> getAvailableBackgroundColors() {
-        Map<String, Integer> backgrounds = new HashMap<String, Integer>();
+        Map<String, Integer> backgrounds = new LinkedHashMap<String, Integer>();
         backgrounds.put("black", 40);
         backgrounds.put("red", 41);
         backgrounds.put("green", 42);
@@ -58,7 +58,7 @@ public class OutputFormatterStyle implements OutputFormatterStyleInterface {
         Map<String, Integer> options = new HashMap<String, Integer>();
         options.put("bold", 1);
         options.put("underscore", 4);
-        options.put("bblink", 5);
+        options.put("blink", 5);
         options.put("reverse", 7);
         options.put("conceal", 8);
 
@@ -72,9 +72,9 @@ public class OutputFormatterStyle implements OutputFormatterStyleInterface {
     /**
      * Initializes output formatter style.
      *
-     * @param foreground style foreground color name
-     * @param background style background color name
-     * @param options    style options
+     * @param foreground The style foreground color name
+     * @param background The style background color name
+     * @param options    The style options
      */
     public OutputFormatterStyle(String foreground, String background, List<String> options) {
         init(foreground, background, options);
@@ -99,7 +99,7 @@ public class OutputFormatterStyle implements OutputFormatterStyleInterface {
         if (null != background) {
             setBackground(background);
         }
-        if (options.size() > 0) {
+        if (null != options && options.size() > 0) {
             setOptions(options);
         }
     }
@@ -107,7 +107,7 @@ public class OutputFormatterStyle implements OutputFormatterStyleInterface {
     /**
      * Sets style foreground color.
      *
-     * @param color color name
+     * @param color The color name
      *
      * @throws Exception When the color name isn't defined
      */
@@ -121,12 +121,10 @@ public class OutputFormatterStyle implements OutputFormatterStyleInterface {
 
         if (!availableForegroundColors.containsKey(color)) {
             Set<String> foregroundNames = availableForegroundColors.keySet();
-            List<String> foregroundNamesList = new ArrayList<String>();
-            foregroundNamesList.addAll(foregroundNames);
             throw new IllegalArgumentException(String.format(
                 "Invalid foreground color specified: \"%s\". Expected one of (%s)",
                 color,
-                StringUtils.join((String[]) foregroundNamesList.toArray(), ", ")
+                StringUtils.join((String[]) foregroundNames.toArray(new String[0]), ", ")
             ));
         }
 
@@ -136,7 +134,7 @@ public class OutputFormatterStyle implements OutputFormatterStyleInterface {
     /**
      * Sets style background color.
      *
-     * @param color  color name
+     * @param color The color name
      *
      * @throws IllegalArgumentException When the color name isn't defined
      */
@@ -155,7 +153,7 @@ public class OutputFormatterStyle implements OutputFormatterStyleInterface {
             throw new IllegalArgumentException(String.format(
                 "Invalid background color specified: \"%s\". Expected one of (%s)",
                 color,
-                StringUtils.join((String[]) backgroundNamesList.toArray(), ", ")
+                StringUtils.join((String[]) backgroundNamesList.toArray(new String[0]), ", ")
             ));
         }
 
@@ -165,7 +163,7 @@ public class OutputFormatterStyle implements OutputFormatterStyleInterface {
     /**
      * Sets some specific style option.
      *
-     * @param option option name
+     * @param option The option name
      *
      * @throws IllegalArgumentException When the option name isn't defined
      */
@@ -173,12 +171,11 @@ public class OutputFormatterStyle implements OutputFormatterStyleInterface {
     public void setOption(String option) {
         if (!availableOptions.containsKey(option)) {
             Set<String> optionNames = availableOptions.keySet();
-            List<String> optionNamesList = new ArrayList<String>();
-            optionNamesList.addAll(optionNames);
+            List<String> optionNamesList = new ArrayList<String>(optionNames);
             throw new IllegalArgumentException(String.format(
                 "Invalid option specified: \"%s\". Expected one of (%s)",
                 option,
-                StringUtils.join((String[]) optionNamesList.toArray(), ", ")
+                StringUtils.join(optionNamesList.toArray(), ", ")
             ));
         }
 
@@ -190,7 +187,7 @@ public class OutputFormatterStyle implements OutputFormatterStyleInterface {
     /**
      * Unsets some specific style option.
      *
-     * @param option option name
+     * @param option The option name
      *
      * @throws IllegalArgumentException When the option name isn't defined
      */
@@ -252,7 +249,45 @@ public class OutputFormatterStyle implements OutputFormatterStyleInterface {
             }
         }
 
-        return String.format("\033[%sm%s\033[0m", StringUtils.join((String[]) codes.toArray(), ":"), text);
+        String flatCodes = StringUtils.join((String[]) codes.toArray(new String[0]), ";");
+
+        return String.format("\033[%sm%s\033[0m", flatCodes, text);
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        hash = 71 * hash + (foreground != null ? foreground.hashCode() : 0);
+        hash = 71 * hash + (background != null ? background.hashCode() : 0);
+        hash = 71 * hash + (options != null ? options.hashCode() : 0);
+
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (null == obj) {
+            return false;
+        }
+
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+
+        final OutputFormatterStyle other = (OutputFormatterStyle) obj;
+        if (foreground != other.foreground && (foreground == null || !this.foreground.equals(other.foreground))) {
+            return false;
+        }
+
+        if (background != other.background && (background == null || !this.background.equals(other.background))) {
+            return false;
+        }
+
+        if (options != other.options && (options == null || !options.equals(other.options))) {
+            return false;
+        }
+
+        return true;
     }
 
 }

@@ -10,6 +10,10 @@ package org.nanocom.console.formatter;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.regex.MatchResult;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Formatter class for console output.
@@ -21,10 +25,11 @@ public class OutputFormatter implements OutputFormatterInterface {
     /**
      * The pattern to phrase the format.
      */
-    private static String FORMAT_PATTERN = "#<(/?)([a-z][a-z0-9_=;-]+)?>([^<]*)#is";
+    private static String FORMAT_PATTERN = "<(/?)([a-z][a-z0-9_=;-]+)?>([^<]*)";
 
     private Boolean decorated;
     private Map<String, OutputFormatterStyleInterface> styles = new HashMap<String, OutputFormatterStyleInterface>();
+    private OutputFormatterStyleStack styleStack;
 
     /**
      * Initializes console output formatter.
@@ -55,6 +60,8 @@ public class OutputFormatter implements OutputFormatterInterface {
         for (Entry<String, OutputFormatterStyleInterface> style : styles.entrySet()) {
             setStyle(style.getKey(), style.getValue());
         }
+
+        styleStack = new OutputFormatterStyleStack();
     }
 
     /**
@@ -127,11 +134,13 @@ public class OutputFormatter implements OutputFormatterInterface {
      */
     @Override
     public String format(String message) {
-        // return preg_replace_callback(FORMAT_PATTERN, array(this, 'replaceStyle'), message);
-        // TODO
-        StringUtils.
-                String
-        return message;
+        return new CallbackMatcher(FORMAT_PATTERN).replaceMatches(message, new Callback() {
+
+            @Override
+            public String foundMatch(MatchResult matchResult) {
+                return replaceStyle(matchResult);
+            }
+        });
     }
 
     /**
@@ -141,25 +150,39 @@ public class OutputFormatter implements OutputFormatterInterface {
      *
      * @return The replaced style
      */
-    /*private String replaceStyle(String match) {
-        if (!isDecorated()) {
-            return String.valueOf(match.charAt(2));
+    private String replaceStyle(MatchResult matchResult) {
+        if ("".equals(matchResult.group(2))) {
+            if ("/".equals(matchResult.group(1))) {
+                // Closing tag ("</>")
+                styleStack.pop();
+
+                return applyStyle(styleStack.getCurrent(), matchResult.group(3));
+            }
+
+            // Opening tag ("<>")
+            return "<>" + matchResult.group(3);
         }
 
         OutputFormatterStyleInterface locStyle;
 
-        if (styles.containsKey(String.valueOf(match.charAt(1)).toLowerCase())) {
-            locStyle = styles.get(String.valueOf(match.charAt(1)).toLowerCase());
+        if (null != styles.get(matchResult.group(2).toLowerCase())) {
+            locStyle = styles.get(matchResult.group(2).toLowerCase());
         } else {
-            locStyle = createStyleFromString(String.valueOf(match.charAt(1)));
+            locStyle = createStyleFromString(matchResult.group(2));
 
             if (null == locStyle) {
-                return String.valueOf(match.charAt(0));
+                return matchResult.group(0);
             }
         }
 
-        return locStyle.apply(format(String.valueOf(match.charAt(2))));
-    }*/
+        if ("/".equals(matchResult.group(1))) {
+            styleStack.pop(locStyle);
+        } else {
+            styleStack.push(locStyle);
+        }
+
+        return applyStyle(styleStack.getCurrent(), matchResult.group(3));
+    }
 
     /**
      * Tries to create new style instance from string.
@@ -168,26 +191,62 @@ public class OutputFormatter implements OutputFormatterInterface {
      *
      * @return Null if string is not format string
      */
-    /*private OutputFormatterStyle createStyleFromString(String string) {
-        // TODO
-        return null;
-        if (!preg_match_all('/([^=]+)=([^;]+)(;|)/', strtolower(string), matches, PREG_SET_ORDER)) {
-            return false; // return null;
-        }
+    private OutputFormatterStyle createStyleFromString(String string) {
+        /*if (!preg_match_all('/([^=]+)=([^;]+)(;|$)/', strtolower($string), $matches, PREG_SET_ORDER)) {
+            return null;
+        }*/
 
-        style = new OutputFormatterStyle();
-        for (matches as match) {
-            array_shift(match);
+        OutputFormatterStyle locStyle = new OutputFormatterStyle();
+        /*for ($matches as $match) {
+            array_shift($match);
 
-            if ('fg' == match[0]) {
-                style.setForeground(match[1]);
-            } elseif ('bg' == match[0]) {
-                style.setBackground(match[1]);
+            if ("fg".equals($match[0])) {
+                locStyle.setForeground($match[1]);
+            } else if ("bg".equals($match[0])) {
+                locStyle.setBackground($match[1]);
             } else {
-                style.setOption(match[1]);
+                locStyle.setOption($match[1]);
             }
+        }*/
+
+        return locStyle;
+    }
+
+    /**
+     * Applies style to text if must be applied.
+     *
+     * @param style Style to apply
+     * @param text  Input text
+     *
+     * @return Styled text
+     */
+    private String applyStyle(OutputFormatterStyleInterface style, String text) {
+        return isDecorated() && StringUtils.isNotEmpty(text) ? style.apply(text) : text;
+    }
+
+    interface Callback {
+        String foundMatch(MatchResult matchResult);
+    }
+
+    class CallbackMatcher {
+
+        private final Pattern pattern;
+
+        public CallbackMatcher(String regex) {
+            pattern = Pattern.compile(regex);
         }
 
-        return style;
-    }*/
+        public String replaceMatches(String stringToMatch, Callback callback) {
+            final Matcher matcher = pattern.matcher(stringToMatch);
+            while (matcher.find()) {
+                MatchResult matchResult = matcher.toMatchResult();
+                String replacement = callback.foundMatch(matchResult);
+                stringToMatch = stringToMatch.substring(0, matchResult.start()) +
+                         replacement + stringToMatch.substring(matchResult.end());
+                matcher.reset(stringToMatch);
+            }
+
+            return stringToMatch;
+        }
+    }
 }

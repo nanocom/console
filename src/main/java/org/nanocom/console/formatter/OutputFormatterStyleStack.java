@@ -8,7 +8,10 @@
 package org.nanocom.console.formatter;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 /**
  * @author Arnaud Kleinpeter <arnaud.kleinpeter at gmail dot com>
@@ -16,8 +19,14 @@ import java.util.List;
 class OutputFormatterStyleStack {
 
     private List<OutputFormatterStyle> styles;
+    private OutputFormatterStyleInterface emptyStyle;
 
     public OutputFormatterStyleStack() {
+        this(null);
+    }
+
+    public OutputFormatterStyleStack(OutputFormatterStyleInterface emptyStyle) {
+        this.emptyStyle = null != emptyStyle ? emptyStyle : new OutputFormatterStyle();
         reset();
     }
 
@@ -44,29 +53,35 @@ class OutputFormatterStyleStack {
      *
      * @return
      *
-     * @throws Exception  When style tags incorrectly nested
+     * @throws IllegalArgumentException When style tags incorrectly nested
      */
     public OutputFormatterStyleInterface pop(OutputFormatterStyleInterface style) {
         if (styles.isEmpty()) {
-            return new OutputFormatterStyle();
+            return emptyStyle;
         }
 
         if (null == style) {
-            return styles.remove(0);
+            return styles.remove(styles.size() - 1);
         }
 
-        /*foreach (array_reverse($this->styles, true) as $index => $stackedStyle) {
-            if ($style->apply('') === $stackedStyle->apply('')) {
-                $this->styles = array_slice($this->styles, 0, $index);
+        // array_reverse equivalent
+        final Map<Integer, OutputFormatterStyleInterface> reversedStyles = new LinkedHashMap<Integer, OutputFormatterStyleInterface>(styles.size());
+        for (int i = styles.size() - 1; i >= 0; --i) {
+            reversedStyles.put(i, styles.get(i));
+        }
 
-                return $stackedStyle;
+        for (Entry<Integer, OutputFormatterStyleInterface> stackedStyle : reversedStyles.entrySet()) {
+            if (style.apply("").equals(stackedStyle.getValue().apply(""))) {
+                styles = styles.subList(0, stackedStyle.getKey());
+
+                return stackedStyle.getValue();
             }
-        }*/
+        }
 
         throw new IllegalArgumentException("Incorrectly nested style tag found.");
     }
 
-    public OutputFormatterStyleInterface pop() throws Exception {
+    public OutputFormatterStyleInterface pop() {
         return pop(null);
     }
 
@@ -75,12 +90,29 @@ class OutputFormatterStyleStack {
      *
      * @return
      */
-    public OutputFormatterStyle getCurrent() throws Exception {
+    public OutputFormatterStyle getCurrent() {
         if (styles.isEmpty()) {
-            return new OutputFormatterStyle();
+            return (OutputFormatterStyle) emptyStyle;
         }
 
         return styles.get(styles.size() - 1);
     }
 
+    /**
+     * @param emptyStyle
+     *
+     * @return OutputFormatterStyleStack
+     */
+    public OutputFormatterStyleStack setEmptyStyle(OutputFormatterStyleInterface emptyStyle) {
+        this.emptyStyle = emptyStyle;
+
+        return this;
+    }
+
+    /**
+     * @return
+     */
+    public OutputFormatterStyleInterface getEmptyStyle() {
+        return emptyStyle;
+    }
 }

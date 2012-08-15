@@ -1,32 +1,18 @@
 package org.nanocom.console.input;
 
-import org.nanocom.console.input.ArrayInput;
-import org.nanocom.console.input.InputDefinition;
-import org.nanocom.console.input.InputOption;
-import org.nanocom.console.input.InputArgument;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import org.junit.AfterClass;
 import org.junit.Assert;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class InputTest {
-    
+
     public InputTest() {
     }
 
-    @BeforeClass
-    public static void setUpClass() throws Exception {
-    }
-
-    @AfterClass
-    public static void tearDownClass() throws Exception {
-    }
-
     @Test
-    public void testConstructor() throws Exception {
+    public void testConstructor() {
         Map<String, String> foobar = new HashMap<String, String>();
         foobar.put("name", "foo");
         ArrayInput input = new ArrayInput(foobar, new InputDefinition(Arrays.asList((Object) new InputArgument("name"))));
@@ -34,7 +20,7 @@ public class InputTest {
     }
 
     @Test
-    public void testOptions() throws Exception {
+    public void testOptions() {
         Map<String, String> foobar = new HashMap<String, String>();
         foobar.put("--name", "foo");
         ArrayInput input = new ArrayInput(foobar, new InputDefinition(Arrays.asList((Object) new InputOption("name"))));
@@ -73,7 +59,7 @@ public class InputTest {
     }
 
     @Test
-    public void testArguments() throws Exception {
+    public void testArguments() {
         Map<String, String> foobar = new HashMap<String, String>();
         foobar.put("name", "foo");
 
@@ -112,7 +98,7 @@ public class InputTest {
     }
 
     @Test
-    public void testValidate() throws Exception {
+    public void testValidate() {
         ArrayInput input = new ArrayInput(new HashMap<String, String>());
         input.bind(new InputDefinition(Arrays.asList((Object) new InputArgument("name", InputArgument.REQUIRED))));
 
@@ -137,7 +123,7 @@ public class InputTest {
     }
 
     @Test
-    public void testSetFetInteractive() throws Exception {
+    public void testSetFetInteractive() {
         ArrayInput input = new ArrayInput(new HashMap<String, String>());
         Assert.assertTrue(".isInteractive() returns whether the input should be interactive or not", input.isInteractive());
         input.setInteractive(false);

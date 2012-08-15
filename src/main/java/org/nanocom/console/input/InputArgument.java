@@ -9,12 +9,11 @@ package org.nanocom.console.input;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import org.nanocom.console.exception.LogicException;
 
 /**
  * Represents a command line argument.
- * 
+ *
  * @author Arnaud Kleinpeter <arnaud.kleinpeter at gmail dot com>
  */
 public class InputArgument {
@@ -34,24 +33,24 @@ public class InputArgument {
      * @param description  A description text
      * @param defaultValue The default value (for OPTIONAL mode only)
      *
-     * @throws Exception When argument mode is not valid
+     * @throws IllegalArgumentException When argument mode is not valid
      */
     public InputArgument(final String name, Integer mode, final String description, final Object defaultValue) {
         init(name, mode, description, defaultValue);
     }
-    
+
     public InputArgument(final String name, Integer mode, final String description) {
         init(name, mode, description, null);
     }
-    
+
     public InputArgument(final String name, Integer mode) {
         init(name, mode, "", null);
     }
-    
+
     public InputArgument(final String name) {
         init(name, null, "", null);
     }
-    
+
     private void init(String name, Integer mode, String description, Object defaultValue) {
         if (null == mode) {
             mode = OPTIONAL;
@@ -81,7 +80,7 @@ public class InputArgument {
      * @return True if parameter mode is REQUIRED, false otherwise
      */
     public boolean isRequired() {
-        return REQUIRED == (REQUIRED & this.mode);
+        return REQUIRED == (REQUIRED & mode);
     }
 
     /**
@@ -90,7 +89,7 @@ public class InputArgument {
      * @return True if mode is IS_ARRAY, false otherwise
      */
     public boolean isArray() {
-        return IS_ARRAY == (IS_ARRAY & this.mode);
+        return IS_ARRAY == (IS_ARRAY & mode);
     }
 
     /**
@@ -133,5 +132,4 @@ public class InputArgument {
     public String getDescription() {
         return description;
     }
-
 }

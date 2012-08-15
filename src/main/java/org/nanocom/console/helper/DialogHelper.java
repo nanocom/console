@@ -10,12 +10,11 @@ package org.nanocom.console.helper;
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
-
 import org.nanocom.console.output.OutputInterface;
 
 /**
  * The Dialog class provides helpers to interact with the user.
- * 
+ *
  * @author Arnaud Kleinpeter <arnaud.kleinpeter at gmail dot com>
  */
 public class DialogHelper extends Helper {
@@ -31,29 +30,29 @@ public class DialogHelper extends Helper {
      *
      * @return The user answer
      *
-     * @throws Exception If there is no data to read in the input stream
+     * @throws RuntimeException If there is no data to read in the input stream
      */
-    public String ask(final OutputInterface output, final List<String> questions, final String defaultAnswer) throws Exception {
+    public String ask(final OutputInterface output, final List<String> questions, final String defaultAnswer) {
         output.write(questions);
 
         String ret = System.console().readLine();
         if (null == ret) {
-            throw new Exception("Aborted");
+            throw new RuntimeException("Aborted");
         }
         ret = ret.trim();
 
         return ret.length() > 0 ? ret : defaultAnswer;
     }
 
-    public String ask(final OutputInterface output, final List<String> questions) throws Exception {
+    public String ask(final OutputInterface output, final List<String> questions) {
         return ask(output, questions, null);
     }
 
-    public String ask(final OutputInterface output, final String question, final String defaultValue) throws Exception {
+    public String ask(final OutputInterface output, final String question, final String defaultValue) {
         return ask(output, Arrays.asList(question), defaultValue); // There's maybe something better to do
     }
 
-    public String ask(OutputInterface output, final String question) throws Exception {
+    public String ask(OutputInterface output, final String question) {
         return ask(output, question, null);
     }
 
@@ -68,7 +67,7 @@ public class DialogHelper extends Helper {
      *
      * @return True if the user has confirmed, false otherwise
      */
-    public boolean askConfirmation(final OutputInterface output, final List<String> question, final boolean defaultAnswer) throws Exception {
+    public boolean askConfirmation(final OutputInterface output, final List<String> question, final boolean defaultAnswer) {
         String answer = "z";
         while (null != answer && !("y".equals(answer.substring(0, 1).toLowerCase()) || "n".equals(answer.substring(0, 1).toLowerCase()))) {
             answer = ask(output, question, null);
@@ -98,8 +97,8 @@ public class DialogHelper extends Helper {
      *
      * @throws Exception When any of the validators return an error
      */
-    public Object askAndValidate(final OutputInterface output, final List<String> question, Object validator, int attempts, final String defaultAnswer) throws Exception {
-        Exception error = null;
+    public Object askAndValidate(final OutputInterface output, final List<String> question, Object validator, int attempts, final String defaultAnswer) {
+        RuntimeException error = null;
         while (attempts > 0) {
             attempts--;
             if (null != error) {
@@ -109,15 +108,15 @@ public class DialogHelper extends Helper {
             // String value = ask(output, question, defaultAnswer);
 
             try {
-                // TODO Imitate this behavior
+                // TODO
                 // return call_user_func(validator, value);
                 return null;
-            } catch (Exception e) {
+            } catch (RuntimeException e) {
+                error = e;
             }
         }
 
-        return null;
-        // throw error;
+        throw error;
     }
 
     /**

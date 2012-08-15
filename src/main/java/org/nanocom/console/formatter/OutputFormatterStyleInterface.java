@@ -21,35 +21,35 @@ public interface OutputFormatterStyleInterface {
      *
      * @param color Color name
      */
-    void setForeground(String color) throws Exception;
+    void setForeground(String color);
 
     /**
      * Sets style background color.
      *
      * @param color Color name
      */
-    void setBackground(String color) throws Exception;
+    void setBackground(String color);
 
     /**
      * Sets some specific style option.
      *
      * @param option Option name
      */
-    void setOption(String option) throws Exception;
+    void setOption(String option);
 
     /**
      * Unsets some specific style option.
      *
      * @param option Option name
      */
-    void unsetOption(String option) throws Exception;
+    void unsetOption(String option);
 
     /**
      * Sets multiple style options at once.
      *
      * @param options
      */
-    void setOptions(List<String> options) throws Exception;
+    void setOptions(List<String> options);
 
     /**
      * Applies the style to a given text.
@@ -58,5 +58,4 @@ public interface OutputFormatterStyleInterface {
      * @return
      */
     String apply(String text);
-
 }

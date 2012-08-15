@@ -8,7 +8,6 @@
 package org.nanocom.console.input;
 
 import java.util.*;
-
 import org.apache.commons.lang3.StringUtils;
 import org.nanocom.console.exception.LogicException;
 
@@ -85,7 +84,6 @@ public class InputDefinition {
      * Adds an array of InputArgument objects.
      *
      * @param arguments An array of InputArgument objects
-     * @throws Exception
      */
     public void addArguments(final List<InputArgument> arguments) {
         if (null != arguments) {
@@ -102,7 +100,7 @@ public class InputDefinition {
      *
      * @throws LogicException When incorrect argument is given
      */
-    public void addArgument(final InputArgument argument) throws LogicException {
+    public void addArgument(final InputArgument argument) {
         if (arguments.containsKey(argument.getName())) {
             throw new LogicException(String.format("An argument with name \"%s\" already exist.", argument.getName()));
         }
@@ -137,7 +135,7 @@ public class InputDefinition {
      *
      * @throws IllegalArgumentException When argument given doesn't exist
      */
-    public InputArgument getArgument(final String name) throws IllegalArgumentException {
+    public InputArgument getArgument(final String name) {
         if (!hasArgument(name)) {
             throw new IllegalArgumentException(String.format("The \"%s\" argument does not exist.", name));
         }
@@ -154,7 +152,7 @@ public class InputDefinition {
      *
      * @throws IllegalArgumentException When argument given doesn't exist
      */
-    public InputArgument getArgument(final Integer position) throws IllegalArgumentException {
+    public InputArgument getArgument(final Integer position) {
         if (!hasArgument(position)) {
             throw new IllegalArgumentException(String.format("The \"%s\" argument does not exist.", position));
         }
@@ -262,7 +260,7 @@ public class InputDefinition {
      *
      * @throws LogicException When option given already exists
      */
-    public void addOption(final InputOption option) throws LogicException {
+    public void addOption(final InputOption option) {
         if (options.containsKey(option.getName()) && !option.equals(options.get(option.getName()))) {
             throw new LogicException(String.format("An option named \"%s\" already exist.", option.getName()));
         } else if (
@@ -287,7 +285,7 @@ public class InputDefinition {
      *
      * @throws IllegalArgumentException When option given doesn't exist
      */
-    public InputOption getOption(final String name) throws IllegalArgumentException {
+    public InputOption getOption(final String name) {
         if (!hasOption(name)) {
             throw new IllegalArgumentException("The \"--" + name + "\" option does not exist.");
         }
@@ -357,7 +355,7 @@ public class InputDefinition {
      *
      * @throws IllegalArgumentException When option given does not exist
      */
-    private String shortcutToName(final String shortcut) throws IllegalArgumentException {
+    private String shortcutToName(final String shortcut) {
         if (!shortcuts.containsKey(shortcut)) {
             throw new IllegalArgumentException(String.format("The \"-%s\" option does not exist.", shortcut));
         }
@@ -491,7 +489,7 @@ public class InputDefinition {
      *
      * @return string|DOMDocument An XML string representing the InputDefinition
      */
-    /*public String asXml(final boolean asDom) throws Exception {
+    /*public String asXml(final boolean asDom) {
         throw new Exception("Not implemented yet.");
     }*/
 

@@ -13,7 +13,7 @@ import org.nanocom.console.output.OutputInterface;
 
 /**
  * A Shell wraps an Application to add shell capabilities to it.
- * 
+ *
  * @author Arnaud Kleinpeter <arnaud.kleinpeter at gmail dot com>
  */
 public class Shell {
@@ -27,7 +27,7 @@ public class Shell {
     /**
      * @param application An application instance
      */
-    public Shell(Application application) throws Exception {
+    public Shell(Application application) {
         this.application = application;
         // history = System.getenv("HOME") + "/.history_" + application.getName();
         output = new ConsoleOutput();
@@ -37,10 +37,10 @@ public class Shell {
 
     /**
      * Runs the shell.
-     * 
-     * @throws Exception 
+     *
+     * @throws Exception
      */
-    public void run() throws Exception {
+    public void run() {
         application.setAutoExit(false);
         application.setCatchExceptions(true);
 
@@ -152,7 +152,7 @@ public class Shell {
      * @return The single line from standard input
      */
     private String readline() {
-    	System.console().printf(this.prompt);
+    	System.console().printf(prompt);
 
     	return System.console().readLine();
     }
@@ -164,5 +164,4 @@ public class Shell {
     public void setProcessIsolation(final boolean processIsolation) {
         this.processIsolation = processIsolation;
     }
-
 }

@@ -7,8 +7,6 @@
 
 package org.nanocom.console.input;
 
-import java.util.ArrayList;
-
 /**
  * StringInput represents an input provided as a string.
  *
@@ -28,13 +26,13 @@ public class StringInput extends ArgvInput {
      * @param definition An InputDefinition instance
      * @throws Exception
      */
-    public StringInput(final String input, final InputDefinition definition) throws Exception {
+    public StringInput(final String input, final InputDefinition definition) {
         super(new String[0], definition);
 
         setTokens(tokenize(input));
     }
 
-    public StringInput(final String input) throws Exception {
+    public StringInput(final String input) {
         this(input, null);
     }
 
@@ -47,7 +45,7 @@ public class StringInput extends ArgvInput {
      * @throws IllegalArgumentException When unable to parse input (should never happen)
      */
     private String[] tokenize(String input) throws IllegalArgumentException {
-        input.replaceAll("(\r\n|\r|\n|\t)", " ");
+        //input.replaceAll("(\r\n|\r|\n|\t)", " ");
 
         // tokens = new ArrayList<String>();
         // int length = input.length();

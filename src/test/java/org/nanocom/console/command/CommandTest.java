@@ -1,15 +1,14 @@
 package org.nanocom.console.command;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 import org.junit.Test;
 import org.nanocom.console.Application;
 import org.nanocom.console.exception.LogicException;
@@ -28,7 +27,7 @@ import org.nanocom.console.tester.CommandTester;
 public class CommandTest {
 
     @Test
-    public void testConstructor() throws Exception {
+    public void testConstructor() {
         Command command;
         try {
             command = new Command();
@@ -42,7 +41,7 @@ public class CommandTest {
     }
 
     @Test
-    public void testSetApplication() throws Exception {
+    public void testSetApplication() {
         Application application = new Application();
         Command command = new TestCommand();
         command.setApplication(application);
@@ -50,7 +49,7 @@ public class CommandTest {
     }
 
     @Test
-    public void testSetGetDefinition() throws Exception {
+    public void testSetGetDefinition() {
         Command command = new TestCommand();
         InputDefinition definition = new InputDefinition();
         Command ret = command.setDefinition(definition);
@@ -63,21 +62,21 @@ public class CommandTest {
     }
 
     @Test
-    public void testAddArgument() throws Exception {
+    public void testAddArgument() {
         Command command = new TestCommand();
         command.addArgument("foo");
         assertTrue("addArgument() adds an argument to the command", command.getDefinition().hasArgument("foo"));
     }
 
     @Test
-    public void testAddOption() throws Exception {
+    public void testAddOption() {
         Command command = new TestCommand();
         command.addOption("foo");
         assertTrue("addOption() adds an option to the command", command.getDefinition().hasOption("foo"));
     }
 
     @Test
-    public void testGetNamespaceGetNameSetName() throws Exception {
+    public void testGetNamespaceGetNameSetName() {
         Command command = new TestCommand();
         assertEquals("getName() returns the command name", "namespace:name", command.getName());
         command.setName("foo");
@@ -103,7 +102,7 @@ public class CommandTest {
     }
 
     @Test
-    public void testGetSetDescription() throws Exception {
+    public void testGetSetDescription() {
         Command command = new TestCommand();
         assertEquals("getDescription() returns the description", "description", command.getDescription());
         command.setDescription("description1");
@@ -111,7 +110,7 @@ public class CommandTest {
     }
 
     @Test
-    public void testGetSetHelp() throws Exception {
+    public void testGetSetHelp() {
         Command command = new TestCommand();
         assertEquals("getHelp() returns the help", "help", command.getHelp());
         command.setHelp("help1");
@@ -119,7 +118,7 @@ public class CommandTest {
     }
 
     @Test
-    public void testGetProcessedHelp() throws Exception {
+    public void testGetProcessedHelp() {
         Command command = new TestCommand();
         command.setHelp("The %command.name% command does... Example: php %command.full_name%.");
         assertTrue("getProcessedHelp() replaces %command.name% correctly", command.getProcessedHelp().contains("The namespace:name command does..."));
@@ -127,7 +126,7 @@ public class CommandTest {
     }
 
     @Test
-    public void testGetSetAliases() throws Exception {
+    public void testGetSetAliases() {
         Command command = new TestCommand();
         assertEquals("getAliases() returns the aliases", Arrays.asList("name"), command.getAliases());
         command.setAliases(Arrays.asList("name1"));
@@ -135,7 +134,7 @@ public class CommandTest {
     }
 
     @Test
-    public void testGetSynopsis() throws Exception {
+    public void testGetSynopsis() {
         Command command = new TestCommand();
         command.addOption("foo");
         command.addArgument("foo");
@@ -143,7 +142,7 @@ public class CommandTest {
     }
 
     @Test
-    public void testGetHelper() throws Exception {
+    public void testGetHelper() {
         Application application = new Application();
         TestCommand command = new TestCommand();
         command.setApplication(application);
@@ -152,7 +151,7 @@ public class CommandTest {
     }
 
     @Test
-    public void testGet() throws Exception {
+    public void testGet() {
         Application application = new Application();
         Command command = new TestCommand();
         command.setApplication(application);
@@ -161,7 +160,7 @@ public class CommandTest {
     }
 
     @Test
-    public void testMergeApplicationDefinition() throws Exception {
+    public void testMergeApplicationDefinition() throws NoSuchMethodException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
         Application application1 = new Application();
         application1.getDefinition().addArguments(Arrays.asList(new InputArgument("foo")));
         application1.getDefinition().addOptions(Arrays.asList(new InputOption("bar")));
@@ -185,7 +184,7 @@ public class CommandTest {
     }
 
     @Test
-    public void testRun() throws Exception {
+    public void testRun() {
         Command command = new TestCommand();
         CommandTester tester = new CommandTester(command);
         Map<String, String> foobar = new HashMap<String, String>();
@@ -220,7 +219,7 @@ public class CommandTest {
     }
 
     @Test
-    public void testSetCode() throws Exception {
+    public void testSetCode() {
         Command command = new TestCommand();
         Command ret = command.setCode(new Executable() {
 			@Override

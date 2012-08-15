@@ -8,7 +8,6 @@
 package org.nanocom.console.output;
 
 import java.util.List;
-
 import org.nanocom.console.formatter.OutputFormatterInterface;
 
 /**
@@ -33,7 +32,7 @@ public interface OutputInterface {
      * @param newline  Whether to add a newline or not
      * @param type     The type of output
      *
-     * @throws Exception When unknown output type is given
+     * @throws IllegalArgumentException When unknown output type is given
      */
     void write(List<String> messages, boolean newline, int type);
 

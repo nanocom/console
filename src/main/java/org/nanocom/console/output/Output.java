@@ -9,7 +9,6 @@ package org.nanocom.console.output;
 
 import java.util.Arrays;
 import java.util.List;
-
 import org.nanocom.console.formatter.OutputFormatter;
 import org.nanocom.console.formatter.OutputFormatterInterface;
 
@@ -21,7 +20,7 @@ import org.nanocom.console.formatter.OutputFormatterInterface;
  *  * normal: no option passed (normal output - information)
  *  * verbose: -v (more output - debug)
  *  * quiet: -q (no output)
- * 
+ *
  * @author Arnaud Kleinpeter <arnaud.kleinpeter at gmail dot com>
  */
 public abstract class Output implements OutputInterface {
@@ -50,7 +49,7 @@ public abstract class Output implements OutputInterface {
         this(OutputInterface.VERBOSITY_NORMAL);
     }
 
-    protected void init(Integer verbosity, boolean decorated, OutputFormatterInterface formatter) {
+    protected final void init(Integer verbosity, boolean decorated, OutputFormatterInterface formatter) {
         this.verbosity = null == verbosity ? OutputInterface.VERBOSITY_NORMAL : verbosity;
         this.formatter = null == formatter ? new OutputFormatter() : formatter;
         this.formatter.setDecorated(decorated);

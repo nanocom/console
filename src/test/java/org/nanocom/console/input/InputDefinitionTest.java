@@ -5,7 +5,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -19,12 +18,8 @@ public class InputDefinitionTest {
     public InputDefinitionTest() {
     }
 
-    @AfterClass
-    public static void tearDownClass() throws Exception {
-    }
-
     @Test
-    public void testConstructor() throws Exception {
+    public void testConstructor() {
         initializeArguments();
 
         InputDefinition definition = new InputDefinition();
@@ -50,7 +45,7 @@ public class InputDefinitionTest {
     }
 
     @Test
-    public void testSetArguments() throws Exception {
+    public void testSetArguments() {
         initializeArguments();
 
         InputDefinition definition = new InputDefinition();
@@ -65,7 +60,7 @@ public class InputDefinitionTest {
     }
 
     @Test
-    public void testAddArguments() throws Exception {
+    public void testAddArguments() {
         initializeArguments();
 
         InputDefinition definition = new InputDefinition();
@@ -79,7 +74,7 @@ public class InputDefinitionTest {
     }
 
     @Test
-    public void testAddArgument() throws Exception {
+    public void testAddArgument() {
         initializeArguments();
 
         InputDefinition definition = new InputDefinition();
@@ -124,7 +119,7 @@ public class InputDefinitionTest {
     }
 
     @Test
-    public void testGetArgument() throws Exception {
+    public void testGetArgument() {
         initializeArguments();
 
         InputDefinition definition = new InputDefinition();
@@ -140,7 +135,7 @@ public class InputDefinitionTest {
     }
 
     @Test
-    public void testHasArgument() throws Exception {
+    public void testHasArgument() {
         initializeArguments();
 
         InputDefinition definition = new InputDefinition();
@@ -150,7 +145,7 @@ public class InputDefinitionTest {
     }
 
     @Test
-    public void testGetArgumentRequiredCount() throws Exception {
+    public void testGetArgumentRequiredCount() {
         initializeArguments();
 
         InputDefinition definition = new InputDefinition();
@@ -161,7 +156,7 @@ public class InputDefinitionTest {
     }
 
     @Test
-    public void testGetArgumentCount() throws Exception {
+    public void testGetArgumentCount() {
         initializeArguments();
 
         InputDefinition definition = new InputDefinition();
@@ -172,7 +167,7 @@ public class InputDefinitionTest {
     }
 
     @Test
-    public void testGetArgumentDefaults() throws Exception {
+    public void testGetArgumentDefaults() {
         InputDefinition definition = new InputDefinition(Arrays.asList((Object)
             new InputArgument("foo1", InputArgument.OPTIONAL),
             new InputArgument("foo2", InputArgument.OPTIONAL, "", "default"),
@@ -193,7 +188,7 @@ public class InputDefinitionTest {
     }
 
     @Test
-    public void testSetOptions() throws Exception {
+    public void testSetOptions() {
         initializeOptions();
 
         InputDefinition definition = new InputDefinition(Arrays.asList(foo));
@@ -214,7 +209,7 @@ public class InputDefinitionTest {
     }
 
     @Test
-    public void testAddOptions() throws Exception {
+    public void testAddOptions() {
         initializeOptions();
 
         InputDefinition definition = new InputDefinition(Arrays.asList(foo));
@@ -227,7 +222,7 @@ public class InputDefinitionTest {
     }
 
     @Test
-    public void testAddOption() throws Exception {
+    public void testAddOption() {
         initializeOptions();
 
         InputDefinition definition = new InputDefinition();
@@ -255,7 +250,7 @@ public class InputDefinitionTest {
     }
 
     @Test
-    public void testGetOption() throws Exception {
+    public void testGetOption() {
         this.initializeOptions();
 
         InputDefinition definition = new InputDefinition(Arrays.asList(foo));
@@ -270,7 +265,7 @@ public class InputDefinitionTest {
     }
 
     @Test
-    public void testHasOption() throws Exception {
+    public void testHasOption() {
         this.initializeOptions();
 
         InputDefinition definition = new InputDefinition(Arrays.asList(this.foo));
@@ -279,7 +274,7 @@ public class InputDefinitionTest {
     }
 
     @Test
-    public void testHasShortcut() throws Exception {
+    public void testHasShortcut() {
         this.initializeOptions();
 
         InputDefinition definition = new InputDefinition(Arrays.asList(this.foo));
@@ -288,7 +283,7 @@ public class InputDefinitionTest {
     }
 
     @Test
-    public void testGetOptionForShortcut() throws Exception {
+    public void testGetOptionForShortcut() {
         this.initializeOptions();
 
         InputDefinition definition = new InputDefinition(Arrays.asList(this.foo));
@@ -303,7 +298,7 @@ public class InputDefinitionTest {
     }
 
     @Test
-    public void testGetOptionDefaults() throws Exception {
+    public void testGetOptionDefaults() {
         InputDefinition definition = new InputDefinition(Arrays.asList((Object)
             new InputOption("foo1", null, InputOption.VALUE_NONE),
             new InputOption("foo2", null, InputOption.VALUE_REQUIRED),
@@ -325,7 +320,7 @@ public class InputDefinitionTest {
     }
 
     @Test
-    public void testGetSynopsis() throws Exception {
+    public void testGetSynopsis() {
         InputDefinition definition = new InputDefinition(Arrays.asList((Object) new InputOption("foo")));
         Assert.assertEquals(".getSynopsis() returns a synopsis of arguments and options", "[--foo]", definition.getSynopsis());
         definition = new InputDefinition(Arrays.asList((Object) new InputOption("foo", "f")));
@@ -345,7 +340,7 @@ public class InputDefinitionTest {
         Assert.assertEquals(".getSynopsis() returns a synopsis of arguments and options", "foo1 ... [fooN]", definition.getSynopsis());
     }
 
-    public void testAsText() throws Exception {
+    public void testAsText() {
         Map<String, String> foobar = new HashMap<String, String>();
         foobar.put("foo", "bar");
 
@@ -362,7 +357,7 @@ public class InputDefinitionTest {
         // Assert.assertStringEqualsFile(self.fixtures."/definition_astext.txt", definition.asText(), ".asText() returns a textual representation of the InputDefinition");
     }
 
-    /*public void testAsXml() throws Exception {
+    /*public void testAsXml() {
         InputDefinition definition = new InputDefinition(Arrays.asList(
             new InputArgument("foo", InputArgument.OPTIONAL, "The foo argument"),
             new InputArgument("baz", InputArgument.OPTIONAL, "The baz argument", true),
@@ -374,14 +369,14 @@ public class InputDefinitionTest {
         Assert.assertXmlStringEqualsXmlFile(self.fixtures."/definition_asxml.txt", definition.asXml(), ".asText() returns a textual representation of the InputDefinition");
     }*/
 
-    private void initializeArguments() throws Exception {
+    private void initializeArguments() {
         foo = new InputArgument("foo");
         bar = new InputArgument("bar");
         foo1 = new InputArgument("foo");
         foo2 = new InputArgument("foo2", InputArgument.REQUIRED);
     }
 
-    private void initializeOptions() throws Exception {
+    private void initializeOptions() {
         foo = new InputOption("foo", "f");
         bar = new InputOption("bar", "b");
         foo1 = new InputOption("fooBis", "f");

@@ -1,28 +1,17 @@
 package org.nanocom.console.input;
 
-import org.nanocom.console.input.InputOption;
 import java.util.ArrayList;
 import java.util.Arrays;
-import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Test;
-import org.junit.BeforeClass;
 
 public class InputOptionTest {
-    
+
     public InputOptionTest() {
     }
 
-    @BeforeClass
-    public static void setUpClass() throws Exception {
-    }
-
-    @AfterClass
-    public static void tearDownClass() throws Exception {
-    }
-
     @Test
-    public void testConstructor() throws Exception {
+    public void testConstructor() {
         InputOption option = new InputOption("foo");
         Assert.assertEquals("__construct() takes a name as its first argument", "foo", option.getName());
         option = new InputOption("--foo");
@@ -78,7 +67,7 @@ public class InputOptionTest {
     }
 
     @Test
-    public void testIsArray() throws Exception {
+    public void testIsArray() {
         InputOption option = new InputOption("foo", null, InputOption.VALUE_OPTIONAL | InputOption.VALUE_IS_ARRAY);
         Assert.assertTrue(".isArray() returns true if the option can be an array", option.isArray());
         option = new InputOption("foo", null, InputOption.VALUE_NONE);
@@ -86,13 +75,13 @@ public class InputOptionTest {
     }
 
     @Test
-    public void testGetDescription() throws Exception {
+    public void testGetDescription() {
         InputOption option = new InputOption("foo", "f", null, "Some description");
         Assert.assertEquals(".getDescription() returns the description message", "Some description", option.getDescription());
     }
 
     @Test
-    public void testgetDefaultValue() throws Exception {
+    public void testgetDefaultValue() {
         InputOption option = new InputOption("foo", null, InputOption.VALUE_OPTIONAL, "", "default");
         Assert.assertEquals(".getDefaultValue() returns the default value", "default", option.getDefaultValue());
 
@@ -110,7 +99,7 @@ public class InputOptionTest {
     }
 
     @Test
-    public void testsetDefaultValue() throws Exception {
+    public void testsetDefaultValue() {
         InputOption option = new InputOption("foo", null, InputOption.VALUE_REQUIRED, "", "default");
         option.setDefaultValue(null);
         Assert.assertNull(".setDefaultValue() can reset the default value by passing null", option.getDefaultValue());
@@ -141,7 +130,7 @@ public class InputOptionTest {
     }
 
     @Test
-    public void testEquals() throws Exception {
+    public void testEquals() {
         InputOption option = new InputOption("foo", "f", null, "Some description");
         InputOption option2 = new InputOption("foo", "f", null, "Alternative description");
         Assert.assertTrue(option.equals(option2));

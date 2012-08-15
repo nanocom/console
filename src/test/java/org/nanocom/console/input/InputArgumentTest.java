@@ -1,10 +1,7 @@
 package org.nanocom.console.input;
 
-import org.nanocom.console.input.InputArgument;
 import java.util.Arrays;
-import org.junit.AfterClass;
 import org.junit.Assert;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class InputArgumentTest {
@@ -12,16 +9,8 @@ public class InputArgumentTest {
     public InputArgumentTest() {
     }
 
-    @BeforeClass
-    public static void setUpClass() throws Exception {
-    }
-
-    @AfterClass
-    public static void tearDownClass() throws Exception {
-    }
-
     @Test
-    public void testConstructor() throws Exception {
+    public void testConstructor() {
         InputArgument argument = new InputArgument("foo");
         Assert.assertEquals("__construct() takes a name as its first argument", "foo", argument.getName());
 
@@ -47,7 +36,7 @@ public class InputArgumentTest {
     }
 
     @Test
-    public void testIsArray() throws Exception {
+    public void testIsArray() {
         InputArgument argument = new InputArgument("foo", InputArgument.IS_ARRAY);
         Assert.assertTrue(".isArray() returns true if the argument can be an array", argument.isArray());
         argument = new InputArgument("foo", InputArgument.OPTIONAL | InputArgument.IS_ARRAY);
@@ -57,19 +46,19 @@ public class InputArgumentTest {
     }
 
     @Test
-    public void testGetDescription() throws Exception {
+    public void testGetDescription() {
         InputArgument argument = new InputArgument("foo", null, "Some description");
         Assert.assertEquals(".getDescription() return the message description", "Some description", argument.getDescription());
     }
 
     @Test
-    public void testGetDefault() throws Exception {
+    public void testGetDefault() {
         InputArgument argument = new InputArgument("foo", InputArgument.OPTIONAL, "", "default");
         Assert.assertEquals(".getDefault() return the default value", "default", argument.getDefaultValue());
     }
 
     @Test
-    public void testSetDefault() throws Exception {
+    public void testSetDefault() {
         InputArgument argument = new InputArgument("foo", InputArgument.OPTIONAL, "", "default");
         argument.setDefaultValue(null);
         Assert.assertNull(".setDefault() can reset the default value by passing null", argument.getDefaultValue());

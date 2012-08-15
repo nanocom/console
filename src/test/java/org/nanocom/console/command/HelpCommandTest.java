@@ -9,15 +9,17 @@ package org.nanocom.console.command;
 
 import java.util.HashMap;
 import java.util.Map;
-
 import org.junit.Test;
 import org.nanocom.console.Application;
 import org.nanocom.console.tester.CommandTester;
 
 public class HelpCommandTest {
 
+    public HelpCommandTest() {
+    }
+
 	@Test
-    public void testExecute() throws Exception {
+    public void testExecute() {
         HelpCommand command = new HelpCommand();
 
         CommandTester commandTester = new CommandTester(command);

@@ -1,10 +1,6 @@
 package org.nanocom.console.formatter;
 
-import org.nanocom.console.formatter.OutputFormatter;
-import org.nanocom.console.formatter.OutputFormatterStyle;
-import org.junit.AfterClass;
 import org.junit.Assert;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class OutputFormatterTest {
@@ -12,22 +8,14 @@ public class OutputFormatterTest {
     public OutputFormatterTest() {
     }
 
-    @BeforeClass
-    public static void setUpClass() throws Exception {
-    }
-
-    @AfterClass
-    public static void tearDownClass() throws Exception {
-    }
-
     @Test
-    public void testEmptyTag() throws Exception {
+    public void testEmptyTag() {
         OutputFormatter formatter = new OutputFormatter(true);
         Assert.assertEquals("foo<>bar", formatter.format("foo<>bar"));
     }
 
     @Test
-    public void testBundledStyles() throws Exception {
+    public void testBundledStyles() {
         //OutputFormatter formatter = new OutputFormatter(true);
 
         /*Assert.assertTrue(formatter.hasStyle("error"));
@@ -54,7 +42,7 @@ public class OutputFormatterTest {
     }
 
     @Test
-    public void testNestedStyles() throws Exception {
+    public void testNestedStyles() {
         //OutputFormatter formatter = new OutputFormatter(true);
 
         /*Assert.assertEquals(
@@ -64,7 +52,7 @@ public class OutputFormatterTest {
     }
 
     @Test
-    public void testDeepNestedStyles() throws Exception {
+    public void testDeepNestedStyles() {
         // OutputFormatter formatter = new OutputFormatter(true);
 
         /*Assert.assertEquals(
@@ -74,7 +62,7 @@ public class OutputFormatterTest {
     }
 
     @Test
-    public void testNewStyle() throws Exception {
+    public void testNewStyle() {
         OutputFormatter formatter = new OutputFormatter(true);
 
         OutputFormatterStyle style = new OutputFormatterStyle("blue", "white");
@@ -87,7 +75,7 @@ public class OutputFormatterTest {
     }
 
     @Test
-    public void testRedefineStyle() throws Exception {
+    public void testRedefineStyle() {
         OutputFormatter formatter = new OutputFormatter(true);
 
         OutputFormatterStyle style = new OutputFormatterStyle("blue", "white");
@@ -97,7 +85,7 @@ public class OutputFormatterTest {
     }
 
     @Test
-    public void testInlineStyle() throws Exception {
+    public void testInlineStyle() {
         // OutputFormatter formatter = new OutputFormatter(true);
 
         // Assert.assertEquals("\033[34;41msome text\033[0m", formatter.format("<fg=blue;bg=red>some text</>"));
@@ -105,7 +93,7 @@ public class OutputFormatterTest {
     }
 
     @Test
-    public void testNotDecoratedFormatter() throws Exception {
+    public void testNotDecoratedFormatter() {
         OutputFormatter formatter = new OutputFormatter(false);
 
         Assert.assertTrue(formatter.hasStyle("error"));
@@ -143,15 +131,12 @@ public class OutputFormatterTest {
     }
 
     @Test
-    public void testContentWithLineBreaks() throws Exception {
-         OutputFormatter formatter = new OutputFormatter(true);
-
+    public void testContentWithLineBreaks() {
+        OutputFormatter formatter = new OutputFormatter(true);
 
         Assert.assertEquals("\033[32m\nsome text\n\033[0m", formatter.format("<info>\nsome text\n</info>"));
         Assert.assertEquals("\033[32m\nsome text\n\033[0m", formatter.format("<info>\nsome text\n</info>"));
         Assert.assertEquals("\033[32m\nsome text\n\033[0m", formatter.format("<info>\nsome text\n</info>"));
         Assert.assertEquals("\033[32m\nsome text\nmore text\n\033[0m", formatter.format("<info>\nsome text\nmore text\n</info>"));
-        
     }
-
 }

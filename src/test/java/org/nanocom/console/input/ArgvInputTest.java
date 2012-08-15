@@ -1,15 +1,9 @@
 package org.nanocom.console.input;
 
-import org.nanocom.console.input.InputDefinition;
-import org.nanocom.console.input.ArgvInput;
-import org.nanocom.console.input.InputOption;
-import org.nanocom.console.input.InputArgument;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import org.junit.AfterClass;
 import org.junit.Assert;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class ArgvInputTest {
@@ -17,16 +11,8 @@ public class ArgvInputTest {
     public ArgvInputTest() {
     }
 
-    @BeforeClass
-    public static void setUpClass() throws Exception {
-    }
-
-    @AfterClass
-    public static void tearDownClass() throws Exception {
-    }
-
     @Test
-    public void testConstructor() throws Exception {
+    public void testConstructor() {
         /*List<String> argv = Arrays.asList("foo");
         ArgvInput input = new ArgvInput();
         Class clazz = input.getClass();
@@ -34,7 +20,7 @@ public class ArgvInputTest {
         Assert.assertEquals("__construct() automatically get its input from the argv server variable", Arrays.asList("foo"), tokens.get(argv));*/
     }
 
-    public void testParser() throws Exception {
+    public void testParser() {
         ArgvInput input = new ArgvInput((String[]) Arrays.asList("foo").toArray());
         input.bind(new InputDefinition(Arrays.asList((Object) new InputArgument("name"))));
         Map<String, Object> foobar = new HashMap<String, Object>();
@@ -211,7 +197,7 @@ public class ArgvInputTest {
     }
 
     @Test
-    public void testGetFirstArgument() throws Exception {
+    public void testGetFirstArgument() {
         ArgvInput input = new ArgvInput((String[]) Arrays.asList("-fbbar").toArray());
         Assert.assertEquals(".getFirstArgument() returns the first argument from the raw input", null, input.getFirstArgument());
 
@@ -220,7 +206,7 @@ public class ArgvInputTest {
     }
 
     @Test
-    public void testHasParameterOption() throws Exception {
+    public void testHasParameterOption() {
         ArgvInput input = new ArgvInput((String[]) Arrays.asList("-f", "foo").toArray());
         Assert.assertTrue(".hasParameterOption() returns true if the given short option is in the raw input", input.hasParameterOption("-f"));
 
@@ -231,7 +217,7 @@ public class ArgvInputTest {
         Assert.assertFalse(".hasParameterOption() returns false if the given short option is not in the raw input", input.hasParameterOption("--foo"));
     }
 
-    /*public void testGetParameterOptionEqualSign(final String[] argv, final String key, final Object expected) throws Exception {
+    /*public void testGetParameterOptionEqualSign(final String[] argv, final String key, final Object expected) {
         ArgvInput input = new ArgvInput(argv);
         Assert.assertEquals(".getParameterOption() returns the expected value", expected, input.getParameterOption(key));
     }*/

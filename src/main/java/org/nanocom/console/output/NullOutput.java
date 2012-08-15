@@ -13,24 +13,24 @@ import org.nanocom.console.formatter.OutputFormatterInterface;
  * NullOutput suppresses all output.
  *
  *     NullOutput output = new NullOutput();
- * 
+ *
  * @author Arnaud Kleinpeter <arnaud.kleinpeter at gmail dot com>
  */
 public final class NullOutput extends Output {
 
-    public NullOutput(final Integer verbosity, final boolean decorated, final OutputFormatterInterface formatter) throws Exception {
+    public NullOutput(final Integer verbosity, final boolean decorated, final OutputFormatterInterface formatter) {
         super(verbosity, decorated, formatter);
     }
 
-    public NullOutput(final Integer verbosity, final boolean decorated) throws Exception {
+    public NullOutput(final Integer verbosity, final boolean decorated) {
         this(verbosity, decorated, null);
     }
 
-    public NullOutput(final Integer verbosity) throws Exception {
+    public NullOutput(final Integer verbosity) {
         this(verbosity, false);
     }
- 
-    public NullOutput() throws Exception {
+
+    public NullOutput() {
         super(OutputInterface.VERBOSITY_NORMAL);
     }
 
@@ -43,5 +43,4 @@ public final class NullOutput extends Output {
     @Override
     public void doWrite(final String message, final boolean newline) {
     }
-
 }

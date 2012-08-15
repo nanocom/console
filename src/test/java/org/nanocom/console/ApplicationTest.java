@@ -9,18 +9,12 @@ package org.nanocom.console;
 
 import java.io.*;
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.net.URI;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import org.apache.commons.io.FileUtils;
-
-import org.junit.Test;
 import static org.junit.Assert.*;
+import org.junit.Test;
 import org.nanocom.console.command.Command;
 import org.nanocom.console.command.HelpCommand;
 import org.nanocom.console.fixtures.Foo1Command;
@@ -28,7 +22,6 @@ import org.nanocom.console.fixtures.Foo2Command;
 import org.nanocom.console.fixtures.FooCommand;
 import org.nanocom.console.input.ArgvInput;
 import org.nanocom.console.output.ConsoleOutput;
-import org.nanocom.console.tester.ApplicationTester;
 
 public class ApplicationTest {
 
@@ -351,7 +344,7 @@ public class ApplicationTest {
         assertEquals("asText() returns a text representation of the application", getResource("application_astext2.txt"), normalizeLineBreaks(application.asText("foo")));
     }
 
-    /*public void testAsXml() throws Exception {
+    /*public void testAsXml() {
         Application application = new Application();
         application.add(new FooCommand());
         this.ensureStaticCommandHelp(application);
@@ -400,7 +393,7 @@ public class ApplicationTest {
     }*/
 
     @Test
-    public void testRun() throws Exception {
+    public void testRun() {
         Application application = new Application();
         application.setAutoExit(false);
         application.setCatchExceptions(false);
@@ -473,7 +466,7 @@ public class ApplicationTest {
      * @expectedException \LogicException
      * @dataProvider getAddingAlreadySetDefinitionElementData
      */
-    /*public void testAddingAlreadySetDefinitionElementData(def) throws Exception {
+    /*public void testAddingAlreadySetDefinitionElementData(def) {
         Application application = new Application();
         application.setAutoExit(false);
         application.setCatchExceptions(false);

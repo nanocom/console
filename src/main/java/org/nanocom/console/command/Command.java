@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import org.apache.commons.lang3.StringUtils;
-
 import org.nanocom.console.Application;
 import org.nanocom.console.exception.LogicException;
 import org.nanocom.console.helper.HelperSet;
@@ -372,7 +371,7 @@ public class Command extends Executable {
      *
      * @return The current instance
      *
-     * @throws Exception When command name given is empty
+     * @throws IllegalArgumentException When command name given is empty
      */
     public void setName(String name) {
         validateName(name);
@@ -482,7 +481,7 @@ public class Command extends Executable {
      *
      * @return The helper value
      *
-     * @throws Exception if the helper is not defined
+     * @throws IllegalArgumentException if the helper is not defined
      */
     public Object getHelper(String name) {
         return helperSet.get(name);

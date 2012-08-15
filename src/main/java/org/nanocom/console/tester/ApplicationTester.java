@@ -11,7 +11,6 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.util.Map;
-
 import org.nanocom.console.Application;
 import org.nanocom.console.input.ArrayInput;
 import org.nanocom.console.input.InputInterface;
@@ -48,7 +47,7 @@ public class ApplicationTester {
      *
      * @return The command exit code
      */
-    public int run(Map<String, String> input, Map<String, Object> options) throws Exception {
+    public int run(Map<String, String> input, Map<String, Object> options) {
         this.input = new ArrayInput(input);
         if (options.containsKey("interactive")) {
             this.input.setInteractive((Boolean) options.get("interactive"));
