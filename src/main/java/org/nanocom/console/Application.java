@@ -812,6 +812,7 @@ public class Application {
      * @return
      */
     protected Integer getTerminalWidth() {
+        // TODO
         /*if (defined("PHP_WINDOWS_VERSION_BUILD") && ansicon = getenv("ANSICON")) {
             return preg_replace("{^(\d+)x.*}", "1", ansicon);
         }
