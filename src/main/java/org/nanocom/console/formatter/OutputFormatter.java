@@ -254,12 +254,10 @@ public class OutputFormatter implements OutputFormatterInterface {
                 String fullReplacement = stringToMatch.substring(0, matchResult.start()) +
                          replacement + stringToMatch.substring(matchResult.end());
 
-                if (stringToMatch.equals(fullReplacement)) {
-                    break; // TODO Check this behavior
+                if (!stringToMatch.equals(fullReplacement)) {
+                    stringToMatch = fullReplacement;
+                    matcher.reset(stringToMatch);
                 }
-
-                stringToMatch = fullReplacement;
-                matcher.reset(stringToMatch);
             }
 
             return stringToMatch;
