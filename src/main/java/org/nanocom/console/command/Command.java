@@ -495,7 +495,7 @@ public class Command extends Executable {
     public String asText() {
         List<String> messages = new ArrayList<String>(Arrays.asList(
             "<comment>Usage:</comment>",
-            " " + this.getSynopsis(),
+            ' ' + this.getSynopsis(),
             ""
         ));
 
@@ -507,12 +507,11 @@ public class Command extends Executable {
 
         String processedHelp = getProcessedHelp();
         if (null != processedHelp && !processedHelp.isEmpty()) {
-            messages.add("comment>Help:</comment>");
-            // TODO
-            // messages.append(" " + implode("\n ", explode("\n", help)) + "\n";
+            messages.add("<comment>Help:</comment>");
+            messages.add(' ' + help.replaceAll("\n", "\n ") + '\n');
         }
 
-        return messages.toString(); // TODO Implode messages with "\n"
+        return StringUtils.join(messages, '\n');
     }
 
     /**
@@ -553,7 +552,7 @@ public class Command extends Executable {
     }*/
 
     private void validateName(String name) throws IllegalArgumentException {
-        if (name.isEmpty() || !name.matches("^[^\\:]+(\\:[^\\:]+)*$")) {
+        if (StringUtils.isEmpty(name) || !name.matches("^[^\\:]+(\\:[^\\:]+)*$")) {
             throw new IllegalArgumentException("Command name \"" + name + "\" is invalid.");
         }
     }

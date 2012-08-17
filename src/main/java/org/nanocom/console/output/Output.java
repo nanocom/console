@@ -11,6 +11,7 @@ import java.util.Arrays;
 import java.util.List;
 import org.nanocom.console.formatter.OutputFormatter;
 import org.nanocom.console.formatter.OutputFormatterInterface;
+import org.nanocom.console.output.OutputInterface.OutputType;
 
 /**
  * Base class for output classes.
@@ -25,7 +26,7 @@ import org.nanocom.console.formatter.OutputFormatterInterface;
  */
 public abstract class Output implements OutputInterface {
 
-    private Integer verbosity;
+    private VerbosityLevel verbosity;
     private OutputFormatterInterface formatter;
 
     /**
@@ -33,24 +34,24 @@ public abstract class Output implements OutputInterface {
      * @param decorated Whether to decorate messages or not (null for auto-guessing)
      * @param formatter Output formatter instance
      */
-    public Output(Integer verbosity, boolean decorated, OutputFormatterInterface formatter) {
+    public Output(VerbosityLevel verbosity, boolean decorated, OutputFormatterInterface formatter) {
         init(verbosity, decorated, formatter);
     }
 
-    public Output(Integer verbosity, boolean decorated) {
+    public Output(VerbosityLevel verbosity, boolean decorated) {
         this(verbosity, decorated, null);
     }
 
-    public Output(Integer verbosity) {
+    public Output(VerbosityLevel verbosity) {
         this(verbosity, false);
     }
 
     public Output() {
-        this(OutputInterface.VERBOSITY_NORMAL);
+        this(VerbosityLevel.NORMAL);
     }
 
-    protected final void init(Integer verbosity, boolean decorated, OutputFormatterInterface formatter) {
-        this.verbosity = null == verbosity ? OutputInterface.VERBOSITY_NORMAL : verbosity;
+    protected final void init(VerbosityLevel verbosity, boolean decorated, OutputFormatterInterface formatter) {
+        this.verbosity = null == verbosity ? VerbosityLevel.NORMAL : verbosity;
         this.formatter = null == formatter ? new OutputFormatter() : formatter;
         this.formatter.setDecorated(decorated);
     }
@@ -101,7 +102,7 @@ public abstract class Output implements OutputInterface {
      * @param level The level of verbosity
      */
     @Override
-    public void setVerbosity(int level) {
+    public void setVerbosity(VerbosityLevel level) {
         verbosity = level;
     }
 
@@ -111,7 +112,7 @@ public abstract class Output implements OutputInterface {
      * @return The current level of verbosity
      */
     @Override
-    public int getVerbosity() {
+    public VerbosityLevel getVerbosity() {
         return verbosity;
     }
 
@@ -122,23 +123,23 @@ public abstract class Output implements OutputInterface {
      * @param type     The type of output
      */
     @Override
-    public void writeln(List<String> messages, int type) {
+    public void writeln(List<String> messages, OutputType type) {
         write(messages, true, type);
     }
 
     @Override
-    public void writeln(String message, int type) {
+    public void writeln(String message, OutputType type) {
         write(message, true, type);
     }
 
     @Override
     public void writeln(List<String> messages) {
-        write(messages, true, 0);
+        write(messages, true, OutputType.NORMAL);
     }
 
     @Override
     public void writeln(String message) {
-        write(message, true, 0);
+        write(message, true, OutputType.NORMAL);
     }
 
     /**
@@ -151,19 +152,19 @@ public abstract class Output implements OutputInterface {
      * @throws Exception When unknown output type is given
      */
     @Override
-    public void write(List<String> messages, boolean newline, int type) {
-        if (VERBOSITY_QUIET == verbosity) {
+    public void write(List<String> messages, boolean newline, OutputType type) {
+        if (VerbosityLevel.QUIET.equals(verbosity)) {
             return;
         }
 
         for (String message : messages) {
             switch (type) {
-                case OutputInterface.OUTPUT_NORMAL:
+                case NORMAL:
                     message = formatter.format(message);
                     break;
-                case OutputInterface.OUTPUT_RAW:
+                case RAW:
                     break;
-                case OutputInterface.OUTPUT_PLAIN:
+                case PLAIN:
                     message = /*strip_tags(*/formatter.format(message)/*)*/; // TODO
                     break;
                 default:
@@ -175,28 +176,28 @@ public abstract class Output implements OutputInterface {
     }
 
     @Override
-    public void write(String message, boolean newline, int type) {
+    public void write(String message, boolean newline, OutputType type) {
         write(Arrays.asList(message), newline, type);
     }
 
     @Override
     public void write(List<String> messages, boolean newline) {
-        write(messages, newline, 0);
+        write(messages, newline, OutputType.NORMAL);
     }
 
     @Override
     public void write(String message, boolean newline) {
-        write(message, newline, 0);
+        write(message, newline, OutputType.NORMAL);
     }
 
     @Override
     public void write(List<String> messages) {
-        write(messages, false, 0);
+        write(messages, false, OutputType.NORMAL);
     }
 
     @Override
     public void write(String message) {
-        write(message, false, 0);
+        write(message, false, OutputType.NORMAL);
     }
 
     /**
@@ -206,5 +207,4 @@ public abstract class Output implements OutputInterface {
      * @param newline Whether to add a newline or not
      */
     abstract public void doWrite(String message, boolean newline);
-
 }

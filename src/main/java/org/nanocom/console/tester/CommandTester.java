@@ -9,11 +9,11 @@ package org.nanocom.console.tester;
 
 import java.util.HashMap;
 import java.util.Map;
-
 import org.nanocom.console.command.Command;
 import org.nanocom.console.input.ArrayInput;
 import org.nanocom.console.input.InputInterface;
 import org.nanocom.console.output.OutputInterface;
+import org.nanocom.console.output.OutputInterface.VerbosityLevel;
 import org.nanocom.console.output.StreamOutput;
 
 /**
@@ -59,7 +59,7 @@ public class CommandTester {
         }
 
         if (options.containsKey("verbosity")) {
-            output.setVerbosity((Integer) options.get("verbosity"));
+            output.setVerbosity(VerbosityLevel.createFromInt((Integer) options.get("verbosity")));
         }
 
         return command.run(this.input, (OutputInterface) output);

@@ -15,6 +15,7 @@ import org.nanocom.console.Application;
 import org.nanocom.console.input.ArrayInput;
 import org.nanocom.console.input.InputInterface;
 import org.nanocom.console.output.OutputInterface;
+import org.nanocom.console.output.OutputInterface.VerbosityLevel;
 import org.nanocom.console.output.StreamOutput;
 
 /**
@@ -66,7 +67,7 @@ public class ApplicationTester {
             output.setDecorated((Boolean) options.get("decorated"));
         }
         if (options.containsKey("verbosity")) {
-            output.setVerbosity((Integer) options.get("verbosity"));
+            output.setVerbosity(VerbosityLevel.createFromInt((Integer) options.get("verbosity")));
         }
 
         return application.run(this.input, this.output);

@@ -17,13 +17,35 @@ import org.nanocom.console.formatter.OutputFormatterInterface;
  */
 public interface OutputInterface {
 
-    static int VERBOSITY_QUIET   = 0;
-    static int VERBOSITY_NORMAL  = 1;
-    static int VERBOSITY_VERBOSE = 2;
+    public static enum VerbosityLevel {
 
-    static int OUTPUT_NORMAL = 0;
-    static int OUTPUT_RAW    = 1;
-    static int OUTPUT_PLAIN  = 2;
+        QUIET(0),
+        NORMAL(1),
+        VERBOSE(2);
+
+        private int level;
+
+        VerbosityLevel(int level) {
+            this.level = level;
+        }
+
+        public static VerbosityLevel createFromInt(int number) {
+            for (VerbosityLevel value : values()) {
+                if (number == value.level) {
+                    return value;
+                }
+            }
+
+            return null;
+        }
+    }
+
+    public static enum OutputType {
+
+        NORMAL,
+        RAW,
+        PLAIN;
+    }
 
     /**
      * Writes a message to the output.
@@ -34,9 +56,9 @@ public interface OutputInterface {
      *
      * @throws IllegalArgumentException When unknown output type is given
      */
-    void write(List<String> messages, boolean newline, int type);
+    void write(List<String> messages, boolean newline, OutputType type);
 
-    void write(String message, boolean newline, int type);
+    void write(String message, boolean newline, OutputType type);
 
     void write(List<String> messages, boolean newline);
 
@@ -52,9 +74,9 @@ public interface OutputInterface {
      * @param messages The message as an array of lines of a single string
      * @param type     The type of output
      */
-    void writeln(List<String> messages, int type);
+    void writeln(List<String> messages, OutputType type);
 
-    void writeln(String message, int type);
+    void writeln(String message, OutputType type);
 
     void writeln(List<String> messages);
 
@@ -65,14 +87,14 @@ public interface OutputInterface {
      *
      * @param level The level of verbosity
      */
-    void setVerbosity(int level);
+    void setVerbosity(VerbosityLevel level);
 
     /**
      * Gets the current verbosity of the output.
      *
      * @return The current level of verbosity
      */
-    int getVerbosity();
+    VerbosityLevel getVerbosity();
 
     /**
      * Sets the decorated flag.

@@ -43,7 +43,6 @@ public class ListCommand extends Command {
     @Override
     protected int execute(InputInterface input, OutputInterface output) {
         output.writeln(getApplication().asText((String) input.getArgument("namespace"), false));
-
         return 0;
     }
 

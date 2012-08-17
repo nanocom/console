@@ -18,7 +18,7 @@ import java.util.Map;
  *  * `ArgvInput`:   The input comes from the CLI arguments (argv)
  *  * `StringInput`: The input is provided as a string
  *  * `ArrayInput`:  The input is provided as an array
- * 
+ *
  * @author Arnaud Kleinpeter <arnaud.kleinpeter at gmail dot com>
  */
 abstract class Input implements InputInterface {
@@ -41,7 +41,7 @@ abstract class Input implements InputInterface {
     	init(definition);
     }
 
-    protected void init(InputDefinition definition) {
+    protected final void init(InputDefinition definition) {
         if (null == definition) {
             this.definition = new InputDefinition();
         } else {
@@ -110,7 +110,7 @@ abstract class Input implements InputInterface {
     public Map<String, Object> getArguments() {
         Map<String, Object> toReturn = definition.getArgumentDefaults();
         toReturn.putAll(arguments);
- 
+
         return toReturn;
     }
 
@@ -182,7 +182,7 @@ abstract class Input implements InputInterface {
     public Map<String, Object> getOptions() {
         Map<String, Object> toReturn = definition.getOptionDefaults();
         toReturn.putAll(options);
- 
+
         return toReturn;
     }
 

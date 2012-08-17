@@ -7,9 +7,8 @@
 
 package org.nanocom.console;
 
-import java.util.*;
 import java.util.Map.Entry;
-
+import java.util.*;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.nanocom.console.command.Command;
@@ -18,15 +17,11 @@ import org.nanocom.console.command.ListCommand;
 import org.nanocom.console.helper.DialogHelper;
 import org.nanocom.console.helper.FormatterHelper;
 import org.nanocom.console.helper.HelperSet;
-import org.nanocom.console.input.ArgvInput;
-import org.nanocom.console.input.ArrayInput;
-import org.nanocom.console.input.InputArgument;
-import org.nanocom.console.input.InputDefinition;
-import org.nanocom.console.input.InputInterface;
-import org.nanocom.console.input.InputOption;
+import org.nanocom.console.input.*;
 import org.nanocom.console.output.ConsoleOutput;
 import org.nanocom.console.output.ConsoleOutputInterface;
 import org.nanocom.console.output.OutputInterface;
+import org.nanocom.console.output.OutputInterface.VerbosityLevel;
 
 /**
  * An Application is the container for a collection of commands.
@@ -174,6 +169,7 @@ public class Application {
         }
 
         if (null != System.console() && getHelperSet().has("dialog")) {
+            // TODO
             // InputStream inputStream = ((DialogHelper) getHelperSet().get("dialog")).getInputStream();
             /*if (!posix_isatty(inputStream)) {
                 input.setInteractive(false);
@@ -181,9 +177,9 @@ public class Application {
         }
 
         if (true == input.hasParameterOption(Arrays.asList("--quiet", "-q"))) {
-            output.setVerbosity(OutputInterface.VERBOSITY_QUIET);
+            output.setVerbosity(VerbosityLevel.QUIET);
         } else if (true == input.hasParameterOption(Arrays.asList("--verbose", "-v"))) {
-            output.setVerbosity(OutputInterface.VERBOSITY_VERBOSE);
+            output.setVerbosity(VerbosityLevel.VERBOSE);
         }
 
         if (true == input.hasParameterOption(Arrays.asList("--version", "-V"))) {
@@ -473,12 +469,12 @@ public class Application {
                     part = String.format("%s:%s", StringUtils.join(found, ':'), part);
                 }
 
-                /*List<String> alternatives = findAlternativeNamespace(part, abbrevs);
+                Set<String> alternatives = findAlternativeNamespace(part, abbrevs);
 
                 if (null != alternatives) {
                     message.append("\n\nDid you mean one of these?\n    ");
                     message.append(StringUtils.join("\n    ", alternatives));
-                }*/
+                }
 
                 throw new IllegalArgumentException(message.toString());
             }
@@ -771,7 +767,7 @@ public class Application {
             output.writeln("");
             output.writeln("");
 
-            if (OutputInterface.VERBOSITY_VERBOSE == output.getVerbosity()) {
+            if (VerbosityLevel.VERBOSE == output.getVerbosity()) {
                 output.writeln("<comment>Exception trace:</comment>");
 
                 // Exception related properties
@@ -983,11 +979,11 @@ public class Application {
      * @param name    The full name of the namespace
      * @param abbrevs The abbreviations
      *
-     * @return array A sorted array of similar namespace
+     * @return A sorted set of similar namespace
      */
-    /*private Set<String> findAlternativeNamespace(String name, final List<String> abbrevs) {
-        return new HashSet<String>(); // findAlternatives(name, getNamespaces(), abbrevs);
-    }*/
+    private Set<String> findAlternativeNamespace(String name, Map<String, List<String>> abbrevs) {
+        return findAlternatives(name, getNamespaces(), abbrevs);
+    }
 
     /**
      * Finds alternative of name among collection,
@@ -999,7 +995,7 @@ public class Application {
      *
      * @return A sorted set of similar string
      */
-    private Set<String> findAlternatives(String name, List<String> collection, Map<String, List<String>> abbrevs) {
+    private Set<String> findAlternatives(String name, Collection<String> collection, Map<String, List<String>> abbrevs) {
         Map<String, Integer> alternatives = new HashMap<String, Integer>();
 
         for (String item : collection) {
@@ -1022,7 +1018,7 @@ public class Application {
             }
         }
 
-        // asort(alternatives); // Trie par ordre de distance
+        // asort(alternatives); // TODO Sort by ascending distance
 
         return alternatives.keySet();
     }

@@ -10,13 +10,12 @@ package org.nanocom.console.output;
 /**
  * ConsoleOutputInterface is the interface implemented by ConsoleOutput class.
  * This adds information about stderr output stream.
- * 
+ *
  * @author Arnaud Kleinpeter <arnaud.kleinpeter at gmail dot com>
  */
 public interface ConsoleOutputInterface extends OutputInterface {
 
-    public OutputInterface getErrorOutput();
+    OutputInterface getErrorOutput();
 
-    public void setErrorOutput(final OutputInterface error);
-
+    void setErrorOutput(final OutputInterface error);
 }

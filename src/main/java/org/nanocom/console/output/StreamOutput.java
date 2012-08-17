@@ -38,7 +38,7 @@ public class StreamOutput extends Output {
     *
     * @throws IllegalArgumentException When first argument is not a real stream
     */
-    public StreamOutput(PrintStream stream, int verbosity, Boolean decorated, OutputFormatterInterface formatter) {
+    public StreamOutput(PrintStream stream, VerbosityLevel verbosity, Boolean decorated, OutputFormatterInterface formatter) {
         if (null == stream) {
             throw new IllegalArgumentException("The stream cannot be null.");
         }
@@ -53,7 +53,7 @@ public class StreamOutput extends Output {
     }
 
     public StreamOutput(PrintStream stream) {
-        this(stream, OutputInterface.VERBOSITY_NORMAL, null, null);
+        this(stream, VerbosityLevel.NORMAL, null, null);
     }
 
     public StreamOutput() {
@@ -92,11 +92,11 @@ public class StreamOutput extends Output {
      * Colorization is disabled if not supported by the stream:
      *
      *  -  windows without ansicon
-     *  -  non tty consoles
+     *  -  non tty consoles (TODO Find a way to detect non-tty consoles)
      *
      * @return true if the stream supports colorization, false otherwise
      */
-    protected boolean hasColorSupport() {
+    protected final boolean hasColorSupport() {
         if (SystemUtils.IS_OS_WINDOWS) {
             return null != System.getenv("ANSICON");
         }

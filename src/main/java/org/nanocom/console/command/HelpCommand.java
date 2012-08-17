@@ -8,11 +8,10 @@
 package org.nanocom.console.command;
 
 import java.util.Arrays;
-
 import org.nanocom.console.input.InputArgument;
 import org.nanocom.console.input.InputInterface;
-import org.nanocom.console.input.InputOption;
 import org.nanocom.console.output.OutputInterface;
+import org.nanocom.console.output.OutputInterface.OutputType;
 
 /**
  * HelpCommand displays the help for a given command.
@@ -57,7 +56,7 @@ public class HelpCommand extends Command {
             command = getApplication().get((String) input.getArgument("command_name"));
         }
 
-        output.writeln(Arrays.asList(command.asText()), OutputInterface.OUTPUT_NORMAL);
+        output.writeln(Arrays.asList(command.asText()), OutputType.NORMAL);
 
         command = null;
 

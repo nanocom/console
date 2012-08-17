@@ -16,22 +16,22 @@ import org.nanocom.console.formatter.OutputFormatterInterface;
  *
  * @author Arnaud Kleinpeter <arnaud.kleinpeter at gmail dot com>
  */
-public final class NullOutput extends Output {
+public class NullOutput extends Output {
 
-    public NullOutput(final Integer verbosity, final boolean decorated, final OutputFormatterInterface formatter) {
+    public NullOutput(VerbosityLevel verbosity, boolean decorated, OutputFormatterInterface formatter) {
         super(verbosity, decorated, formatter);
     }
 
-    public NullOutput(final Integer verbosity, final boolean decorated) {
+    public NullOutput(VerbosityLevel verbosity, boolean decorated) {
         this(verbosity, decorated, null);
     }
 
-    public NullOutput(final Integer verbosity) {
+    public NullOutput(VerbosityLevel verbosity) {
         this(verbosity, false);
     }
 
     public NullOutput() {
-        super(OutputInterface.VERBOSITY_NORMAL);
+        super(VerbosityLevel.NORMAL);
     }
 
     /**
@@ -41,6 +41,6 @@ public final class NullOutput extends Output {
      * @param newline Whether to add a newline or not
      */
     @Override
-    public void doWrite(final String message, final boolean newline) {
+    public void doWrite(String message, boolean newline) {
     }
 }
