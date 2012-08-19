@@ -11,6 +11,7 @@ import java.util.Map.Entry;
 import java.util.*;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.SystemUtils;
 import org.nanocom.console.command.Command;
 import org.nanocom.console.command.HelpCommand;
 import org.nanocom.console.command.ListCommand;
@@ -735,85 +736,23 @@ public class Application {
      * @param output An OutputInterface instance
      */
     public void renderException(Exception e, OutputInterface output) throws RuntimeException {
-        Throwable t = (Throwable) e;
-
-		output.writeln(e.getMessage());
-
-        do {
-            // String title = String.format("  [%s]  ", e.getClass().toString());
-            // int len = title.length();
-            // int width = null != getTerminalWidth() ? getTerminalWidth() - 1 : Integer.MAX_VALUE;
-            // List<String> lines = new ArrayList<String>();
-            /*for (preg_split("{\r?\n}", e.getMessage()) as line) {
-                for (str_split(line, width - 4) as line) {
-                    lines.add(String.format("  %s  ", line));
-                    len = Math.max(line.length() + 4, len);
-                }
-            }
-
-            List<String> messages = Arrays.asList(str_repeat(" ", len), title + str_repeat(" ", Math.max(0, len - title.length())));
-
-            for (lines as line) {
-                messages.add(line + str_repeat(" ", len - line.length()));
-            }*/
-
-            // messages.add(str_repeat(" ", len));
-
-            output.writeln("");
-            output.writeln("");
-            /*for (messages as message) {
-                output.writeln("<error>" + message + "</error>");
-            }*/
-            output.writeln("");
-            output.writeln("");
-
-            if (VerbosityLevel.VERBOSE == output.getVerbosity()) {
-                output.writeln("<comment>Exception trace:</comment>");
-
-                // Exception related properties
-                /*trace = e.getTrace();
-                array_unshift(trace, array(
-                    "void" => "",
-                    "file"     => e.getFile() != null ? e.getFile() : "n/a",
-                    "line"     => e.getLine() != null ? e.getLine() : "n/a",
-                    "args"     => array(),
-                ));
-
-                for (i = 0, count = count(trace); i < count; i++) {
-                    class = isset(trace[i]["class"]) ? trace[i]["class"] : "";
-                    type = isset(trace[i]["type"]) ? trace[i]["type"] : "";
-                    void = trace[i]["void"];
-                    file = isset(trace[i]["file"]) ? trace[i]["file"] : "n/a";
-                    line = isset(trace[i]["line"]) ? trace[i]["line"] : "n/a";
-
-                    output.writeln(String.format(" %s%s%s() at <info>%s:%s</info>", class, type, void, file, line));
-                }*/
-
-                output.writeln("");
-                output.writeln("");
-            }
-            t = t.getCause();
-        } while (null != t);
-
-        if (null != runningCommand) {
-            output.writeln(String.format("<info>%s</info>", String.format(runningCommand.getSynopsis(), getName())));
-            output.writeln("");
-            output.writeln("");
-        }
+        // TODO
+        output.writeln(String.format("An exception occured: %s", e.getMessage()));
     }
 
     /**
-     * Tries to figure out the terminal width in which this application runs
+     * Tries to figure out the terminal width in which this application runs.
      *
      * @return
      */
     protected Integer getTerminalWidth() {
         // TODO
-        /*if (defined("PHP_WINDOWS_VERSION_BUILD") && ansicon = getenv("ANSICON")) {
-            return preg_replace("{^(\d+)x.*}", "1", ansicon);
+        String ansicon = System.getenv("ANSICON");
+        if (SystemUtils.IS_OS_WINDOWS && null != ansicon) {
+            return Integer.valueOf(ansicon.replaceAll("{^(d+)x.*}", "1"));
         }
 
-        if (preg_match(\"{rows.(\d+);.columns.(\d+);}i\", this.getSttyColumns(), match)) {
+        /*if (preg_match(\"{rows.(\d+);.columns.(\d+);}i\", this.getSttyColumns(), match)) {
             return match[1];
         }*/
 
@@ -821,16 +760,17 @@ public class Application {
     }
 
     /**
-     * Tries to figure out the terminal height in which this application runs
+     * Tries to figure out the terminal height in which this application runs.
      *
      * @return
      */
     protected Integer getTerminalHeight() {
-        /* if (defined("PHP_WINDOWS_VERSION_BUILD") && ansicon = getenv("ANSICON")) {
-            return preg_replace("{^\d+x\d+ \(\d+x(\d+)\)}", "1", trim(ansicon));
+        String ansicon = System.getenv("ANSICON");
+        if (SystemUtils.IS_OS_WINDOWS && null != ansicon) {
+            return Integer.valueOf(ansicon.trim().replaceAll("{^d+xd+ (d+x(d+))}", "1"));
         }
 
-        if (preg_match("{rows.(\d+);.columns.(\d+);}i", getSttyColumns(), match)) {
+        /*if (preg_match("{rows.(\d+);.columns.(\d+);}i", getSttyColumns(), match)) {
             return match[2];
         }*/
 
@@ -888,9 +828,11 @@ public class Application {
     }
 
     /**
-     * Runs and parses stty -a if it's available, suppressing any error output
+     * Runs and parses stty -a if it's available, suppressing any error output.
      *
      * @return
+     *
+     * TODO
      */
     /*private String getSttyColumns() {
         descriptorspec = array(1 => array("pipe", "w"), 2 => array("pipe", "w"));

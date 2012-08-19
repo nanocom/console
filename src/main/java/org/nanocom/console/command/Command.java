@@ -365,7 +365,7 @@ public class Command extends Executable {
      * This method can set both the namespace and the name if
      * you separate them by a colon (:)
      *
-     *     command.setName('foo:bar');
+     *     command.setName("foo:bar");
      *
      * @param name The command name
      *
@@ -495,7 +495,7 @@ public class Command extends Executable {
     public String asText() {
         List<String> messages = new ArrayList<String>(Arrays.asList(
             "<comment>Usage:</comment>",
-            ' ' + this.getSynopsis(),
+            ' ' + getSynopsis(),
             ""
         ));
 
@@ -517,38 +517,11 @@ public class Command extends Executable {
     /**
      * Returns an XML representation of the command.
      *
-     * @param asDom Whether to return a DOM or an XML string
-     *
      * @return An XML string representing the command
+     *
+     * TODO
      */
-    /*public String asXml(boolean asDom) {
-        dom = new \DOMDocument('1.0', 'UTF-8');
-        dom.formatOutput = true;
-        dom.appendChild(commandXML = dom.createElement('command'));
-        commandXML.setAttribute('id', this.name);
-        commandXML.setAttribute('name', this.name);
-
-        commandXML.appendChild(usageXML = dom.createElement('usage'));
-        usageXML.appendChild(dom.createTextNode(sprintf(this.getSynopsis(), '')));
-
-        commandXML.appendChild(descriptionXML = dom.createElement('description'));
-        descriptionXML.appendChild(dom.createTextNode(implode("\n ", explode("\n", this.getDescription()))));
-
-        commandXML.appendChild(helpXML = dom.createElement('help'));
-        help = this.help;
-        helpXML.appendChild(dom.createTextNode(implode("\n ", explode("\n", help))));
-
-        commandXML.appendChild(aliasesXML = dom.createElement('aliases'));
-        foreach (this.getAliases() as alias) {
-            aliasesXML.appendChild(aliasXML = dom.createElement('alias'));
-            aliasXML.appendChild(dom.createTextNode(alias));
-        }
-
-        definition = this.getNativeDefinition().asXml(true);
-        commandXML.appendChild(dom.importNode(definition.getElementsByTagName('arguments').item(0), true));
-        commandXML.appendChild(dom.importNode(definition.getElementsByTagName('options').item(0), true));
-
-        return asDom ? dom : dom.saveXml();
+    /*public String asXml() {
     }*/
 
     private void validateName(String name) throws IllegalArgumentException {
