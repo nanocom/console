@@ -19,17 +19,18 @@ import org.nanocom.console.command.Command;
 import org.nanocom.console.command.HelpCommand;
 import org.nanocom.console.fixtures.Foo1Command;
 import org.nanocom.console.fixtures.Foo2Command;
+import org.nanocom.console.fixtures.Foo3Command;
 import org.nanocom.console.fixtures.FooCommand;
 import org.nanocom.console.input.ArgvInput;
 import org.nanocom.console.output.ConsoleOutput;
+import org.nanocom.console.tester.ApplicationTester;
 
 public class ApplicationTest {
 
     public ApplicationTest() {
     }
 
-    protected String normalizeLineBreaks(final String text) {
-        //return text;
+    protected String normalizeLineBreaks(String text) {
         return text.replaceAll(System.getProperty("line.separator"), "\n");
     }
 
@@ -40,7 +41,9 @@ public class ApplicationTest {
      */
     protected void ensureStaticCommandHelp(Application application) {
         for (Command command : application.all().values()) {
-            // command.setHelp(command.getHelp().replaceAll("%command.full_name%", "app/console %command.name%"));
+            if (null != command.getHelp()) {
+                command.setHelp(command.getHelp().replaceAll("%command.full_name%", "app/console %command.name%"));
+            }
         }
     }
 
@@ -74,8 +77,8 @@ public class ApplicationTest {
 
     @Test
     public void testHelp() {
-//        Application application = new Application();
-//        assertStringEqualsFile("setHelp() returns a help message", self.fixturesPath."/application_gethelp.txt", this.normalizeLineBreaks(application.getHelp()));
+        Application application = new Application();
+        assertEquals("setHelp() returns a help message", getResource("application_gethelp.txt"), normalizeLineBreaks(application.getHelp()));
     }
 
     @Test
@@ -162,6 +165,7 @@ public class ApplicationTest {
         assertEquals("findNamespace() finds a namespace given an abbreviation", "foo", application.findNamespace("f"));
         application.add(new Foo2Command());
         assertEquals("findNamespace() returns the given namespace if it exists", "foo", application.findNamespace("foo"));
+
         try {
             application.findNamespace("f");
             fail("findNamespace() throws an IllegalArgumentException if the abbreviation is ambiguous");
@@ -242,9 +246,9 @@ public class ApplicationTest {
         } catch (Exception e) {
             assertTrue("find() throws an IllegalArgumentException if command does not exist", e instanceof IllegalArgumentException);
             assertEquals("find() throws an IllegalArgumentException if command does not exist, with alternatives", String.format("Command \"%s\" is not defined.", commandName), e.getMessage());
-//            assertTrue("find() throws an IllegalArgumentException if command does not exist, with alternative : \"foo:bar\"", e.getMessage().indexOf("foo:bar") > -1);
-//            assertEquals("find() throws an IllegalArgumentException if command does not exist, with alternative : \"foo1:bar\"", "/foo1:bar/", e.getMessage());
-//            assertEquals("find() throws an IllegalArgumentException if command does not exist, with alternative : \"foo:bar1\"", "/foo:bar1/", e.getMessage());
+            assertTrue("find() throws an IllegalArgumentException if command does not exist, with alternative : \"foo:bar\"", e.getMessage().contains("foo:bar"));
+            assertTrue("find() throws an IllegalArgumentException if command does not exist, with alternative : \"foo1:bar\"", e.getMessage().contains("foo1:bar"));
+            assertTrue("find() throws an IllegalArgumentException if command does not exist, with alternative : \"foo:bar1\"", e.getMessage().contains("foo:bar1"));
         }
 
         // Test if "foo1" command throws an "IllegalArgumentException" and does not contain
@@ -260,35 +264,35 @@ public class ApplicationTest {
         }
     }
 
-    /*public void testFindAlternativeNamespace() {
+    public void testFindAlternativeNamespace() {
         Application application = new Application();
 
-        application.add(new \FooCommand());
-        application.add(new \Foo1Command());
-        application.add(new \Foo2Command());
-        application.add(new \foo3Command());
+        application.add(new FooCommand());
+        application.add(new Foo1Command());
+        application.add(new Foo2Command());
+        application.add(new Foo3Command());
 
         try {
             application.find("Unknow-namespace:Unknow-command");
-            fail(".find() throws an \InvalidArgumentException if namespace does not exist");
+            fail("find() throws an IllegalArgumentException if namespace does not exist");
         } catch (Exception e) {
-            assertInstanceOf("\InvalidArgumentException", e, ".find() throws an \InvalidArgumentException if namespace does not exist");
-            assertEquals("There are no commands defined in the \"Unknow-namespace\" namespace.", e.getMessage(), ".find() throws an \InvalidArgumentException if namespace does not exist, without alternatives");
+            assertTrue("find() throws an IllegalArgumentException if namespace does not exist", e instanceof IllegalArgumentException);
+            assertEquals("find() throws an IllegalArgumentException if namespace does not exist, without alternatives", "There are no commands defined in the \"Unknow-namespace\" namespace.", e.getMessage());
         }
 
         try {
             application.find("foo2:command");
-            fail(".find() throws an \InvalidArgumentException if namespace does not exist");
+            fail("find() throws an IllegalArgumentException if namespace does not exist");
         } catch (Exception e) {
-            assertInstanceOf("\InvalidArgumentException", e, ".find() throws an \InvalidArgumentException if namespace does not exist");
-            assertRegExp("/There are no commands defined in the \"foo2\" namespace./", e.getMessage(), ".find() throws an \InvalidArgumentException if namespace does not exist, with alternative");
-            assertRegExp("/foo/", e.getMessage(), ".find() throws an \InvalidArgumentException if namespace does not exist, with alternative : \"foo\"");
-            assertRegExp("/foo1/", e.getMessage(), ".find() throws an \InvalidArgumentException if namespace does not exist, with alternative : \"foo1\"");
-            assertRegExp("/foo3/", e.getMessage(), ".find() throws an \InvalidArgumentException if namespace does not exist, with alternative : \"foo3\"");
+            assertTrue("find() throws an IllegalArgumentException if namespace does not exist", e instanceof IllegalArgumentException);
+            assertTrue("find() throws an IllegalArgumentException if namespace does not exist, with alternative", e.getMessage().contains("There are no commands defined in the \"foo2\" namespace."));
+            assertTrue("find() throws an IllegalArgumentException if namespace does not exist, with alternative : \"foo\"", e.getMessage().contains("foo"));
+            assertTrue("find() throws an IllegalArgumentException if namespace does not exist, with alternative : \"foo1\"", e.getMessage().contains("foo1"));
+            assertTrue("find() throws an IllegalArgumentException if namespace does not exist, with alternative : \"foo3\"", e.getMessage().contains("foo3"));
         }
     }
 
-    public void testSetCatchExceptions() {
+    /*public void testSetCatchExceptions() {
         Application application = this.getMock("Symfony\Component\Console\Application", array("getTerminalWidth"));
         application.setAutoExit(false);
         application.expects(this.any())
@@ -318,14 +322,15 @@ public class ApplicationTest {
                     new InputStreamReader(
                             getClass().getClassLoader().getResourceAsStream(file)));
             try {
-                String line = null;
-                while ((line = input.readLine()) != null) {
+                String line;
+                while (null != (line = input.readLine())) {
                     contents.append(line);
                     contents.append(System.getProperty("line.separator"));
                 }
             } finally {
                 input.close();
             }
+
             contents.deleteCharAt(contents.lastIndexOf(System.getProperty("line.separator")));
         } catch (IOException ex){
             ex.printStackTrace();
@@ -463,7 +468,7 @@ public class ApplicationTest {
     }
 
     /**
-     * @expectedException \LogicException
+     * @expectedException LogicException
      * @dataProvider getAddingAlreadySetDefinitionElementData
      */
     /*public void testAddingAlreadySetDefinitionElementData(def) {

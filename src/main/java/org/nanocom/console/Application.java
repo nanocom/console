@@ -472,7 +472,7 @@ public class Application {
 
                 Set<String> alternatives = findAlternativeNamespace(part, abbrevs);
 
-                if (null != alternatives) {
+                if (!alternatives.isEmpty()) {
                     message.append("\n\nDid you mean one of these?\n    ");
                     message.append(StringUtils.join("\n    ", alternatives));
                 }
@@ -514,14 +514,14 @@ public class Application {
         }
 
         // Name
-        Set<String> commands = new LinkedHashSet<String>();
-        for (Command command : this.commands.values()) {
+        Set<String> locCommands = new LinkedHashSet<String>();
+        for (Command command : commands.values()) {
             if (extractNamespace(command.getName()).equals(namespace)) {
-            	commands.add(command.getName());
+                locCommands.add(command.getName());
             }
         }
 
-        Map<String, List<String>> abbrevs = getAbbreviations(new ArrayList<String>(commands));
+        Map<String, List<String>> abbrevs = getAbbreviations(locCommands);
         if (abbrevs.containsKey(searchName) && 1 == abbrevs.get(searchName).size()) {
             return get(abbrevs.get(searchName).get(0));
         }
@@ -534,7 +534,7 @@ public class Application {
 
         // Aliases
         Set<String> aliases = new HashSet<String>();
-        for (Command command : this.commands.values()) {
+        for (Command command : commands.values()) {
             for (String alias : command.getAliases()) {
                 if (extractNamespace(alias).equals(namespace)) {
                     aliases.add(alias);
@@ -564,7 +564,7 @@ public class Application {
     }
 
     public Map<String, Command> all() {
-    	return all(null);
+        return all(null);
     }
 
     /**
@@ -577,9 +577,9 @@ public class Application {
      * @return A map of Command instances
      */
     public Map<String, Command> all(String namespace) {
-    	if (null == namespace) {
-    		return new HashMap<String, Command>(commands);
-    	}
+        if (null == namespace) {
+                    return new HashMap<String, Command>(commands);
+        }
 
         Map<String, Command> namespacedCommands = new HashMap<String, Command>();
         for (Command command : commands.values()) {
@@ -598,7 +598,7 @@ public class Application {
      *
      * @return A map of abbreviations
      */
-    static public Map<String, List<String>> getAbbreviations(List<String> names) {
+    static public Map<String, List<String>> getAbbreviations(Collection<String> names) {
         Map<String, List<String>> abbrevs = new LinkedHashMap<String, List<String>>();
         for (String name : names) {
             for (int len = name.length() - 1; len > 0; --len) {
