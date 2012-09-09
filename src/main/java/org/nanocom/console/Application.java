@@ -243,7 +243,7 @@ public class Application {
         messages.add(getLongVersion());
         messages.add("");
         messages.add("<comment>Usage:</comment>");
-        messages.add("  [options] command [arguments]\n");
+        messages.add("  [options] command [arguments]" + System.getProperty("line.separator"));
         messages.add("<comment>Options:</comment>");
 
         for (InputOption option : getDefinition().getOptions().values()) {
@@ -474,7 +474,7 @@ public class Application {
 
                 if (!alternatives.isEmpty()) {
                     message.append("\n\nDid you mean one of these?\n    ");
-                    message.append(StringUtils.join("\n    ", alternatives));
+                    message.append(StringUtils.join(alternatives, "\n    "));
                 }
 
                 throw new IllegalArgumentException(message.toString());

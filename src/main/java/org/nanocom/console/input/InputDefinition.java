@@ -440,10 +440,10 @@ public class InputDefinition {
                 }
 
                 String replaceBy = String.format("%1$-" + max + 2 + "s", ""); // PHP's str_pad (right) equivalent
-                String description = argument.getDescription().replaceAll("\n", "\n" + replaceBy);
+                String description = argument.getDescription().replaceAll("\n", System.getProperty("line.separator") + replaceBy);
 
                 // FIXME Add max value
-                sb.append(" <info>" + argument.getName() + "</info> " + description + defaultValue);
+                sb.append(" <info>").append(argument.getName()).append("</info> ").append(description).append(defaultValue);
             }
         }
 
@@ -468,10 +468,10 @@ public class InputDefinition {
                 String multiple = option.isArray() ? "<comment> (multiple values allowed)</comment>" : "";
 
                 String replaceBy = String.format("%1$-" + max + 2 + "s", ""); // PHP's str_pad (right) equivalent
-                String description = option.getDescription().replaceAll("\n", "\n" + replaceBy);
+                String description = option.getDescription().replaceAll("\n", System.getProperty("line.separator") + replaceBy);
 
                 // int optionMax = max - option.getName().length() - 2;
-                sb.append(" <info>--" + option.getName() + "</info> ");
+                sb.append(" <info>--").append(option.getName()).append("</info> ");
                 sb.append(null != option.getShortcut() ? "(-" + option.getShortcut() + ") " : "");
                 sb.append(description);
                 sb.append(defaultValue);

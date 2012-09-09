@@ -508,10 +508,10 @@ public class Command extends Executable {
         String processedHelp = getProcessedHelp();
         if (null != processedHelp && !processedHelp.isEmpty()) {
             messages.add("<comment>Help:</comment>");
-            messages.add(' ' + help.replaceAll("\n", "\n ") + '\n');
+            messages.add(' ' + help.replaceAll("\n", "\n " + " ") + "\n");
         }
 
-        return StringUtils.join(messages, '\n');
+        return StringUtils.join(messages, "\n");
     }
 
     /**
