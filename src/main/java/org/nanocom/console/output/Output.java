@@ -149,7 +149,7 @@ public abstract class Output implements OutputInterface {
      * @param newline  Whether to add a newline or not
      * @param type     The type of output
      *
-     * @throws Exception When unknown output type is given
+     * @throws IllegalArgumentException When unknown output type is given
      */
     @Override
     public void write(List<String> messages, boolean newline, OutputType type) {

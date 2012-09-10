@@ -8,9 +8,10 @@
 package org.nanocom.console.helper;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-
 import org.apache.commons.lang3.StringUtils;
+import org.nanocom.console.formatter.OutputFormatter;
 
 /**
  * The Formatter class provides helpers to format messages.
@@ -28,11 +29,11 @@ public class FormatterHelper extends Helper {
      *
      * @return The formatted section
      */
-    public String formatSection(final String section, final String message, final String style) {
+    public String formatSection(String section, String message, String style) {
         return String.format("<%s>[%s]</%s> %s", style, section, style, message);
     }
 
-    public String formatSection(final String section, final String message) {
+    public String formatSection(String section, String message) {
         return formatSection(section, message, "info");
     }
 
@@ -45,28 +46,28 @@ public class FormatterHelper extends Helper {
      *
      * @return The formatter message
      */
-    public String formatBlock(List<String> messages, final String style, final boolean large) {
+    public String formatBlock(List<String> messages, String style, boolean large) {
         int len = 0;
         List<String> lines = new ArrayList<String>();
         for (String message : messages) {
+            message = OutputFormatter.escape(message);
             lines.add(String.format(large ? "  %s  " : " %s ", message));
-            len = Math.max(strlen(message) + (large ? 4 : 2), len);
+            len = Math.max(StringUtils.length(message) + (large ? 4 : 2), len);
         }
 
-        // TODO Implement this part
-        /*messages = large ? Arrays.asList(StringUtils.repeat(" ", len)) : new ArrayList<String>();
-        for (String line : lines) {
-            messages.add(line + StringUtils.repeat(" ", len - strlen(line)));
+        $messages = $large ? array(str_repeat(' ', $len)) : array();
+        foreach ($lines as $line) {
+            $messages[] = $line.str_repeat(' ', $len - $this->strlen($line));
         }
-        if (large) {
-            messages.add(StringUtils.repeat(" ", len));
-        }*/
-
-        for (String message : messages) {
-            message = String.format("<%s>%s</%s>", style, message, style);
+        if ($large) {
+            $messages[] = str_repeat(' ', $len);
         }
 
-        return StringUtils.join((String[]) messages.toArray(), "\n");
+        foreach ($messages as &$message) {
+            $message = sprintf('<%s>%s</%s>', $style, $message, $style);
+        }
+
+        return implode("\n", $messages);
     }
 
     public String formatBlock(final String message, final String style, final boolean large) {
@@ -85,17 +86,6 @@ public class FormatterHelper extends Helper {
     }
 
     /**
-     * Returns the length of a string, using mb_strlen if it is available.
-     *
-     * @param string The string to check its length
-     *
-     * @return The length of the string
-     */
-    private int strlen(final String string) {
-        return string.length(); // TODO check that encoding is managed
-    }
-
-    /**
      * Returns the helper's canonical name.
      *
      * @return The canonical name of the helper
@@ -104,5 +94,4 @@ public class FormatterHelper extends Helper {
     public String getName() {
         return "formatter";
     }
-
 }

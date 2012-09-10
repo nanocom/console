@@ -32,6 +32,21 @@ public class OutputFormatter implements OutputFormatterInterface {
     private OutputFormatterStyleStack styleStack;
 
     /**
+     * Escapes "<" special char in given text.
+     *
+     * @param text Text to escape
+     *
+     * @return Escaped text
+     */
+    public static String escape(String text) {
+        Pattern pattern = Pattern.compile("([^\\\\]?)<");
+        Matcher matcher = pattern.matcher(text);
+
+        MatchResult result;
+        return Pattern.compile("([^\\\\]?)<").matcher(text), "$1\\<", text);
+    }
+
+    /**
      * Initializes console output formatter.
      *
      * @param decorated  Whether this formatter should actually decorate strings
