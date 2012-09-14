@@ -31,11 +31,14 @@ public class HelpCommand extends Command {
 
         setName("help");
         setDefinition(Arrays.<Object>asList(
-                new InputArgument("command_name", InputArgument.OPTIONAL, "The command name", "help")
+            new InputArgument("command_name", InputArgument.OPTIONAL, "The command name", "help")
+            // new InputOption("xml", null, InputOption.VALUE_NONE, "To output help as XML"),
         ));
         setDescription("Displays help for a command");
-        setHelp("The <info>help</info> command displays help for a given command:\n"
-            + "<info>php app/console help list</info>\n");
+        String lineSeparator = System.getProperty("line.separator") + System.getProperty("line.separator");
+        setHelp("The <info>%command.name%</info> command displays help for a given command:" + lineSeparator
+                + "  <info>php %command.full_name% list</info>"
+        );
     }
 
     /**
