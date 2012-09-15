@@ -69,8 +69,8 @@ public class FormatterHelperTest {
 
         assertEquals(
             "formatBlock() escapes \"<\" chars",
-            "<error>                            </error>" + "\n" +
-            "<error>  \\<info>some info\\</info>  </error>" + "\n" +
+            "<error>                            </error>\n" +
+            "<error>  \\<info>some info\\</info>  </error>\n" +
             "<error>                            </error>",
             formatter.formatBlock("<info>some info</info>", "error", true)
         );

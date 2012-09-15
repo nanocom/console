@@ -7,11 +7,11 @@
 
 package org.nanocom.console;
 
-import java.util.Map.Entry;
 import java.util.*;
+import java.util.Map.Entry;
 import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.SystemUtils;
+import static org.apache.commons.lang3.StringUtils.*;
+import static org.apache.commons.lang3.SystemUtils.*;
 import org.nanocom.console.command.Command;
 import org.nanocom.console.command.HelpCommand;
 import org.nanocom.console.command.ListCommand;
@@ -241,9 +241,9 @@ public class Application {
     public String getHelp() {
         List<String> messages = new ArrayList<String>();
         messages.add(getLongVersion());
-        messages.add("");
+        messages.add(EMPTY);
         messages.add("<comment>Usage:</comment>");
-        messages.add("  [options] command [arguments]" + System.getProperty("line.separator"));
+        messages.add("  [options] command [arguments]" + "\n");
         messages.add("<comment>Options:</comment>");
 
         for (InputOption option : getDefinition().getOptions().values()) {
@@ -255,7 +255,7 @@ public class Application {
             ));
         }
 
-        return StringUtils.join(messages, System.getProperty("line.separator"));
+        return join(messages, LINE_SEPARATOR);
     }
 
     /**
@@ -467,14 +467,19 @@ public class Application {
                 message.append(String.format("There are no commands defined in the \"%s\" namespace.", namespace));
 
                 if (1 <= i) {
-                    part = String.format("%s:%s", StringUtils.join(found, ':'), part);
+                    part = String.format("%s:%s", join(found, ':'), part);
                 }
 
                 Set<String> alternatives = findAlternativeNamespace(part, abbrevs);
 
                 if (!alternatives.isEmpty()) {
-                    message.append("\n\nDid you mean one of these?\n    ");
-                    message.append(StringUtils.join(alternatives, "\n    "));
+                    if (1 == alternatives.size()) {
+                        message.append("\n\nDid you mean this?\n    ");
+                    } else {
+                        message.append("\n\nDid you mean one of these?\n    ");
+                    }
+
+                    message.append(join(alternatives, "\n    "));
                 }
 
                 throw new IllegalArgumentException(message.toString());
@@ -488,7 +493,7 @@ public class Application {
             i++;
         }
 
-        return StringUtils.join(found, ':');
+        return join(found, ':');
     }
 
     /**
@@ -549,8 +554,13 @@ public class Application {
 
             Set<String> alternatives = findAlternativeCommands(searchName, abbrevs);
             if (!alternatives.isEmpty()) {
-                message.append("\n\nDid you mean one of these?\n    ");
-                message.append(StringUtils.join(alternatives, "\n    "));
+                if (1 == alternatives.size()) {
+                    message.append("\n\nDid you mean this?\n    ");
+                } else {
+                    message.append("\n\nDid you mean one of these?\n    ");
+                }
+
+                message.append(join(alternatives, "\n    "));
             }
 
             throw new IllegalArgumentException(message.toString());
@@ -578,7 +588,7 @@ public class Application {
      */
     public Map<String, Command> all(String namespace) {
         if (null == namespace) {
-                    return new HashMap<String, Command>(commands);
+            return new HashMap<String, Command>(commands);
         }
 
         Map<String, Command> namespacedCommands = new HashMap<String, Command>();
@@ -644,7 +654,7 @@ public class Application {
                 }
             }
 
-            return StringUtils.join(messages, System.getProperty("line.separator"));
+            return join(messages, LINE_SEPARATOR);
         }
 
         List<String> messages = new ArrayList<String>(Arrays.asList(getHelp(), ""));
@@ -665,7 +675,7 @@ public class Application {
             }
         }
 
-        return StringUtils.join(messages, System.getProperty("line.separator"));
+        return join(messages, LINE_SEPARATOR);
     }
 
     public String asText(final String namespace) {
@@ -748,7 +758,7 @@ public class Application {
     protected Integer getTerminalWidth() {
         // TODO
         String ansicon = System.getenv("ANSICON");
-        if (SystemUtils.IS_OS_WINDOWS && null != ansicon) {
+        if (IS_OS_WINDOWS && null != ansicon) {
             return Integer.valueOf(ansicon.replaceAll("{^(d+)x.*}", "1"));
         }
 
@@ -766,7 +776,7 @@ public class Application {
      */
     protected Integer getTerminalHeight() {
         String ansicon = System.getenv("ANSICON");
-        if (SystemUtils.IS_OS_WINDOWS && null != ansicon) {
+        if (IS_OS_WINDOWS && null != ansicon) {
             return Integer.valueOf(ansicon.trim().replaceAll("{^d+xd+ (d+x(d+))}", "1"));
         }
 
@@ -896,7 +906,7 @@ public class Application {
         String[] parts = name.split(":");
         parts = ArrayUtils.<String>subarray(parts, 0, parts.length - 1);
 
-        return 0 == parts.length ? "" : StringUtils.join(null == limit ? parts : ArrayUtils.<String>subarray(parts, 0, limit), ':');
+        return 0 == parts.length ? "" : join(null == limit ? parts : ArrayUtils.<String>subarray(parts, 0, limit), ':');
     }
 
     private String extractNamespace(String name) {
@@ -941,7 +951,7 @@ public class Application {
         Map<String, Integer> alternatives = new HashMap<String, Integer>();
 
         for (String item : collection) {
-            int lev = StringUtils.getLevenshteinDistance(name, item);
+            int lev = getLevenshteinDistance(name, item);
             if (lev <= name.length() / 3 || -1 < name.indexOf(item)) {
                 alternatives.put(item, lev);
             }
@@ -950,7 +960,7 @@ public class Application {
         if (alternatives.isEmpty()) {
             int i = 0;
             for (Entry<String, List<String>> values : abbrevs.entrySet()) {
-                int lev = StringUtils.getLevenshteinDistance(name, values.getKey());
+                int lev = getLevenshteinDistance(name, values.getKey());
                 if (lev <= name.length() / 3 || values.getKey().indexOf(name) > -1) {
                     for (String value : values.getValue()) {
                         alternatives.put(value, lev);

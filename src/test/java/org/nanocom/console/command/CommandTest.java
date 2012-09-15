@@ -201,12 +201,12 @@ public class CommandTest {
         Map<String, Object> foobar2 = new HashMap<String, Object>();
         foobar2.put("interactive", true);
         tester.execute(new HashMap<String, String>(), foobar2);
-        // assertTrue("run() calls the interact() method if the input is interactive", "interact called" + System.getProperty("line.separator") + "execute called" + System.getProperty("line.separator"), tester.getDisplay());
+        // assertTrue("run() calls the interact() method if the input is interactive", "interact called" + LINE_SEPARATOR + "execute called" + LINE_SEPARATOR, tester.getDisplay());
 
         foobar2.clear();
         foobar2.put("interactive", false);
         tester.execute(new HashMap<String, String>(), foobar2);
-        // assertEquals(".run() does not call the interact() method if the input is not interactive", "execute called" + System.getProperty("line.separator"), tester.getDisplay());
+        // assertEquals(".run() does not call the interact() method if the input is not interactive", "execute called" + LINE_SEPARATOR, tester.getDisplay());
 
         command = new Command("foo");
         try {
@@ -232,7 +232,7 @@ public class CommandTest {
         assertEquals("setCode() implements a fluent interface", command, ret);
         CommandTester tester = new CommandTester(command);
         tester.execute(new HashMap<String, String>());
-        // assertEquals("interact called" + System.getProperty("line.separator") + "from the code..." + System.getProperty("line.separator"), tester.getDisplay());
+        // assertEquals("interact called" + LINE_SEPARATOR + "from the code..." + LINE_SEPARATOR, tester.getDisplay());
     }
 
     /*@Test

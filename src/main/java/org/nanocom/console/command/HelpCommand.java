@@ -8,6 +8,7 @@
 package org.nanocom.console.command;
 
 import java.util.Arrays;
+import static org.apache.commons.lang3.SystemUtils.LINE_SEPARATOR;
 import org.nanocom.console.input.InputArgument;
 import org.nanocom.console.input.InputInterface;
 import org.nanocom.console.output.OutputInterface;
@@ -35,7 +36,7 @@ public class HelpCommand extends Command {
             // new InputOption("xml", null, InputOption.VALUE_NONE, "To output help as XML"),
         ));
         setDescription("Displays help for a command");
-        String lineSeparator = System.getProperty("line.separator") + System.getProperty("line.separator");
+        String lineSeparator = LINE_SEPARATOR + LINE_SEPARATOR;
         setHelp("The <info>%command.name%</info> command displays help for a given command:" + lineSeparator
                 + "  <info>php %command.full_name% list</info>"
         );

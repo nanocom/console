@@ -8,9 +8,8 @@
 package org.nanocom.console.command;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import org.apache.commons.lang3.StringUtils;
+import static org.apache.commons.lang3.StringUtils.*;
 import org.nanocom.console.Application;
 import org.nanocom.console.exception.LogicException;
 import org.nanocom.console.helper.HelperSet;
@@ -434,7 +433,18 @@ public class Command extends Executable {
      * @return The processed help for the command
      */
     public String getProcessedHelp() {
-        return getHelp().replaceAll("%command.name%", name);
+        String commandName = this.name;
+
+        String[] placeholders = new String[]{
+            "%command.name%",
+            "%command.full_name%"
+        };
+        String[] replacements = new String[]{
+            commandName,
+            " " + commandName
+        };
+
+        return replaceEach(getHelp(), placeholders, replacements);
     }
 
     /**
@@ -493,14 +503,13 @@ public class Command extends Executable {
      * @return A string representing the command
      */
     public String asText() {
-        List<String> messages = new ArrayList<String>(Arrays.asList(
-            "<comment>Usage:</comment>",
-            ' ' + getSynopsis(),
-            ""
-        ));
+        List<String> messages = new ArrayList<String>();
+        messages.add("<comment>Usage:</comment>");
+        messages.add(' ' + getSynopsis());
+        messages.add(EMPTY);
 
         if (null != getAliases() && !getAliases().isEmpty()) {
-            messages.add("<comment>Aliases:</comment> <info>" + StringUtils.join(getAliases(), ", ") + "</info>");
+            messages.add("<comment>Aliases:</comment> <info>" + join(getAliases(), ", ") + "</info>");
         }
 
         messages.add(getNativeDefinition().asText());
@@ -508,25 +517,15 @@ public class Command extends Executable {
         String processedHelp = getProcessedHelp();
         if (null != processedHelp && !processedHelp.isEmpty()) {
             messages.add("<comment>Help:</comment>");
-            messages.add(' ' + help.replaceAll("\n", "\n " + " ") + "\n");
+            messages.add(' ' + processedHelp.replace("\n", "\n ") + "\n");
         }
 
-        return StringUtils.join(messages, "\n");
+        return join(messages, "\n");
     }
 
-    /**
-     * Returns an XML representation of the command.
-     *
-     * @return An XML string representing the command
-     *
-     * TODO
-     */
-    /*public String asXml() {
-    }*/
-
     private void validateName(String name) throws IllegalArgumentException {
-        if (StringUtils.isEmpty(name) || !name.matches("^[^\\:]+(\\:[^\\:]+)*$")) {
-            throw new IllegalArgumentException("Command name \"" + name + "\" is invalid.");
+        if (isEmpty(name) || !name.matches("^[^\\:]+(\\:[^\\:]+)*$")) {
+            throw new IllegalArgumentException(String.format("Command name \"%s\" is invalid.", name));
         }
     }
 }

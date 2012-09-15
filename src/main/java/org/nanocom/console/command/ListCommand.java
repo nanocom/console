@@ -1,11 +1,10 @@
 package org.nanocom.console.command;
 
 import java.util.Arrays;
-
+import static org.apache.commons.lang3.SystemUtils.LINE_SEPARATOR;
 import org.nanocom.console.input.InputArgument;
 import org.nanocom.console.input.InputDefinition;
 import org.nanocom.console.input.InputInterface;
-import org.nanocom.console.input.InputOption;
 import org.nanocom.console.output.OutputInterface;
 
 /**
@@ -23,7 +22,7 @@ public class ListCommand extends Command {
         setName("list");
         setDefinition(createDefinition());
         setDescription("Lists commands");
-        String lineSeparator = System.getProperty("line.separator") + System.getProperty("line.separator");
+        String lineSeparator = LINE_SEPARATOR + LINE_SEPARATOR;
         setHelp("The <info>%command.name%</info> command lists all commands:" + lineSeparator
             + "  <info>php %command.full_name%</info>" + lineSeparator
             + "You can also display the commands for a specific namespace:" + lineSeparator

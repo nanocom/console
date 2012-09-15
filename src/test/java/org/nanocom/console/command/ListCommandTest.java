@@ -32,7 +32,7 @@ public class ListCommandTest {
         /*String output = "help   Displays help for a command\n" +
         		 "list   Lists commands\n\n";*/
 
-        // assertEquals(str_replace("\n", System.getProperty("line.separator"), output), commandTester.getDisplay(), "boo");
+        // assertEquals(str_replace("\n", LINE_SEPARATOR, output), commandTester.getDisplay(), "boo");
     }
 
 }

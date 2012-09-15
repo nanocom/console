@@ -13,7 +13,7 @@ import java.util.Map.Entry;
 import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import org.apache.commons.lang3.StringUtils;
+import static org.apache.commons.lang3.StringUtils.*;
 
 /**
  * Formatter class for console output.
@@ -25,7 +25,17 @@ public class OutputFormatter implements OutputFormatterInterface {
     /**
      * The pattern to phrase the format.
      */
-    private static String FORMAT_PATTERN = "<(/?)([a-z][a-z0-9_=;-]+)?>([^<]*)";
+    private static Pattern FORMAT_PATTERN = Pattern.compile("<(/?)([a-z][a-z0-9_=;-]+)?>([^<]*)");
+
+    /**
+     * The pattern to escape "<" special char.
+     */
+    private static Pattern ESCAPE_PATTERN = Pattern.compile("([^\\\\\\\\]?)<");
+
+    /**
+     * The pattern for style.
+     */
+    private static Pattern STYLE_PATTERN = Pattern.compile("([^=]+)=([^;]+)(;|$)");
 
     private Boolean decorated;
     private Map<String, OutputFormatterStyleInterface> styles = new HashMap<String, OutputFormatterStyleInterface>();
@@ -39,11 +49,15 @@ public class OutputFormatter implements OutputFormatterInterface {
      * @return Escaped text
      */
     public static String escape(String text) {
-        Pattern pattern = Pattern.compile("([^\\\\]?)<");
-        Matcher matcher = pattern.matcher(text);
+        Matcher matcher = ESCAPE_PATTERN.matcher(text);
+        StringBuffer sb = new StringBuffer();
 
-        MatchResult result;
-        return Pattern.compile("([^\\\\]?)<").matcher(text), "$1\\<", text);
+        while (matcher.find()) {
+            matcher.appendReplacement(sb, "$1\\\\<");
+        }
+        matcher.appendTail(sb);
+
+        return sb.toString();
     }
 
     /**
@@ -166,10 +180,10 @@ public class OutputFormatter implements OutputFormatterInterface {
      * @return The replaced style
      */
     private String replaceStyle(MatchResult matchResult) {
-        String match0 = StringUtils.defaultString(matchResult.group(0));
-        String match1 = StringUtils.defaultString(matchResult.group(1));
-        String match2 = StringUtils.defaultString(matchResult.group(2));
-        String match3 = StringUtils.defaultString(matchResult.group(3));
+        String match0 = defaultString(matchResult.group(0));
+        String match1 = defaultString(matchResult.group(1));
+        String match2 = defaultString(matchResult.group(2));
+        String match3 = defaultString(matchResult.group(3));
 
         if ("".equals(match2)) {
             if ("/".equals(match1)) {
@@ -212,29 +226,30 @@ public class OutputFormatter implements OutputFormatterInterface {
      * @return Null if string is not format string
      */
     private OutputFormatterStyle createStyleFromString(String string) {
-        Pattern pattern = Pattern.compile("([^=]+)=([^;]+)(;|$)");
-        Matcher matcher = pattern.matcher(string.toLowerCase());
+        Matcher matcher = STYLE_PATTERN.matcher(string.toLowerCase());
 
-        OutputFormatterStyle locStyle = new OutputFormatterStyle();
+        OutputFormatterStyle style = new OutputFormatterStyle();
         MatchResult result;
-        boolean foundMatch = false;
 
-        while (matcher.find()) {
-            foundMatch = true;
+        if (!matcher.find()) {
+            return null;
+        }
+
+        do {
             result = matcher.toMatchResult();
             String match1 = result.group(1); // fg
             String match2 = result.group(2); // blue
 
             if ("fg".equals(result.group(1))) {
-                locStyle.setForeground(result.group(2));
+                style.setForeground(result.group(2));
             } else if ("bg".equals(result.group(1))) {
-                locStyle.setBackground(result.group(2));
+                style.setBackground(result.group(2));
             } else {
-                locStyle.setOption(result.group(2));
+                style.setOption(result.group(2));
             }
-        }
+        } while (matcher.find());
 
-        return foundMatch ? locStyle : null;
+        return style;
     }
 
     /**
@@ -246,7 +261,7 @@ public class OutputFormatter implements OutputFormatterInterface {
      * @return Styled text
      */
     private String applyStyle(OutputFormatterStyleInterface style, String text) {
-        return isDecorated() && StringUtils.isNotEmpty(text) ? style.apply(text) : text;
+        return isDecorated() && isNotEmpty(text) ? style.apply(text) : text;
     }
 
     interface Callback {
@@ -255,27 +270,23 @@ public class OutputFormatter implements OutputFormatterInterface {
 
     class CallbackMatcher {
 
-        private final Pattern pattern;
+        private Pattern pattern;
 
-        public CallbackMatcher(String regex) {
-            pattern = Pattern.compile(regex);
+        public CallbackMatcher(Pattern pattern) {
+            this.pattern = pattern;
         }
 
         public String replaceMatches(String stringToMatch, Callback callback) {
-            final Matcher matcher = pattern.matcher(stringToMatch);
+            Matcher matcher = pattern.matcher(stringToMatch);
+            StringBuffer sb = new StringBuffer();
+
             while (matcher.find()) {
                 MatchResult matchResult = matcher.toMatchResult();
-                String replacement = callback.foundMatch(matchResult);
-                String fullReplacement = stringToMatch.substring(0, matchResult.start()) +
-                         replacement + stringToMatch.substring(matchResult.end());
-
-                if (!stringToMatch.equals(fullReplacement)) {
-                    stringToMatch = fullReplacement;
-                    matcher.reset(stringToMatch);
-                }
+                matcher.appendReplacement(sb, Matcher.quoteReplacement(callback.foundMatch(matchResult)));
             }
+            matcher.appendTail(sb);
 
-            return stringToMatch;
+            return sb.toString();
         }
     }
 }

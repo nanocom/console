@@ -8,9 +8,8 @@
 package org.nanocom.console.helper;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import org.apache.commons.lang3.StringUtils;
+import static org.apache.commons.lang3.StringUtils.*;
 import org.nanocom.console.formatter.OutputFormatter;
 
 /**
@@ -52,36 +51,51 @@ public class FormatterHelper extends Helper {
         for (String message : messages) {
             message = OutputFormatter.escape(message);
             lines.add(String.format(large ? "  %s  " : " %s ", message));
-            len = Math.max(StringUtils.length(message) + (large ? 4 : 2), len);
+            len = Math.max(length(message) + (large ? 4 : 2), len);
         }
 
-        $messages = $large ? array(str_repeat(' ', $len)) : array();
-        foreach ($lines as $line) {
-            $messages[] = $line.str_repeat(' ', $len - $this->strlen($line));
-        }
-        if ($large) {
-            $messages[] = str_repeat(' ', $len);
+        messages = new ArrayList<String>();
+        if (large) {
+            messages.add(repeat(' ', len));
         }
 
-        foreach ($messages as &$message) {
-            $message = sprintf('<%s>%s</%s>', $style, $message, $style);
+        for (String line : lines) {
+            messages.add(line + repeat(' ', len - length(line)));
         }
 
-        return implode("\n", $messages);
+        if (large) {
+            messages.add(repeat(' ', len));
+        }
+
+        lines = new ArrayList<String>(messages.size());
+        for (String message : messages) {
+            lines.add(String.format("<%s>%s</%s>", style, message, style));
+        }
+
+        return join(lines, "\n");
     }
 
-    public String formatBlock(final String message, final String style, final boolean large) {
+    /**
+     * Formats a message as a block of text.
+     *
+     * @param message  The message to write in the block
+     * @param style    The style to apply to the whole block
+     * @param large    Whether to return a large block
+     *
+     * @return The formatter message
+     */
+    public String formatBlock(String message, String style, boolean large) {
         List<String> messages = new ArrayList<String>();
         messages.add(message);
 
         return formatBlock(messages, style, large);
     }
 
-    public String formatBlock(final List<String> messages, final String style) {
+    public String formatBlock(List<String> messages, String style) {
         return formatBlock(messages, style, false);
     }
 
-    public String formatBlock(final String message, final String style) {
+    public String formatBlock(String message, String style) {
         return formatBlock(message, style, false);
     }
 

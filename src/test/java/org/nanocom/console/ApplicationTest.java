@@ -14,6 +14,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import static org.junit.Assert.*;
+import static org.apache.commons.lang3.SystemUtils.*;
 import org.junit.Test;
 import org.nanocom.console.command.Command;
 import org.nanocom.console.command.HelpCommand;
@@ -23,7 +24,6 @@ import org.nanocom.console.fixtures.Foo3Command;
 import org.nanocom.console.fixtures.FooCommand;
 import org.nanocom.console.input.ArgvInput;
 import org.nanocom.console.output.ConsoleOutput;
-import org.nanocom.console.tester.ApplicationTester;
 
 public class ApplicationTest {
 
@@ -31,7 +31,7 @@ public class ApplicationTest {
     }
 
     protected String normalizeLineBreaks(String text) {
-        return text.replaceAll(System.getProperty("line.separator"), "\n");
+        return text.replaceAll(LINE_SEPARATOR, "\n");
     }
 
     /**
@@ -325,13 +325,13 @@ public class ApplicationTest {
                 String line;
                 while (null != (line = input.readLine())) {
                     contents.append(line);
-                    contents.append(System.getProperty("line.separator"));
+                    contents.append(LINE_SEPARATOR);
                 }
             } finally {
                 input.close();
             }
 
-            contents.deleteCharAt(contents.lastIndexOf(System.getProperty("line.separator")));
+            contents.deleteCharAt(contents.lastIndexOf(LINE_SEPARATOR));
         } catch (IOException ex){
             ex.printStackTrace();
             fail();

@@ -8,7 +8,8 @@
 package org.nanocom.console.input;
 
 import java.util.*;
-import org.apache.commons.lang3.StringUtils;
+import java.util.Map.Entry;
+import static org.apache.commons.lang3.StringUtils.*;
 import org.nanocom.console.exception.LogicException;
 
 /**
@@ -36,7 +37,7 @@ public class InputDefinition {
     /**
      * @param definition An array of InputArgument and InputOption instance
      */
-    public InputDefinition(final List<Object> definition) {
+    public InputDefinition(List<Object> definition) {
         setDefinition(definition);
     }
 
@@ -49,7 +50,7 @@ public class InputDefinition {
      *
      * @param definition The definition array
      */
-    public final void setDefinition(final List<Object> definition) {
+    public final void setDefinition(List<Object> definition) {
         List<InputArgument> locArguments = new ArrayList<InputArgument>();
         List<InputOption> locOptions = new ArrayList<InputOption>();
 
@@ -72,7 +73,7 @@ public class InputDefinition {
      *
      * @param arguments An array of InputArgument objects
      */
-    public void setArguments(final List<InputArgument> arguments) {
+    public void setArguments(List<InputArgument> arguments) {
         this.arguments     = new HashMap<String, InputArgument>();
         requiredCount      = 0;
         hasOptional        = false;
@@ -85,7 +86,7 @@ public class InputDefinition {
      *
      * @param arguments An array of InputArgument objects
      */
-    public void addArguments(final List<InputArgument> arguments) {
+    public void addArguments(List<InputArgument> arguments) {
         if (null != arguments) {
             for (InputArgument argument : arguments) {
                 addArgument(argument);
@@ -100,7 +101,7 @@ public class InputDefinition {
      *
      * @throws LogicException When incorrect argument is given
      */
-    public void addArgument(final InputArgument argument) {
+    public void addArgument(InputArgument argument) {
         if (arguments.containsKey(argument.getName())) {
             throw new LogicException(String.format("An argument with name \"%s\" already exist.", argument.getName()));
         }
@@ -135,7 +136,7 @@ public class InputDefinition {
      *
      * @throws IllegalArgumentException When argument given doesn't exist
      */
-    public InputArgument getArgument(final String name) {
+    public InputArgument getArgument(String name) {
         if (!hasArgument(name)) {
             throw new IllegalArgumentException(String.format("The \"%s\" argument does not exist.", name));
         }
@@ -152,18 +153,13 @@ public class InputDefinition {
      *
      * @throws IllegalArgumentException When argument given doesn't exist
      */
-    public InputArgument getArgument(final Integer position) {
+    public InputArgument getArgument(int position) {
         if (!hasArgument(position)) {
             throw new IllegalArgumentException(String.format("The \"%s\" argument does not exist.", position));
         }
 
-        /*
-         * TODO Optimize this part if possible
-         * Maybe change Map<String, InputArgument> to something more adapted?
-         */
-        Collection<InputArgument> valuesArguments = arguments.values();
-        List<InputArgument> arrayArguments = new ArrayList<InputArgument>();
-        arrayArguments.addAll(valuesArguments);
+        // TODO Optimize this awful shit
+        List<InputArgument> arrayArguments = new ArrayList<InputArgument>(arguments.values());
 
         return arrayArguments.get(position);
     }
@@ -175,7 +171,7 @@ public class InputDefinition {
      *
      * @return True if the InputArgument object exists, false otherwise
      */
-    public boolean hasArgument(final String name) {
+    public boolean hasArgument(String name) {
         return arguments.containsKey(name);
     }
 
@@ -186,7 +182,7 @@ public class InputDefinition {
      *
      * @return True if the InputArgument object exists, false otherwise
      */
-    public boolean hasArgument(final Integer position) {
+    public boolean hasArgument(int position) {
         return arguments.size() > position;
     }
 
@@ -236,7 +232,7 @@ public class InputDefinition {
      *
      * @param options An array of InputOption objects
      */
-    public void setOptions(final List<InputOption> options) {
+    public void setOptions(List<InputOption> options) {
         this.options = new LinkedHashMap<String, InputOption>();
         shortcuts = new LinkedHashMap<String, String>();
         addOptions(options);
@@ -247,7 +243,7 @@ public class InputDefinition {
      *
      * @param options An array of InputOption objects
      */
-    public void addOptions(final List<InputOption> options) {
+    public void addOptions(List<InputOption> options) {
         for (InputOption option : options) {
             addOption(option);
         }
@@ -260,7 +256,7 @@ public class InputDefinition {
      *
      * @throws LogicException When option given already exists
      */
-    public void addOption(final InputOption option) {
+    public void addOption(InputOption option) {
         if (options.containsKey(option.getName()) && !option.equals(options.get(option.getName()))) {
             throw new LogicException(String.format("An option named \"%s\" already exist.", option.getName()));
         } else if (
@@ -285,7 +281,7 @@ public class InputDefinition {
      *
      * @throws IllegalArgumentException When option given doesn't exist
      */
-    public InputOption getOption(final String name) {
+    public InputOption getOption(String name) {
         if (!hasOption(name)) {
             throw new IllegalArgumentException("The \"--" + name + "\" option does not exist.");
         }
@@ -299,7 +295,7 @@ public class InputDefinition {
      * @param name The InputOption name
      * @return True if the InputOption object exists, false otherwise
      */
-    public boolean hasOption(final String name) {
+    public boolean hasOption(String name) {
         return options.containsKey(name);
     }
 
@@ -318,7 +314,7 @@ public class InputDefinition {
      * @param name The InputOption shortcut
      * @return True if the InputOption object exists, false otherwise
      */
-    public boolean hasShortcut(final String name) {
+    public boolean hasShortcut(String name) {
         return shortcuts.containsKey(name);
     }
 
@@ -329,7 +325,7 @@ public class InputDefinition {
      *
      * @return An InputOption object
      */
-    public InputOption getOptionForShortcut(final String shortcut) {
+    public InputOption getOptionForShortcut(String shortcut) {
         return getOption(shortcutToName(shortcut));
     }
 
@@ -355,7 +351,7 @@ public class InputDefinition {
      *
      * @throws IllegalArgumentException When option given does not exist
      */
-    private String shortcutToName(final String shortcut) {
+    private String shortcutToName(String shortcut) {
         if (!shortcuts.containsKey(shortcut)) {
             throw new IllegalArgumentException(String.format("The \"-%s\" option does not exist.", shortcut));
         }
@@ -422,33 +418,33 @@ public class InputDefinition {
         }
         ++max;
 
-        StringBuilder sb = new StringBuilder();
+        List<String> text = new ArrayList<String>();
 
         if (!getArguments().isEmpty()) {
-            sb.append("<comment>Arguments:</comment>");
+            text.add("<comment>Arguments:</comment>");
             String defaultValue;
             for (InputArgument argument : getArguments().values()) {
                 if (null != argument.getDefaultValue()
                         && (
-                                !(argument.getDefaultValue() instanceof ArrayList)
-                                || ((ArrayList<Object>)argument.getDefaultValue()).isEmpty()
+                                !(argument.getDefaultValue() instanceof List)
+                                || ((List<Object>) argument.getDefaultValue()).isEmpty()
                         )
                 ) {
-                    defaultValue = "<comment> (default: " + formatDefaultValue(argument.getDefaultValue()) + ")</comment>";
+                    defaultValue = String.format("<comment> (default: %s)</comment>", formatDefaultValue(argument.getDefaultValue()));
                 } else {
-                    defaultValue = "";
+                    defaultValue = EMPTY;
                 }
 
-                String replaceBy = String.format("%1$-" + max + 2 + "s", ""); // PHP's str_pad (right) equivalent
-                String description = argument.getDescription().replaceAll("\n", System.getProperty("line.separator") + replaceBy);
+                String description = argument.getDescription().replaceAll("\n", "\n" + repeat(' ', max + 2));
 
-                // FIXME Add max value
-                sb.append(" <info>").append(argument.getName()).append("</info> ").append(description).append(defaultValue);
+                text.add(String.format(" <info>%-" + max + "s</info> %s%s", argument.getName(), description, defaultValue));
             }
+
+            text.add(EMPTY);
         }
 
         if (!getOptions().isEmpty()) {
-            sb.append("<comment>Options:</comment>");
+            text.add("<comment>Options:</comment>");
 
             for (InputOption option : getOptions().values()) {
                 String defaultValue;
@@ -456,53 +452,52 @@ public class InputDefinition {
                         option.acceptValue()
                         && null != option.getDefaultValue()
                         && (
-                                !(option.getDefaultValue() instanceof ArrayList)
-                                || ((ArrayList<Object>)option.getDefaultValue()).isEmpty()
+                                !(option.getDefaultValue() instanceof List)
+                                || ((List<Object>) option.getDefaultValue()).isEmpty()
                         )
                 ) {
-                    defaultValue = "<comment> (default: " + formatDefaultValue(option.getDefaultValue()) + ")</comment>";
+                    defaultValue = String.format("<comment> (default: %s)</comment>", formatDefaultValue(option.getDefaultValue()));
                 } else {
-                    defaultValue = "";
+                    defaultValue = EMPTY;
                 }
 
-                String multiple = option.isArray() ? "<comment> (multiple values allowed)</comment>" : "";
+                String multiple = option.isArray() ? "<comment> (multiple values allowed)</comment>" : EMPTY;
+                String description = option.getDescription().replaceAll("\n", "\n" + repeat(' ', max + 2));
 
-                String replaceBy = String.format("%1$-" + max + 2 + "s", ""); // PHP's str_pad (right) equivalent
-                String description = option.getDescription().replaceAll("\n", System.getProperty("line.separator") + replaceBy);
-
-                // int optionMax = max - option.getName().length() - 2;
-                sb.append(" <info>--").append(option.getName()).append("</info> ");
-                sb.append(null != option.getShortcut() ? "(-" + option.getShortcut() + ") " : "");
-                sb.append(description);
-                sb.append(defaultValue);
-                sb.append(multiple);
+                int optionMax = max - option.getName().length() - 2;
+                text.add(String.format(" <info>%s</info> %-" + optionMax + "s%s%s%s",
+                    "--" + option.getName(),
+                    null != option.getShortcut() ? String.format("(-%s) ", option.getShortcut()) : EMPTY,
+                    description,
+                    defaultValue,
+                    multiple
+                ));
             }
+
+            text.add(EMPTY);
         }
 
-        return sb.toString();
+        return join(text, "\n");
     }
-
-    /**
-     * Returns an XML representation of the InputDefinition.
-     *
-     * @param Boolean asDom Whether to return a DOM or an XML string
-     *
-     * @return string|DOMDocument An XML string representing the InputDefinition
-     */
-    /*public String asXml(final boolean asDom) {
-        throw new Exception("Not implemented yet.");
-    }*/
 
     @SuppressWarnings("unchecked")
-	private String formatDefaultValue(final Object defaultValue) {
-        if (defaultValue instanceof List<?>) {
-            return String.format("array('%s')",
-                    StringUtils.join((String[]) ((List<String>) defaultValue).toArray()), "', '");
+	private String formatDefaultValue(Object defaultValue) {
+        // PHP's json_encode equivalent
+        if (defaultValue instanceof Iterable<?>) {
+            return String.format("{\"%s\"}", join((Iterable) defaultValue, "\", \""));
+        } else if (defaultValue instanceof Map) {
+            Map<?, ?> map = (Map<?, ?>) defaultValue;
+            StringBuilder sb = new StringBuilder();
+
+            sb.append("{");
+            for (Entry<?, ?> entry : map.entrySet()) {
+                sb.append(String.format("\"%s\": \"%s\"", entry.getKey().toString(), entry.getValue().toString()));
+            }
+            sb.append("}");
+
+            return sb.toString();
         }
 
-        //TODO implement this part
-        //return str_replace("\n", '', var_export(defaultValue, true));
-        return "";
+        return defaultValue.toString().replace("\n", EMPTY);
     }
-
 }
