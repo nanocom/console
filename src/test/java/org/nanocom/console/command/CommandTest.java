@@ -2,6 +2,7 @@ package org.nanocom.console.command;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -118,9 +119,9 @@ public class CommandTest {
     }
 
     @Test
-    public void testGetProcessedHelp() {
+    public void testGetProcessedHelp() throws URISyntaxException {
         Command command = new TestCommand();
-        command.setHelp("The %command.name% command does... Example: php %command.full_name%.");
+        command.setHelp("The %command.name% command does... Example: java -jar %command.full_name%.");
         assertTrue("getProcessedHelp() replaces %command.name% correctly", command.getProcessedHelp().contains("The namespace:name command does..."));
         assertFalse("getProcessedHelp() replaces %command.full_name%", command.getProcessedHelp().matches("%command.full_name%"));
     }

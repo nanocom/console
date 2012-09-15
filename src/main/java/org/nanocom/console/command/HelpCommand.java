@@ -38,7 +38,7 @@ public class HelpCommand extends Command {
         setDescription("Displays help for a command");
         String lineSeparator = LINE_SEPARATOR + LINE_SEPARATOR;
         setHelp("The <info>%command.name%</info> command displays help for a given command:" + lineSeparator
-                + "  <info>php %command.full_name% list</info>"
+                + "  <info>java -jar %command.full_name% list</info>"
         );
     }
 

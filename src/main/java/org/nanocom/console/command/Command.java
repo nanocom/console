@@ -7,9 +7,11 @@
 
 package org.nanocom.console.command;
 
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import static org.apache.commons.lang3.StringUtils.*;
+import org.apache.commons.lang3.SystemUtils;
 import org.nanocom.console.Application;
 import org.nanocom.console.exception.LogicException;
 import org.nanocom.console.helper.HelperSet;
@@ -433,15 +435,23 @@ public class Command extends Executable {
      * @return The processed help for the command
      */
     public String getProcessedHelp() {
-        String commandName = this.name;
+        String jar;
+        try {
+            jar = Command.class.getProtectionDomain().getCodeSource().getLocation().toURI().toString();
+        } catch (URISyntaxException e) {
+            jar = "my-jar.jar";
+        }
 
-        String[] placeholders = new String[]{
+        String[] path = split(jar, SystemUtils.FILE_SEPARATOR);
+        jar = path[path.length - 1];
+
+        String[] placeholders = new String[] {
             "%command.name%",
             "%command.full_name%"
         };
-        String[] replacements = new String[]{
-            commandName,
-            " " + commandName
+        String[] replacements = new String[] {
+            name,
+            String.format("%s %s", jar, name)
         };
 
         return replaceEach(getHelp(), placeholders, replacements);

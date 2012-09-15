@@ -498,6 +498,6 @@ public class InputDefinition {
             return sb.toString();
         }
 
-        return defaultValue.toString().replace("\n", EMPTY);
+        return String.format("\"%s\"", defaultValue.toString().replace("\n", EMPTY));
     }
 }

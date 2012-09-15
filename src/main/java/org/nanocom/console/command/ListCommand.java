@@ -24,11 +24,11 @@ public class ListCommand extends Command {
         setDescription("Lists commands");
         String lineSeparator = LINE_SEPARATOR + LINE_SEPARATOR;
         setHelp("The <info>%command.name%</info> command lists all commands:" + lineSeparator
-            + "  <info>php %command.full_name%</info>" + lineSeparator
+            + "  <info>java -jar %command.full_name%</info>" + lineSeparator
             + "You can also display the commands for a specific namespace:" + lineSeparator
-            + "  <info>php %command.full_name% test</info>" + lineSeparator
+            + "  <info>java -jar %command.full_name% test</info>" + lineSeparator
             + "It's also possible to get raw list of commands (useful for embedding command runner):" + lineSeparator
-            + "  <info>php %command.full_name% --raw</info>");
+            + "  <info>java -jar %command.full_name% --raw</info>");
     }
 
     /**
