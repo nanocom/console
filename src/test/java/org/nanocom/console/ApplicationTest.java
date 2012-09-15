@@ -10,20 +10,30 @@ package org.nanocom.console;
 import java.io.*;
 import java.lang.reflect.Field;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import static org.apache.commons.lang3.SystemUtils.*;
 import static org.junit.Assert.*;
 import org.junit.Test;
 import org.nanocom.console.command.Command;
+import org.nanocom.console.command.Executable;
 import org.nanocom.console.command.HelpCommand;
+import org.nanocom.console.exception.LogicException;
 import org.nanocom.console.fixtures.Foo1Command;
 import org.nanocom.console.fixtures.Foo2Command;
 import org.nanocom.console.fixtures.Foo3Command;
 import org.nanocom.console.fixtures.FooCommand;
 import org.nanocom.console.input.ArgvInput;
+import org.nanocom.console.input.ArrayInput;
+import org.nanocom.console.input.InputArgument;
+import org.nanocom.console.input.InputInterface;
+import org.nanocom.console.input.InputOption;
 import org.nanocom.console.output.ConsoleOutput;
+import org.nanocom.console.output.NullOutput;
+import org.nanocom.console.output.OutputInterface;
 
 public class ApplicationTest {
 
@@ -45,6 +55,30 @@ public class ApplicationTest {
                 command.setHelp(command.getHelp().replace("%command.full_name%", "app/console %command.name%"));
             }
         }
+    }
+
+    protected String getResource(String file) {
+        StringBuilder contents = new StringBuilder();
+
+        try {
+            BufferedReader input = new BufferedReader(new InputStreamReader(getClass().getClassLoader().getResourceAsStream(file)));
+            try {
+                String line;
+                while (null != (line = input.readLine())) {
+                    contents.append(line);
+                    contents.append(LINE_SEPARATOR);
+                }
+            } finally {
+                input.close();
+            }
+
+            contents.deleteCharAt(contents.lastIndexOf(LINE_SEPARATOR));
+        } catch (IOException ex){
+            ex.printStackTrace();
+            fail();
+        }
+
+        return contents.toString();
     }
 
     @Test
@@ -221,6 +255,52 @@ public class ApplicationTest {
         }
     }
 
+    /*public function testFindAlternativeExceptionMessage()
+    {
+        $application = new Application();
+        $application->add(new \FooCommand());
+
+        // Command + singular
+        try {
+            $application->find('foo:baR');
+            $this->fail('->find() throws an \InvalidArgumentException if command does not exist, with one alternative');
+        } catch (\Exception $e) {
+            $this->assertInstanceOf('\InvalidArgumentException', $e, '->find() throws an \InvalidArgumentException if command does not exist, with one alternative');
+            $this->assertRegExp('/Did you mean this/', $e->getMessage(), '->find() throws an \InvalidArgumentException if command does not exist, with one alternative');
+        }
+
+        // Namespace + singular
+        try {
+            $application->find('foO:bar');
+            $this->fail('->find() throws an \InvalidArgumentException if command does not exist, with one alternative');
+        } catch (\Exception $e) {
+            $this->assertInstanceOf('\InvalidArgumentException', $e, '->find() throws an \InvalidArgumentException if command does not exist, with one alternative');
+            $this->assertRegExp('/Did you mean this/', $e->getMessage(), '->find() throws an \InvalidArgumentException if command does not exist, with one alternative');
+        }
+
+
+        $application->add(new \Foo1Command());
+        $application->add(new \Foo2Command());
+
+        // Command + plural
+        try {
+            $application->find('foo:baR');
+            $this->fail('->find() throws an \InvalidArgumentException if command does not exist, with alternatives');
+        } catch (\Exception $e) {
+            $this->assertInstanceOf('\InvalidArgumentException', $e, '->find() throws an \InvalidArgumentException if command does not exist, with alternatives');
+            $this->assertRegExp('/Did you mean one of these/', $e->getMessage(), '->find() throws an \InvalidArgumentException if command does not exist, with alternatives');
+        }
+
+        // Namespace + plural
+        try {
+            $application->find('foo2:bar');
+            $this->fail('->find() throws an \InvalidArgumentException if command does not exist, with alternatives');
+        } catch (\Exception $e) {
+            $this->assertInstanceOf('\InvalidArgumentException', $e, '->find() throws an \InvalidArgumentException if command does not exist, with alternatives');
+            $this->assertRegExp('/Did you mean one of these/', $e->getMessage(), '->find() throws an \InvalidArgumentException if command does not exist, with alternatives');
+        }
+    }*/
+
     @Test
     public void testFindAlternativeCommands() {
         Application application = new Application();
@@ -314,32 +394,6 @@ public class ApplicationTest {
         }
     }*/
 
-    public String getResource(String file) {
-        StringBuilder contents = new StringBuilder();
-
-        try {
-            BufferedReader input = new BufferedReader(
-                    new InputStreamReader(
-                            getClass().getClassLoader().getResourceAsStream(file)));
-            try {
-                String line;
-                while (null != (line = input.readLine())) {
-                    contents.append(line);
-                    contents.append(LINE_SEPARATOR);
-                }
-            } finally {
-                input.close();
-            }
-
-            contents.deleteCharAt(contents.lastIndexOf(LINE_SEPARATOR));
-        } catch (IOException ex){
-            ex.printStackTrace();
-            fail();
-        }
-
-        return contents.toString();
-    }
-
     @Test
     public void testAsText() {
         Application application = new Application();
@@ -348,14 +402,6 @@ public class ApplicationTest {
         assertEquals("asText() returns a text representation of the application", getResource("application_astext1.txt"), normalizeLineBreaks(application.asText()));
         assertEquals("asText() returns a text representation of the application", getResource("application_astext2.txt"), normalizeLineBreaks(application.asText("foo")));
     }
-
-    /*public void testAsXml() {
-        Application application = new Application();
-        application.add(new FooCommand());
-        this.ensureStaticCommandHelp(application);
-        assertXmlStringEqualsXmlFile(self.fixturesPath."/application_asxml1.txt", application.asXml(), ".asXml() returns an XML representation of the application");
-        assertXmlStringEqualsXmlFile(self.fixturesPath."/application_asxml2.txt", application.asXml("foo"), ".asXml() returns an XML representation of the application");
-    }*/
 
     /*public void testRenderException() {
         Application application = this.getMock("Symfony\Component\Console\Application", array("getTerminalWidth"));
@@ -467,30 +513,35 @@ public class ApplicationTest {
         assertSame("called".PHP_EOL, tester.getDisplay(), ".run() does not call interact() if -n is passed");*/
     }
 
-    /**
-     * @expectedException LogicException
-     * @dataProvider getAddingAlreadySetDefinitionElementData
-     */
-    /*public void testAddingAlreadySetDefinitionElementData(def) {
+    @Test(expected=LogicException.class)
+    public void testAddingAlreadySetDefinitionElementData() {
         Application application = new Application();
         application.setAutoExit(false);
         application.setCatchExceptions(false);
         application
             .register("foo")
-            .setDefinition(array(def))
-            .setCode(void (InputInterface input, OutputInterface output) {})
+            .setDefinition(getAddingAlreadySetDefinitionElementData())
+            .setCode(new Executable() {
+
+                @Override
+                protected int execute(InputInterface input, OutputInterface output) {
+                    return 0;
+                }
+            })
         ;
 
-        input = new ArrayInput(array("command" => "foo"));
-        output = new NullOutput();
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("command", "foo");
+        InputInterface input = new ArrayInput(params);
+        OutputInterface output = new NullOutput();
         application.run(input, output);
     }
 
     public List<Object> getAddingAlreadySetDefinitionElementData() {
         return Arrays.asList(
-            array(new InputArgument("command", InputArgument.REQUIRED)),
-            array(new InputOption("quiet", "", InputOption.VALUE_NONE)),
-            array(new InputOption("query", "q", InputOption.VALUE_NONE)),
+            new InputArgument("command", InputArgument.REQUIRED),
+            new InputOption("quiet", "", InputOption.VALUE_NONE),
+            new InputOption("query", "q", InputOption.VALUE_NONE)
         );
-    }*/
+    }
 }
