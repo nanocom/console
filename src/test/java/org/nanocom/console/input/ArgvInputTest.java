@@ -7,7 +7,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 public class ArgvInputTest {
-    
+
     public ArgvInputTest() {
     }
 
@@ -217,7 +217,7 @@ public class ArgvInputTest {
         Assert.assertFalse(".hasParameterOption() returns false if the given short option is not in the raw input", input.hasParameterOption("--foo"));
     }
 
-    /*public void testGetParameterOptionEqualSign(final String[] argv, final String key, final Object expected) {
+    /*public void testGetParameterOptionEqualSign(String[] argv, String key, Object expected) {
         ArgvInput input = new ArgvInput(argv);
         Assert.assertEquals(".getParameterOption() returns the expected value", expected, input.getParameterOption(key));
     }*/
@@ -230,5 +230,4 @@ public class ArgvInputTest {
             array(array("app/console", "foo:bar", "--env=dev"), array("-e", "--env"), "dev"),
         );
     }*/
-
 }

@@ -17,5 +17,5 @@ public interface ConsoleOutputInterface extends OutputInterface {
 
     OutputInterface getErrorOutput();
 
-    void setErrorOutput(final OutputInterface error);
+    void setErrorOutput(OutputInterface error);
 }

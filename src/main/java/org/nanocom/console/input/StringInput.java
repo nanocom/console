@@ -26,13 +26,13 @@ public class StringInput extends ArgvInput {
      * @param definition An InputDefinition instance
      * @throws Exception
      */
-    public StringInput(final String input, final InputDefinition definition) {
+    public StringInput(String input, InputDefinition definition) {
         super(new String[0], definition);
 
         setTokens(tokenize(input));
     }
 
-    public StringInput(final String input) {
+    public StringInput(String input) {
         this(input, null);
     }
 

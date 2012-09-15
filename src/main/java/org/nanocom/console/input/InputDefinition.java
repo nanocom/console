@@ -435,7 +435,7 @@ public class InputDefinition {
                     defaultValue = EMPTY;
                 }
 
-                String description = argument.getDescription().replaceAll("\n", "\n" + repeat(' ', max + 2));
+                String description = argument.getDescription().replace("\n", "\n" + repeat(' ', max + 2));
 
                 text.add(String.format(" <info>%-" + max + "s</info> %s%s", argument.getName(), description, defaultValue));
             }
@@ -462,7 +462,7 @@ public class InputDefinition {
                 }
 
                 String multiple = option.isArray() ? "<comment> (multiple values allowed)</comment>" : EMPTY;
-                String description = option.getDescription().replaceAll("\n", "\n" + repeat(' ', max + 2));
+                String description = option.getDescription().replace("\n", "\n" + repeat(' ', max + 2));
 
                 int optionMax = max - option.getName().length() - 2;
                 text.add(String.format(" <info>%s</info> %-" + optionMax + "s%s%s%s",

@@ -65,7 +65,7 @@ class OutputFormatterStyleStack {
         }
 
         // array_reverse equivalent
-        final Map<Integer, OutputFormatterStyleInterface> reversedStyles = new LinkedHashMap<Integer, OutputFormatterStyleInterface>(styles.size());
+        Map<Integer, OutputFormatterStyleInterface> reversedStyles = new LinkedHashMap<Integer, OutputFormatterStyleInterface>(styles.size());
         for (int i = styles.size() - 1; i >= 0; --i) {
             reversedStyles.put(i, styles.get(i));
         }

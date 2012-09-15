@@ -32,7 +32,7 @@ public class DialogHelper extends Helper {
      *
      * @throws RuntimeException If there is no data to read in the input stream
      */
-    public String ask(final OutputInterface output, final List<String> questions, final String defaultAnswer) {
+    public String ask(OutputInterface output, List<String> questions, String defaultAnswer) {
         output.write(questions);
 
         String ret = System.console().readLine();
@@ -44,15 +44,15 @@ public class DialogHelper extends Helper {
         return ret.length() > 0 ? ret : defaultAnswer;
     }
 
-    public String ask(final OutputInterface output, final List<String> questions) {
+    public String ask(OutputInterface output, List<String> questions) {
         return ask(output, questions, null);
     }
 
-    public String ask(final OutputInterface output, final String question, final String defaultValue) {
+    public String ask(OutputInterface output, String question, String defaultValue) {
         return ask(output, Arrays.asList(question), defaultValue); // There's maybe something better to do
     }
 
-    public String ask(OutputInterface output, final String question) {
+    public String ask(OutputInterface output, String question) {
         return ask(output, question, null);
     }
 
@@ -67,7 +67,7 @@ public class DialogHelper extends Helper {
      *
      * @return True if the user has confirmed, false otherwise
      */
-    public boolean askConfirmation(final OutputInterface output, final List<String> question, final boolean defaultAnswer) {
+    public boolean askConfirmation(OutputInterface output, List<String> question, boolean defaultAnswer) {
         String answer = "z";
         while (null != answer && !("y".equals(answer.substring(0, 1).toLowerCase()) || "n".equals(answer.substring(0, 1).toLowerCase()))) {
             answer = ask(output, question, null);
@@ -97,7 +97,7 @@ public class DialogHelper extends Helper {
      *
      * @throws Exception When any of the validators return an error
      */
-    public Object askAndValidate(final OutputInterface output, final List<String> question, Object validator, int attempts, final String defaultAnswer) {
+    public Object askAndValidate(OutputInterface output, List<String> question, Object validator, int attempts, String defaultAnswer) {
         RuntimeException error = null;
         while (attempts > 0) {
             attempts--;
@@ -126,7 +126,7 @@ public class DialogHelper extends Helper {
      *
      * @param stream The input stream
      */
-    public void setInputStream(final InputStream stream) {
+    public void setInputStream(InputStream stream) {
         this.inputStream = stream;
     }
 
@@ -146,5 +146,4 @@ public class DialogHelper extends Helper {
     public String getName() {
         return "dialog";
     }
-
 }

@@ -96,7 +96,7 @@ public class StreamOutput extends Output {
      *
      * @return true if the stream supports colorization, false otherwise
      */
-    protected final boolean hasColorSupport() {
+    protected boolean hasColorSupport() {
         if (SystemUtils.IS_OS_WINDOWS) {
             return null != System.getenv("ANSICON");
         }

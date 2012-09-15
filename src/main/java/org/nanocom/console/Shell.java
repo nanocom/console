@@ -118,7 +118,7 @@ public class Shell {
      * @param The last segment of the entered text
      * @return Boolean|array A list of guessed strings or true
      */
-    /*private void autocompleter(final String text) {
+    /*private void autocompleter(String text) {
         info = readline_info();
         text = substr(info["line_buffer"], 0, info["end"]);
 
@@ -161,7 +161,7 @@ public class Shell {
         return processIsolation;
     }
 
-    public void setProcessIsolation(final boolean processIsolation) {
+    public void setProcessIsolation(boolean processIsolation) {
         this.processIsolation = processIsolation;
     }
 }

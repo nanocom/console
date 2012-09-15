@@ -97,7 +97,7 @@ abstract class Input implements InputInterface {
      * @param interactive If the input should be interactive
      */
     @Override
-    public void setInteractive(final boolean interactive) {
+    public void setInteractive(boolean interactive) {
         this.interactive = interactive;
     }
 
@@ -124,7 +124,7 @@ abstract class Input implements InputInterface {
      * @throws IllegalArgumentException When argument given doesn't exist
      */
     @Override
-    public Object getArgument(final String name) throws IllegalArgumentException {
+    public Object getArgument(String name) throws IllegalArgumentException {
         if (!definition.hasArgument(name)) {
             throw new IllegalArgumentException(String.format("The \"%s\" argument does not exist.", name));
         }
@@ -141,7 +141,7 @@ abstract class Input implements InputInterface {
      * @throws IllegalArgumentException When argument given doesn't exist
      */
     @Override
-    public void setArgument(final String name, final String value) throws IllegalArgumentException {
+    public void setArgument(String name, String value) throws IllegalArgumentException {
         if (!definition.hasArgument(name)) {
             throw new IllegalArgumentException(String.format("The \"%s\" argument does not exist.", name));
         }
@@ -157,7 +157,7 @@ abstract class Input implements InputInterface {
      * @return True if the InputArgument object exists, false otherwise
      */
     @Override
-    public boolean hasArgument(final String name) {
+    public boolean hasArgument(String name) {
         return definition.hasArgument(name);
     }
 
@@ -169,7 +169,7 @@ abstract class Input implements InputInterface {
      * @return True if the InputArgument object exists, false otherwise
      */
     @Override
-    public boolean hasArgument(final int position) {
+    public boolean hasArgument(int position) {
         return definition.hasArgument(position);
     }
 
@@ -196,7 +196,7 @@ abstract class Input implements InputInterface {
      * @throws IllegalArgumentException When option given doesn't exist
      */
     @Override
-    public Object getOption(final String name) throws IllegalArgumentException {
+    public Object getOption(String name) throws IllegalArgumentException {
         if (!definition.hasOption(name)) {
             throw new IllegalArgumentException(String.format("The \"%s\" option does not exist.", name));
         }
@@ -213,7 +213,7 @@ abstract class Input implements InputInterface {
      * @throws IllegalArgumentException When option given doesn't exist
      */
     @Override
-    public void setOption(final String name, final String value) throws IllegalArgumentException {
+    public void setOption(String name, String value) throws IllegalArgumentException {
         if (!definition.hasOption(name)) {
             throw new IllegalArgumentException(String.format("The \"%s\" option does not exist.", name));
         }
@@ -229,8 +229,7 @@ abstract class Input implements InputInterface {
      * @return True if the InputOption object exists, false otherwise
      */
     @Override
-    public boolean hasOption(final String name) {
+    public boolean hasOption(String name) {
         return definition.hasOption(name);
     }
-
 }

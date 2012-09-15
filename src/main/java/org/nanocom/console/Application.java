@@ -678,66 +678,13 @@ public class Application {
         return join(messages, LINE_SEPARATOR);
     }
 
-    public String asText(final String namespace) {
+    public String asText(String namespace) {
         return asText(namespace, false);
     }
 
     public String asText() {
         return asText(null, false);
     }
-
-    /**
-     * Returns an XML representation of the Application.
-     *
-     * @param namespace An optional namespace name
-     * @param asDom     Whether to return a DOM or an XML string
-     *
-     * @return string|DOMDocument An XML string representing the Application
-     */
-    /*public void asXml(fnal String namespace = null, final boolean asDom = false) {
-        commands = namespace ? this.all(this.findNamespace(namespace)) : this.commands;
-
-        dom = new \DOMDocument("1.0", "UTF-8");
-        dom.formatOutput = true;
-        dom.appendChild(xml = dom.createElement("symfony"));
-
-        xml.appendChild(commandsXML = dom.createElement("commands"));
-
-        if (namespace) {
-            commandsXML.setAttribute("namespace", namespace);
-        } else {
-            namespacesXML = dom.createElement("namespaces");
-            xml.appendChild(namespacesXML);
-        }
-
-        // add commands by namespace
-        foreach (this.sortCommands(commands) as space => commands) {
-            if (!namespace) {
-                namespaceArrayXML = dom.createElement("namespace");
-                namespacesXML.appendChild(namespaceArrayXML);
-                namespaceArrayXML.setAttribute("id", space);
-            }
-
-            foreach (commands as name => command) {
-                if (name != command.getName()) {
-                    continue;
-                }
-
-                if (!namespace) {
-                    commandXML = dom.createElement("command");
-                    namespaceArrayXML.appendChild(commandXML);
-                    commandXML.appendChild(dom.createTextNode(name));
-                }
-
-                node = command.asXml(true).getElementsByTagName("command").item(0);
-                node = dom.importNode(node, true);
-
-                commandsXML.appendChild(node);
-            }
-        }
-
-        return asDom ? dom : dom.saveXml();
-    }*/
 
     /**
      * Renders a caught exception.

@@ -23,7 +23,7 @@ import java.util.Map;
  * When passing an argument to the constructor, be sure that it respects
  * the same rules as the argv one. It's almost always better to use the
  * `StringInput` when you want to provide your own input.
- * 
+ *
  * @author Arnaud Kleinpeter <arnaud.kleinpeter at gmail dot com>
  */
 public class ArgvInput extends Input {
@@ -35,7 +35,7 @@ public class ArgvInput extends Input {
         tokens = new ArrayList<String>();
         init(null);
     }
-    
+
     public ArgvInput(String[] argv) {
         tokens = new ArrayList<String>();
         tokens.addAll(Arrays.asList(argv));
@@ -64,7 +64,7 @@ public class ArgvInput extends Input {
     protected void parse() {
         parsed = new LinkedList<String>();
         parsed.addAll(tokens);
-        
+
         while (!parsed.isEmpty()) {
             String token = parsed.poll();
 
@@ -83,7 +83,7 @@ public class ArgvInput extends Input {
      *
      * @param token The current token.
      */
-    private void parseShortOption(final String token) {
+    private void parseShortOption(String token) {
         String name = token.substring(1);
 
         if (name.length() > 1) {
@@ -108,7 +108,7 @@ public class ArgvInput extends Input {
      *
      * @throws RuntimeException When option given doesn't exist
      */
-    private void parseShortOptionSet(final String name) throws RuntimeException {
+    private void parseShortOptionSet(String name) throws RuntimeException {
         int nameLength = name.length();
         for (int i = 0; i < nameLength; i++) {
             if (!definition.hasShortcut(name.substring(i, i + 1))) {
@@ -131,7 +131,7 @@ public class ArgvInput extends Input {
      *
      * @param token The current token
      */
-    private void parseLongOption(final String token)
+    private void parseLongOption(String token)
     {
         String name = token.substring(2);
 
@@ -150,7 +150,7 @@ public class ArgvInput extends Input {
      *
      * @throws RuntimeException When too many arguments are given
      */
-    private void parseArgument(final String token) throws RuntimeException {
+    private void parseArgument(String token) throws RuntimeException {
         int c = arguments.size();
 
         // If input is expecting another argument, add it
@@ -184,7 +184,7 @@ public class ArgvInput extends Input {
      *
      * @throws RuntimeException When option given doesn't exist
      */
-    private void addShortOption(final String shortcut, final Object value) throws RuntimeException {
+    private void addShortOption(String shortcut, Object value) throws RuntimeException {
         if (!definition.hasShortcut(shortcut)) {
             throw new RuntimeException(String.format("The \"-%s\" option does not exist.", shortcut));
         }
@@ -201,7 +201,7 @@ public class ArgvInput extends Input {
      * @throws RuntimeException When option given doesn't exist
      */
     @SuppressWarnings("unchecked")
-    private void addLongOption(final String name, Object value) throws RuntimeException {
+    private void addLongOption(String name, Object value) throws RuntimeException {
         if (!definition.hasOption(name)) {
             throw new RuntimeException(String.format("The \"--%s\" option does not exist.", name));
         }
@@ -263,12 +263,12 @@ public class ArgvInput extends Input {
      * @return True if the value is contained in the raw parameters
      */
     @Override
-    public boolean hasParameterOption(final String value) {
+    public boolean hasParameterOption(String value) {
         return hasParameterOption(Arrays.asList(value));
     }
- 
+
     @Override
-    public boolean hasParameterOption(final List<String> values) {
+    public boolean hasParameterOption(List<String> values) {
         for (String value : tokens) {
             if (values.contains(value)) {
                 return true;
@@ -279,7 +279,7 @@ public class ArgvInput extends Input {
     }
 
     @Override
-    public boolean hasParameterOption(final Map<String, String> values) {
+    public boolean hasParameterOption(Map<String, String> values) {
         for (String value : tokens) {
             if (values.containsValue(value)) {
                 return true;
@@ -301,7 +301,7 @@ public class ArgvInput extends Input {
      * @return The option value
      */
     @Override
-    public Object getParameterOption(final List<String> values, final Object defaultValue) {
+    public Object getParameterOption(List<String> values, Object defaultValue) {
         LinkedList<String> locTokens = new LinkedList<String>();
         locTokens.addAll(tokens);
 
@@ -322,20 +322,19 @@ public class ArgvInput extends Input {
 
         return defaultValue;
     }
-    
+
     @Override
-    public Object getParameterOption(final List<String> values) {
+    public Object getParameterOption(List<String> values) {
         return getParameterOption(values, false);
     }
 
     @Override
-    public Object getParameterOption(final String value) {
+    public Object getParameterOption(String value) {
         return getParameterOption(Arrays.asList(value), false);
     }
 
     @Override
-    public Object getParameterOption(final String value, final Object defaultValue) {
+    public Object getParameterOption(String value, Object defaultValue) {
         return getParameterOption(Arrays.asList(value), defaultValue);
     }
-
 }

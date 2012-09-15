@@ -14,7 +14,7 @@ import org.nanocom.console.exception.LogicException;
 
 /**
  * Represents a command line option.
- * 
+ *
  * @author Arnaud Kleinpeter <arnaud.kleinpeter at gmail dot com>
  */
 public class InputOption {
@@ -39,11 +39,11 @@ public class InputOption {
      *
      * @throws IllegalArgumentException If option mode is invalid or incompatible
      */
-    public InputOption(String name, String shortcut, Integer mode, final String description, final Object defaultValue) {
+    public InputOption(String name, String shortcut, Integer mode, String description, Object defaultValue) {
         init(name, shortcut, mode, description, defaultValue);
     }
 
-    public InputOption(String name, String shortcut, Integer mode, final String description) {
+    public InputOption(String name, String shortcut, Integer mode, String description) {
         init(name, shortcut, mode, description, null);
     }
 
@@ -54,12 +54,12 @@ public class InputOption {
     public InputOption(String name, String shortcut) {
         init(name, shortcut, null, "", null);
     }
-    
+
     public InputOption(String name) {
         init(name, null, null, "", null);
     }
 
-    private void init(String name, String shortcut, Integer mode, final String description, final Object defaultValue) {
+    private void init(String name, String shortcut, Integer mode, String description, Object defaultValue) {
         if (null != name) {
             if (name.startsWith("--")) {
                 name = name.substring(2);

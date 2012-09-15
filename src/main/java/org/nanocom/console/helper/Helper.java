@@ -9,7 +9,7 @@ package org.nanocom.console.helper;
 
 /**
  * Helper is the base class for all helper classes.
- * 
+ *
  * @author Arnaud Kleinpeter <arnaud.kleinpeter at gmail dot com>
  */
 public abstract class Helper implements HelperInterface {
@@ -37,8 +37,7 @@ public abstract class Helper implements HelperInterface {
      * @return A HelperSet instance
      */
     @Override
-    public final HelperSet getHelperSet() {
+    public HelperSet getHelperSet() {
         return helperSet;
     }
-
 }

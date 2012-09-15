@@ -19,7 +19,7 @@ public interface HelperInterface {
      *
      * @param helperSet A HelperSet instance
      */
-    void setHelperSet(final HelperSet helperSet);
+    void setHelperSet(HelperSet helperSet);
 
     void setHelperSet();
 

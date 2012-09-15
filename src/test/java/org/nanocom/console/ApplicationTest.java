@@ -13,8 +13,8 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import static org.junit.Assert.*;
 import static org.apache.commons.lang3.SystemUtils.*;
+import static org.junit.Assert.*;
 import org.junit.Test;
 import org.nanocom.console.command.Command;
 import org.nanocom.console.command.HelpCommand;
@@ -31,7 +31,7 @@ public class ApplicationTest {
     }
 
     protected String normalizeLineBreaks(String text) {
-        return text.replaceAll(LINE_SEPARATOR, "\n");
+        return text.replace(LINE_SEPARATOR, "\n");
     }
 
     /**
@@ -42,7 +42,7 @@ public class ApplicationTest {
     protected void ensureStaticCommandHelp(Application application) {
         for (Command command : application.all().values()) {
             if (null != command.getHelp()) {
-                command.setHelp(command.getHelp().replaceAll("%command.full_name%", "app/console %command.name%"));
+                command.setHelp(command.getHelp().replace("%command.full_name%", "app/console %command.name%"));
             }
         }
     }

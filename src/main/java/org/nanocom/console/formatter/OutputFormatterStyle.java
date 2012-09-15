@@ -274,7 +274,7 @@ public class OutputFormatterStyle implements OutputFormatterStyleInterface {
             return false;
         }
 
-        final OutputFormatterStyle other = (OutputFormatterStyle) obj;
+        OutputFormatterStyle other = (OutputFormatterStyle) obj;
         if (foreground != other.foreground && (foreground == null || !this.foreground.equals(other.foreground))) {
             return false;
         }

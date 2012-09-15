@@ -35,19 +35,19 @@ public class InputArgument {
      *
      * @throws IllegalArgumentException When argument mode is not valid
      */
-    public InputArgument(final String name, Integer mode, final String description, final Object defaultValue) {
+    public InputArgument(String name, Integer mode, String description, Object defaultValue) {
         init(name, mode, description, defaultValue);
     }
 
-    public InputArgument(final String name, Integer mode, final String description) {
+    public InputArgument(String name, Integer mode, String description) {
         init(name, mode, description, null);
     }
 
-    public InputArgument(final String name, Integer mode) {
+    public InputArgument(String name, Integer mode) {
         init(name, mode, "", null);
     }
 
-    public InputArgument(final String name) {
+    public InputArgument(String name) {
         init(name, null, "", null);
     }
 
