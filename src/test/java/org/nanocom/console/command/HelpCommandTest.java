@@ -25,7 +25,7 @@ public class HelpCommandTest {
         CommandTester commandTester = new CommandTester(command);
         command.setCommand(new ListCommand());
         commandTester.execute(new HashMap<String, String>());
-        // assertRegExp(".execute() returns a text help for the given command", "list [--xml] [--raw] [namespace]", commandTester.getDisplay());
+        // assertRegExp("execute() returns a text help for the given command", "list [--xml] [--raw] [namespace]", commandTester.getDisplay());
 
         command.setCommand(new ListCommand());
         Map<String, String> input = new HashMap<String, String>();
@@ -38,10 +38,6 @@ public class HelpCommandTest {
         input.clear();
         input.put("command_name", "list");
         commandTester.execute(input);
-        // assertRegExp(".execute() returns a text help for the given command", "list [--xml] [--raw] [namespace]", commandTester.getDisplay());
-
-        input.put("--xml", "true");
-        commandTester.execute(input);
-        // assertRegExp(".execute() returns an XML help text if --xml is passed", "<command", commandTester.getDisplay());
+        // assertTrue("execute() returns a text help for the given command", "list [--xml] [--raw] [namespace]", commandTester.getDisplay());
     }
 }

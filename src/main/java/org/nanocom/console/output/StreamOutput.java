@@ -7,10 +7,8 @@
 
 package org.nanocom.console.output;
 
-import java.io.File;
 import java.io.PrintStream;
-import org.apache.commons.lang3.SystemUtils;
-
+import static org.apache.commons.lang3.SystemUtils.IS_OS_WINDOWS;
 import org.nanocom.console.formatter.OutputFormatterInterface;
 
 /**
@@ -96,8 +94,8 @@ public class StreamOutput extends Output {
      *
      * @return true if the stream supports colorization, false otherwise
      */
-    protected boolean hasColorSupport() {
-        if (SystemUtils.IS_OS_WINDOWS) {
+    protected final boolean hasColorSupport() {
+        if (IS_OS_WINDOWS) {
             return null != System.getenv("ANSICON");
         }
 

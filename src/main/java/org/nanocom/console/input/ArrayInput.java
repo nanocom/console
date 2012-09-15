@@ -11,6 +11,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import static org.apache.commons.lang3.StringUtils.*;
 
 /**
  * ArrayInput represents an input provided as an array.
@@ -18,7 +19,7 @@ import java.util.Map.Entry;
  * Usage:
  *
  *     Input input = new ArrayInput(new HashMap<String, String>("name" => "foo", "--bar" => "foobar"));
- * 
+ *
  * @author Arnaud Kleinpeter <arnaud.kleinpeter at gmail dot com>
  */
 public class ArrayInput extends Input {
@@ -28,7 +29,7 @@ public class ArrayInput extends Input {
     public ArrayInput(Map<String, String> parameters) {
         this(parameters, null);
     }
-    
+
     /**
      * @param parameters An array of parameters
      * @param definition A InputDefinition instance
@@ -46,13 +47,14 @@ public class ArrayInput extends Input {
     @Override
     public String getFirstArgument() {
         for (Entry<String, String> parameter : parameters.entrySet()) {
-            if (null != parameter.getKey() && !parameter.getKey().isEmpty() && '-' == parameter.getKey().charAt(0)) {
+            String key = parameter.getKey();
+            if (isNotEmpty(key) && '-' == key.charAt(0)) {
                 continue;
             }
 
             return parameter.getValue();
         }
-        
+
         return null;
     }
 
@@ -74,7 +76,7 @@ public class ArrayInput extends Input {
                 return true;
             }
         }
-        
+
         return false;
     }
 
@@ -88,7 +90,7 @@ public class ArrayInput extends Input {
 
         return false;
     }
-    
+
     @Override
     public boolean hasParameterOption(Map<String, String> values) {
         for (Entry<String, String> parameter : parameters.entrySet()) {
@@ -96,7 +98,7 @@ public class ArrayInput extends Input {
                 return true;
             }
         }
-        
+
         return false;
     }
 
@@ -164,7 +166,7 @@ public class ArrayInput extends Input {
      */
     private void addShortOption(String shortcut, Object value) throws RuntimeException {
         if (!definition.hasShortcut(shortcut)) {
-            throw new IllegalArgumentException(String.format("The \"-%s\" option does not exist."));
+            throw new IllegalArgumentException(String.format("The \"-%s\" option does not exist.", shortcut));
         }
 
         addLongOption(definition.getOptionForShortcut(shortcut).getName(), value);
@@ -193,7 +195,7 @@ public class ArrayInput extends Input {
 
             value = option.isValueOptional() ? option.getDefaultValue() : true;
         }
-        
+
         options.put(name, value);
     }
 

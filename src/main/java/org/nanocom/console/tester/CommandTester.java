@@ -75,7 +75,7 @@ public class CommandTester {
      * @return The display
      */
     /*public String getDisplay() {
-        // rewind(output.getStream()); Does not exist in Java...
+        // rewind(output.getStream());
         // TODO return stream_get_contents(output.getStream());
         return "";
     }*/
@@ -95,7 +95,6 @@ public class CommandTester {
      * @return The current output instance
      */
     public OutputInterface getOutput() {
-        return (OutputInterface) output;
+        return output;
     }
-
 }

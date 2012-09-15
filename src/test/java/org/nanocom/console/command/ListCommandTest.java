@@ -1,3 +1,10 @@
+/*
+ * This file is part of the Console package.
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 package org.nanocom.console.command;
 
 import java.util.HashMap;
@@ -22,17 +29,10 @@ public class ListCommandTest {
         commandTester.execute(input, options);
         // assertRegExp("/help   Displays help for a command/", commandTester.getDisplay(), ".execute() returns a list of available commands");
 
-        input.put("--xml", "true");
+        input.put("--raw", "true");
         commandTester.execute(input);
-        // assertRegExp("/<command id="list" name="list">/", commandTester.getDisplay(), ".execute() returns a list of available commands in XML if --xml is passed");
-
-        input.remove("--xml");
-        /*input.put("--raw", "true");
-        commandTester.execute(input);*/
-        /*String output = "help   Displays help for a command\n" +
-        		 "list   Lists commands\n\n";*/
-
-        // assertEquals(str_replace("\n", LINE_SEPARATOR, output), commandTester.getDisplay(), "boo");
+        String output = "help   Displays help for a command\nlist   Lists commands\n\n";
+        // assertEquals(output.replace("\n", LINE_SEPARATOR), commandTester.getDisplay(), "boo");
     }
 
 }
