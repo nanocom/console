@@ -315,20 +315,20 @@ public class Command extends Executable {
      * @param description  A description text
      * @param defaultValue The default value (for InputArgument::OPTIONAL mode only)
      */
-    public void addArgument(String name, Integer mode, String description, Object defaultValue) {
+    public void addArgument(String name, int mode, String description, Object defaultValue) {
         definition.addArgument(new InputArgument(name, mode, description, defaultValue));
     }
 
-    public void addArgument(String name, Integer mode, String description) {
+    public void addArgument(String name, int mode, String description) {
         addArgument(name, mode, description, null);
     }
 
-    public void addArgument(String name, Integer mode) {
+    public void addArgument(String name, int mode) {
         addArgument(name, mode, "", null);
     }
 
     public void addArgument(String name) {
-        addArgument(name, null, "", null);
+        addArgument(name, InputArgument.OPTIONAL, "", null);
     }
 
     /**
@@ -336,24 +336,24 @@ public class Command extends Executable {
      *
      * @param name         The option name
      * @param shortcut     The shortcut (can be null)
-     * @param mode         The option mode: One of the InputOption::VALUE_* constants
+     * @param mode         The option mode: One of the InputOption.VALUE_* constants
      * @param description  A description text
-     * @param defaultValue The default value (must be null for InputOption::VALUE_REQUIRED or InputOption::VALUE_NONE)
+     * @param defaultValue The default value (must be null for InputOption.VALUE_REQUIRED or InputOption.VALUE_NONE)
      */
-    public void addOption(String name, String shortcut, Integer mode, String description, Object defaultValue) {
+    public void addOption(String name, String shortcut, int mode, String description, Object defaultValue) {
         definition.addOption(new InputOption(name, shortcut, mode, description, defaultValue));
     }
 
-    public void addOption(String name, String shortcut, Integer mode, String description) {
+    public void addOption(String name, String shortcut, int mode, String description) {
         addOption(name, shortcut, mode, description, null);
     }
 
-    public void addOption(String name, String shortcut, Integer mode) {
+    public void addOption(String name, String shortcut, int mode) {
         addOption(name, shortcut, mode, "");
     }
 
     public void addOption(String name, String shortcut) {
-        addOption(name, shortcut, null);
+        addOption(name, shortcut, InputOption.VALUE_NONE);
     }
 
     public void addOption(String name) {

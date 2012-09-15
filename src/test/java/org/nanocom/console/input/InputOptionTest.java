@@ -13,9 +13,9 @@ public class InputOptionTest {
     @Test
     public void testConstructor() {
         InputOption option = new InputOption("foo");
-        Assert.assertEquals("__construct() takes a name as its first argument", "foo", option.getName());
+        Assert.assertEquals("Constructor takes a name as its first argument", "foo", option.getName());
         option = new InputOption("--foo");
-        Assert.assertEquals("__construct() removes the leading -- of the option name", "foo", option.getName());
+        Assert.assertEquals("Constructor removes the leading -- of the option name", "foo", option.getName());
 
         try {
             option = new InputOption("foo", "f", InputOption.VALUE_IS_ARRAY);
@@ -27,41 +27,36 @@ public class InputOptionTest {
 
         // shortcut argument
         option = new InputOption("foo", "f");
-        Assert.assertEquals("__construct() can take a shortcut as its second argument", "f", option.getShortcut());
+        Assert.assertEquals("Constructor can take a shortcut as its second argument", "f", option.getShortcut());
         option = new InputOption("foo", "-f");
-        Assert.assertEquals("__construct() removes the leading - of the shortcut", "f", option.getShortcut());
+        Assert.assertEquals("Constructor removes the leading - of the shortcut", "f", option.getShortcut());
 
         // mode argument
         option = new InputOption("foo", "f");
-        Assert.assertFalse("__construct() gives a \"InputOption.VALUE_NONE\" mode by default", option.acceptValue());
-        Assert.assertFalse("__construct() gives a \"InputOption.VALUE_NONE\" mode by default", option.isValueRequired());
-        Assert.assertFalse("__construct() gives a \"InputOption.VALUE_NONE\" mode by default", option.isValueOptional());
-
-        option = new InputOption("foo", "f", null);
-        Assert.assertFalse("__construct() can take \"InputOption.VALUE_NONE\" as its mode", option.acceptValue());
-        Assert.assertFalse("__construct() can take \"InputOption.VALUE_NONE\" as its mode", option.isValueRequired());
-        Assert.assertFalse("__construct() can take \"InputOption.VALUE_NONE\" as its mode", option.isValueOptional());
+        Assert.assertFalse("Constructor gives a \"InputOption.VALUE_NONE\" mode by default", option.acceptValue());
+        Assert.assertFalse("Constructor gives a \"InputOption.VALUE_NONE\" mode by default", option.isValueRequired());
+        Assert.assertFalse("Constructor gives a \"InputOption.VALUE_NONE\" mode by default", option.isValueOptional());
 
         option = new InputOption("foo", "f", InputOption.VALUE_NONE);
-        Assert.assertFalse("__construct() can take \"InputOption.VALUE_NONE\" as its mode", option.acceptValue());
-        Assert.assertFalse("__construct() can take \"InputOption.VALUE_NONE\" as its mode", option.isValueRequired());
-        Assert.assertFalse("__construct() can take \"InputOption.VALUE_NONE\" as its mode", option.isValueOptional());
+        Assert.assertFalse("Constructor can take \"InputOption.VALUE_NONE\" as its mode", option.acceptValue());
+        Assert.assertFalse("Constructor can take \"InputOption.VALUE_NONE\" as its mode", option.isValueRequired());
+        Assert.assertFalse("Constructor can take \"InputOption.VALUE_NONE\" as its mode", option.isValueOptional());
 
         option = new InputOption("foo", "f", InputOption.VALUE_REQUIRED);
-        Assert.assertTrue("__construct() can take \"InputOption.VALUE_REQUIRED\" as its mode", option.acceptValue());
-        Assert.assertTrue("__construct() can take \"InputOption.VALUE_REQUIRED\" as its mode", option.isValueRequired());
-        Assert.assertFalse("__construct() can take \"InputOption.VALUE_REQUIRED\" as its mode",option.isValueOptional());
+        Assert.assertTrue("Constructor can take \"InputOption.VALUE_REQUIRED\" as its mode", option.acceptValue());
+        Assert.assertTrue("Constructor can take \"InputOption.VALUE_REQUIRED\" as its mode", option.isValueRequired());
+        Assert.assertFalse("Constructor can take \"InputOption.VALUE_REQUIRED\" as its mode",option.isValueOptional());
 
         option = new InputOption("foo", "f", InputOption.VALUE_OPTIONAL);
-        Assert.assertTrue("__construct() can take \"InputOption.VALUE_OPTIONAL\" as its mode", option.acceptValue());
-        Assert.assertFalse("__construct() can take \"InputOption.VALUE_OPTIONAL\" as its mode", option.isValueRequired());
-        Assert.assertTrue("__construct() can take \"InputOption.VALUE_OPTIONAL\" as its mode", option.isValueOptional());
+        Assert.assertTrue("Constructor can take \"InputOption.VALUE_OPTIONAL\" as its mode", option.acceptValue());
+        Assert.assertFalse("Constructor can take \"InputOption.VALUE_OPTIONAL\" as its mode", option.isValueRequired());
+        Assert.assertTrue("Constructor can take \"InputOption.VALUE_OPTIONAL\" as its mode", option.isValueOptional());
 
         try {
             option = new InputOption("foo", "f", -1);
-            Assert.fail("__construct() throws an Exception if the mode is not valid");
+            Assert.fail("Constructor throws an Exception if the mode is not valid");
         } catch (Exception e) {
-            // Assert.assertInstanceOf("__construct() throws an Exception if the mode is not valid", "Exception", e);
+            // Assert.assertInstanceOf("Constructor throws an Exception if the mode is not valid", "Exception", e);
             Assert.assertEquals("Option mode \"-1\" is not valid.", e.getMessage());
         }
     }
@@ -76,7 +71,7 @@ public class InputOptionTest {
 
     @Test
     public void testGetDescription() {
-        InputOption option = new InputOption("foo", "f", null, "Some description");
+        InputOption option = new InputOption("foo", "f", InputOption.VALUE_NONE, "Some description");
         Assert.assertEquals(".getDescription() returns the description message", "Some description", option.getDescription());
     }
 
@@ -131,25 +126,24 @@ public class InputOptionTest {
 
     @Test
     public void testEquals() {
-        InputOption option = new InputOption("foo", "f", null, "Some description");
-        InputOption option2 = new InputOption("foo", "f", null, "Alternative description");
+        InputOption option = new InputOption("foo", "f", InputOption.VALUE_NONE, "Some description");
+        InputOption option2 = new InputOption("foo", "f", InputOption.VALUE_NONE, "Alternative description");
         Assert.assertTrue(option.equals(option2));
 
         option = new InputOption("foo", "f", InputOption.VALUE_OPTIONAL, "Some description");
         option2 = new InputOption("foo", "f", InputOption.VALUE_OPTIONAL, "Some description", true);
         Assert.assertFalse(option.equals(option2));
 
-        option = new InputOption("foo", "f", null, "Some description");
-        option2 = new InputOption("bar", "f", null, "Some description");
+        option = new InputOption("foo", "f", InputOption.VALUE_NONE, "Some description");
+        option2 = new InputOption("bar", "f", InputOption.VALUE_NONE, "Some description");
         Assert.assertFalse(option.equals(option2));
 
-        option = new InputOption("foo", "f", null, "Some description");
-        option2 = new InputOption("foo", "", null, "Some description");
+        option = new InputOption("foo", "f", InputOption.VALUE_NONE, "Some description");
+        option2 = new InputOption("foo", "", InputOption.VALUE_NONE, "Some description");
         Assert.assertFalse(option.equals(option2));
 
-        option = new InputOption("foo", "f", null, "Some description");
+        option = new InputOption("foo", "f", InputOption.VALUE_NONE, "Some description");
         option2 = new InputOption("foo", "f", InputOption.VALUE_OPTIONAL, "Some description");
         Assert.assertFalse(option.equals(option2));
     }
-
 }

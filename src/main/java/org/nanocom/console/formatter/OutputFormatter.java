@@ -25,17 +25,12 @@ public class OutputFormatter implements OutputFormatterInterface {
     /**
      * The pattern to phrase the format.
      */
-    private static Pattern FORMAT_PATTERN = Pattern.compile("<(/?)([a-z][a-z0-9_=;-]+)?>([^<]*)");
-
-    /**
-     * The pattern to escape "<" special char.
-     */
-    private static Pattern ESCAPE_PATTERN = Pattern.compile("([^\\\\\\\\]?)<");
+    private static Pattern FORMAT_PATTERN = Pattern.compile("<(/?)([a-z][a-z0-9_=;-]+)?>([^<]*)", Pattern.CASE_INSENSITIVE);
 
     /**
      * The pattern for style.
      */
-    private static Pattern STYLE_PATTERN = Pattern.compile("([^=]+)=([^;]+)(;|$)");
+    private static Pattern STYLE_PATTERN = Pattern.compile("([^=]+)=([^;]+)(;|$)", Pattern.CASE_INSENSITIVE);
 
     private Boolean decorated;
     private Map<String, OutputFormatterStyleInterface> styles = new HashMap<String, OutputFormatterStyleInterface>();
@@ -49,15 +44,7 @@ public class OutputFormatter implements OutputFormatterInterface {
      * @return Escaped text
      */
     public static String escape(String text) {
-        Matcher matcher = ESCAPE_PATTERN.matcher(text);
-        StringBuffer sb = new StringBuffer();
-
-        while (matcher.find()) {
-            matcher.appendReplacement(sb, "$1\\\\<");
-        }
-        matcher.appendTail(sb);
-
-        return sb.toString();
+        return text.replaceAll("([^\\\\\\\\]?)<", "$1\\\\<");
     }
 
     /**
@@ -268,6 +255,9 @@ public class OutputFormatter implements OutputFormatterInterface {
         String foundMatch(MatchResult matchResult);
     }
 
+    /**
+     * TODO Delete this unuseful class
+     */
     class CallbackMatcher {
 
         private Pattern pattern;

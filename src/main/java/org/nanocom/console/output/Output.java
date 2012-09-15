@@ -206,5 +206,5 @@ public abstract class Output implements OutputInterface {
      * @param message A message to write to the output
      * @param newline Whether to add a newline or not
      */
-    abstract public void doWrite(String message, boolean newline);
+    abstract protected void doWrite(String message, boolean newline);
 }

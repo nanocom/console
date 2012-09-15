@@ -35,27 +35,25 @@ public class InputArgument {
      *
      * @throws IllegalArgumentException When argument mode is not valid
      */
-    public InputArgument(String name, Integer mode, String description, Object defaultValue) {
+    public InputArgument(String name, int mode, String description, Object defaultValue) {
         init(name, mode, description, defaultValue);
     }
 
-    public InputArgument(String name, Integer mode, String description) {
-        init(name, mode, description, null);
+    public InputArgument(String name, int mode, String description) {
+        this(name, mode, description, null);
     }
 
-    public InputArgument(String name, Integer mode) {
-        init(name, mode, "", null);
+    public InputArgument(String name, int mode) {
+        this(name, mode, "");
     }
 
     public InputArgument(String name) {
-        init(name, null, "", null);
+        this(name, OPTIONAL);
     }
 
-    private void init(String name, Integer mode, String description, Object defaultValue) {
-        if (null == mode) {
-            mode = OPTIONAL;
-        } else if (mode > 7 || mode < 1) {
-            throw new IllegalArgumentException("Argument mode \"" + mode + "\" is not valid.");
+    private void init(String name, int mode, String description, Object defaultValue) {
+        if (mode > 7 || mode < 1) {
+            throw new IllegalArgumentException(String.format("Argument mode \"%d\" is not valid.", mode));
         }
 
         this.name        = name;

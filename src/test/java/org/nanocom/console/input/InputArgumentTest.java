@@ -19,25 +19,22 @@ public class InputArgumentTest {
     @Test
     public void testConstructor() {
         InputArgument argument = new InputArgument("foo");
-        assertEquals("__construct() takes a name as its first argument", "foo", argument.getName());
+        assertEquals("Constructor takes a name as its first argument", "foo", argument.getName());
 
         argument = new InputArgument("foo");
-        assertFalse("__construct() gives a \"InputArgument.OPTIONAL\" mode by default", argument.isRequired());
-
-        argument = new InputArgument("foo", null);
-        assertFalse("__construct() can take \"InputArgument.OPTIONAL\" as its mode", argument.isRequired());
+        assertFalse("Constructor gives a \"InputArgument.OPTIONAL\" mode by default", argument.isRequired());
 
         argument = new InputArgument("foo", InputArgument.OPTIONAL);
-        assertFalse("__construct() can take \"InputArgument.OPTIONAL\" as its mode", argument.isRequired());
+        assertFalse("Constructor can take \"InputArgument.OPTIONAL\" as its mode", argument.isRequired());
 
         argument = new InputArgument("foo", InputArgument.REQUIRED);
-        assertTrue("__construct() can take \"InputArgument.REQUIRED\" as its mode", argument.isRequired());
+        assertTrue("Constructor can take \"InputArgument.REQUIRED\" as its mode", argument.isRequired());
 
         try {
             argument = new InputArgument("foo", -1);
-            fail("__construct() throws an Exception if the mode is not valid");
+            fail("Constructor throws an IllegalArgumentException if the mode is not valid");
         } catch (Exception e) {
-            // assertTrue(e instanceof Exception, "__construct() throws an Exception if the mode is not valid");
+            assertTrue("Constructor throws an IllegalArgumentException if the mode is not valid", e instanceof IllegalArgumentException);
             assertEquals("Argument mode \"-1\" is not valid.", e.getMessage());
         }
     }
@@ -54,7 +51,7 @@ public class InputArgumentTest {
 
     @Test
     public void testGetDescription() {
-        InputArgument argument = new InputArgument("foo", null, "Some description");
+        InputArgument argument = new InputArgument("foo", InputArgument.OPTIONAL, "Some description");
         assertEquals(".getDescription() return the message description", "Some description", argument.getDescription());
     }
 
@@ -94,5 +91,4 @@ public class InputArgumentTest {
             assertEquals("A default value for an array argument must be an array.", e.getMessage());
         }
     }
-
 }

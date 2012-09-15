@@ -9,7 +9,6 @@ package org.nanocom.console.input;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import org.nanocom.console.exception.LogicException;
 
 /**
@@ -39,27 +38,27 @@ public class InputOption {
      *
      * @throws IllegalArgumentException If option mode is invalid or incompatible
      */
-    public InputOption(String name, String shortcut, Integer mode, String description, Object defaultValue) {
+    public InputOption(String name, String shortcut, int mode, String description, Object defaultValue) {
         init(name, shortcut, mode, description, defaultValue);
     }
 
-    public InputOption(String name, String shortcut, Integer mode, String description) {
-        init(name, shortcut, mode, description, null);
+    public InputOption(String name, String shortcut, int mode, String description) {
+        this(name, shortcut, mode, description, null);
     }
 
-    public InputOption(String name, String shortcut, Integer mode) {
-        init(name, shortcut, mode, "", null);
+    public InputOption(String name, String shortcut, int mode) {
+        this(name, shortcut, mode, "");
     }
 
     public InputOption(String name, String shortcut) {
-        init(name, shortcut, null, "", null);
+        this(name, shortcut, VALUE_NONE);
     }
 
     public InputOption(String name) {
-        init(name, null, null, "", null);
+        this(name, null);
     }
 
-    private void init(String name, String shortcut, Integer mode, String description, Object defaultValue) {
+    private void init(String name, String shortcut, int mode, String description, Object defaultValue) {
         if (null != name) {
             if (name.startsWith("--")) {
                 name = name.substring(2);
@@ -77,10 +76,8 @@ public class InputOption {
             }
         }
 
-        if (null == mode) {
-            mode = VALUE_NONE;
-        } else if (mode > 15 || mode < 1) {
-            throw new IllegalArgumentException("Option mode \"" + mode + "\" is not valid.");
+        if (mode > 15 || mode < 1) {
+            throw new IllegalArgumentException(String.format("Option mode \"%d\" is not valid.", mode));
         }
 
         this.name        = name;
@@ -187,7 +184,7 @@ public class InputOption {
      * @return The description text
      */
     public String getDescription() {
-        return this.description;
+        return description;
     }
 
     /**
@@ -205,5 +202,4 @@ public class InputOption {
             && option.isValueOptional() == isValueOptional()
         ;
     }
-
 }
