@@ -99,7 +99,7 @@ public class Application {
      */
     public int run(InputInterface input, OutputInterface output) throws RuntimeException {
         if (null == input) {
-            input = new ArgvInput();
+            input = new ArgvInput(new String[0]);
         }
 
         if (null == output) {
@@ -144,7 +144,7 @@ public class Application {
      * @return 0 if everything went fine, or an error code
      */
     public int doRun(InputInterface input, OutputInterface output) throws RuntimeException {
-        name = getCommandName(input);
+        String commandName = getCommandName(input);
 
         if (true == input.hasParameterOption(Arrays.asList("--ansi"))) {
             output.setDecorated(true);
@@ -153,8 +153,8 @@ public class Application {
         }
 
         if (true == input.hasParameterOption(Arrays.asList("--help", "-h"))) {
-            if (null == name) {
-                name = "help";
+            if (null == commandName) {
+                commandName = "help";
                 Map<String, String> arrayInputParams = new HashMap<String, String>();
                 arrayInputParams.put("command", "help");
                 try {
@@ -189,15 +189,15 @@ public class Application {
             return 0;
         }
 
-        if (null == name) {
-            name = "list";
+        if (null == commandName) {
+            commandName = "list";
             Map<String, String> arrayInputParams = new HashMap<String, String>();
             arrayInputParams.put("command", "list");
             input = new ArrayInput(arrayInputParams);
         }
 
         // The command name MUST be the first element of the input
-        Command command = find(name);
+        Command command = find(commandName);
 
         runningCommand = command;
         int statusCode = command.run(input, output);

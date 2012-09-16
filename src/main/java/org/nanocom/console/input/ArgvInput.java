@@ -12,49 +12,54 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import static org.apache.commons.lang3.StringUtils.*;
 
 /**
  * ArgvInput represents an input coming from the CLI arguments.
  *
  * Usage:
  *
- *     InputInterface input = new ArgvInput();
+ *     public static void main(String[] args) {
+ *         InputInterface input = new ArgvInput(args);
+ *     }
+ *
+ * Don't forget that the first element of the array
+ * is the name of the running application.
  *
  * When passing an argument to the constructor, be sure that it respects
- * the same rules as the argv one. It's almost always better to use the
+ * the same rules as the args one. It's almost always better to use the
  * `StringInput` when you want to provide your own input.
  *
  * @author Arnaud Kleinpeter <arnaud.kleinpeter at gmail dot com>
  */
 public class ArgvInput extends Input {
 
-    protected ArrayList<String> tokens;
-    private LinkedList<String> parsed;
+    protected List<String> tokens;
+    private List<String> parsed;
 
-    public ArgvInput() {
-        tokens = new ArrayList<String>();
-        init(null);
-    }
-
-    public ArgvInput(String[] argv) {
-        tokens = new ArrayList<String>();
-        tokens.addAll(Arrays.asList(argv));
-        init(null);
+    /**
+     * Constructor.
+     *
+     * @param args       An array of parameters (in the args format)
+     * @param definition An InputDefinition instance
+     */
+    public ArgvInput(String[] args) {
+        this(args, null);
     }
 
     /**
-     * @param argv       An array of parameters from the CLI (in the argv format)
-     * @param definition A InputDefinition instance
+     * Constructor.
+     *
+     * @param args       An array of parameters (in the args format)
+     * @param definition An InputDefinition instance
      */
     public ArgvInput(String[] argv, InputDefinition definition) {
-        tokens = new ArrayList<String>();
-        tokens.addAll(Arrays.asList(argv));
+        tokens = new ArrayList<String>(Arrays.asList(argv));
         super.init(definition);
     }
 
     protected void setTokens(String[] tokens) {
-        this.tokens = new ArrayList<String>();
-        this.tokens.addAll(Arrays.asList(tokens));
+        this.tokens = new ArrayList<String>(Arrays.asList(tokens));
     }
 
     /**
@@ -62,15 +67,19 @@ public class ArgvInput extends Input {
      */
     @Override
     protected void parse() {
-        parsed = new LinkedList<String>();
-        parsed.addAll(tokens);
+        boolean parseOptions = true;
+        parsed = new ArrayList<String>(tokens);
+        String token;
 
         while (!parsed.isEmpty()) {
-            String token = parsed.poll();
-
-            if (token.startsWith("--")) {
+            token = parsed.remove(0);
+            if (parseOptions && EMPTY.equals(token)) {
+                parseArgument(token);
+            } else if (parseOptions && "--".equals(token)) {
+                parseOptions = false;
+            } else if (parseOptions && 0 == token.indexOf("--")) {
                 parseLongOption(token);
-            } else if ('-' == token.charAt(0)) {
+            } else if (parseOptions && '-' == token.charAt(0)) {
                 parseShortOption(token);
             } else {
                 parseArgument(token);
@@ -211,23 +220,24 @@ public class ArgvInput extends Input {
         if (null == value && option.acceptValue()) {
             // If option accepts an optional or mandatory argument
             // Let's see if there is one provided
-            String next = parsed.getFirst();
-            if ('-' != next.charAt(0)) {
-                value = next;
-                parsed.removeFirst();
+            if (!parsed.isEmpty()) {
+                String next = parsed.get(0);
+                if (!next.startsWith("-")) {
+                    value = next;
+                    parsed.remove(0);
+                }
             }
         }
 
         if (null == value) {
             if (option.isValueRequired()) {
-                throw new RuntimeException(String.format("The \"--%s\" option requires a value."));
+                throw new RuntimeException(String.format("The \"--%s\" option requires a value.", name));
             }
 
             value = option.isValueOptional() ? option.getDefaultValue() : true;
         }
 
         if (option.isArray()) {
-            // This line is giving an "unchecked" warning
             ((List<Object>) options.get(name)).add(value);
         } else {
             options.put(name, value);

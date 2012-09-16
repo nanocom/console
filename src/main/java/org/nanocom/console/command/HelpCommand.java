@@ -64,6 +64,6 @@ public class HelpCommand extends Command {
 
         command = null;
 
-        return 1;
+        return 0;
     }
 }

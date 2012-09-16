@@ -13,7 +13,7 @@ import org.nanocom.console.output.OutputInterface;
 
 /**
  * Base class to inject executable code inside a command.
- * 
+ *
  * @author Arnaud Kleinpeter <arnaud.kleinpeter at gmail dot com>
  */
 public abstract class Executable {
@@ -30,5 +30,4 @@ public abstract class Executable {
      * @see    Command#setCode(Executable)
      */
 	protected abstract int execute(InputInterface input, OutputInterface output);
-
 }

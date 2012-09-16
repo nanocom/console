@@ -1,17 +1,15 @@
-Console
-=======
+Console Component
+=================
 
 Console eases the creation of beautiful and testable command line interfaces.
-It is a port from Symfony2's Console component.
+It is a port from [Symfony2's Console component](https://github.com/symfony/symfony/tree/master/src/Symfony/Component/Console)
 
-The Application object manages the CLI application:
+The Application object manages the command-line application:
 
-    import com.nanocom.console.Application;
+    import org.nanocom.console.Application;
 
-    public static void main(String[] args) {
-        Application console = new Application(args);
-        console.run();
-    }
+    console = new Application();
+    console.run();
 
 The ``run()`` method parses the arguments and options passed on the command
 line and executes the right command.
@@ -19,21 +17,25 @@ line and executes the right command.
 Registering a new command can easily be done via the ``register()`` method,
 which returns a ``Command`` instance:
 
-    import com.nanocom.console.Input.InputInterface;
-    import com.nanocom.console.Input.InputArgument;
-    import com.nanocom.console.Input.InputOption;
-    import com.nanocom.console.Output.OutputInterface;
+    import org.nanocom.console.Input.InputInterface;
+    import org.nanocom.console.Input.InputArgument;
+    import org.nanocom.console.Input.InputOption;
+    import org.nanocom.console.Output.OutputInterface;
 
     console
         .register("ls")
-        .setDefinition(Arrays.asList((Object)
-            new InputArgument("dir", InputArgument.REQUIRED, "Directory name"),
+        .setDefinition(Arrays.asList(
+            new InputArgument('dir', InputArgument.REQUIRED, "Directory name"),
         ))
         .setDescription("Displays the files in the given directory")
-        .setCode(function (InputInterface input, OutputInterface output) {
-            dir = input.getArgument("dir");
+        .setCode(new Executable() {
 
-            output.writeln(String.format("Dir listing for <info>%s</info>", dir));
+            @Override
+            protected int execute(InputInterface input, OutputInterface output);
+                String dir = input.getArgument("dir");
+                output.writeln(String.format("Dir listing for <info>%s</info>", dir));
+                return 0;
+            }
         })
     ;
 
