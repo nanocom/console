@@ -12,6 +12,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 /**
  * @author Arnaud Kleinpeter <arnaud.kleinpeter at gmail dot com>
@@ -71,7 +72,7 @@ class OutputFormatterStyleStack {
         }
 
         for (Entry<Integer, OutputFormatterStyleInterface> stackedStyle : reversedStyles.entrySet()) {
-            if (style.apply("").equals(stackedStyle.getValue().apply(""))) {
+            if (style.apply(EMPTY).equals(stackedStyle.getValue().apply(EMPTY))) {
                 styles = styles.subList(0, stackedStyle.getKey());
 
                 return stackedStyle.getValue();

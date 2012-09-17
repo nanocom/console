@@ -430,7 +430,7 @@ public class Application {
             }
         }
 
-        namespaces.remove(""); // deletes global namespace
+        namespaces.remove(EMPTY); // deletes global namespace
         return namespaces;
     }
 
@@ -510,7 +510,7 @@ public class Application {
      */
     public Command find(String name) throws IllegalArgumentException {
         // Namespace
-        String namespace = "";
+        String namespace = EMPTY;
         String searchName = name;
         int pos = name.indexOf(':');
         if (pos >= 0) {
@@ -657,7 +657,7 @@ public class Application {
             return join(messages, LINE_SEPARATOR);
         }
 
-        List<String> messages = new ArrayList<String>(Arrays.asList(getHelp(), ""));
+        List<String> messages = new ArrayList<String>(Arrays.asList(getHelp(), EMPTY));
         if (null != namespace) {
             messages.add(String.format("<comment>Available commands for the \"%s\" namespace:</comment>", namespace));
         } else {
@@ -757,8 +757,8 @@ public class Application {
             new InputOption("--quiet",          "-q", InputOption.VALUE_NONE, "Do not output any message."),
             new InputOption("--verbose",        "-v", InputOption.VALUE_NONE, "Increase verbosity of messages."),
             new InputOption("--version",        "-V", InputOption.VALUE_NONE, "Display this application version."),
-            new InputOption("--ansi",           "",   InputOption.VALUE_NONE, "Force ANSI output."),
-            new InputOption("--no-ansi",        "",   InputOption.VALUE_NONE, "Disable ANSI output."),
+            new InputOption("--ansi",           EMPTY,   InputOption.VALUE_NONE, "Force ANSI output."),
+            new InputOption("--no-ansi",        EMPTY,   InputOption.VALUE_NONE, "Disable ANSI output."),
             new InputOption("--no-interaction", "-n", InputOption.VALUE_NONE, "Do not ask any interactive question.")
         ));
     }
@@ -838,7 +838,7 @@ public class Application {
      * @return A formatted string of abbreviated suggestions
      */
     private String getAbbreviationSuggestions(List<String> abbrevs) {
-        return String.format("%s, %s%s", abbrevs.get(0), abbrevs.get(1), abbrevs.size() > 2 ? String.format(" and %d more", abbrevs.size() - 2) : "");
+        return String.format("%s, %s%s", abbrevs.get(0), abbrevs.get(1), abbrevs.size() > 2 ? String.format(" and %d more", abbrevs.size() - 2) : EMPTY);
     }
 
     /**
@@ -853,7 +853,7 @@ public class Application {
         String[] parts = name.split(":");
         parts = ArrayUtils.<String>subarray(parts, 0, parts.length - 1);
 
-        return 0 == parts.length ? "" : join(null == limit ? parts : ArrayUtils.<String>subarray(parts, 0, limit), ':');
+        return 0 == parts.length ? EMPTY : join(null == limit ? parts : ArrayUtils.<String>subarray(parts, 0, limit), ':');
     }
 
     private String extractNamespace(String name) {

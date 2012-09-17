@@ -183,7 +183,7 @@ public class InputDefinition {
      * @return True if the InputArgument object exists, false otherwise
      */
     public boolean hasArgument(int position) {
-        return arguments.size() > position;
+        return position >= 0 && arguments.size() > position;
     }
 
     /**
@@ -260,7 +260,8 @@ public class InputDefinition {
         if (options.containsKey(option.getName()) && !option.equals(options.get(option.getName()))) {
             throw new LogicException(String.format("An option named \"%s\" already exist.", option.getName()));
         } else if (
-                shortcuts.containsKey(option.getShortcut())
+                null != option.getShortcut()
+                && shortcuts.containsKey(option.getShortcut())
                 && !option.equals(options.get(shortcuts.get(option.getShortcut())))
         ) {
             throw new LogicException(String.format("An option with shortcut \"%s\" already exist.", option.getShortcut()));
@@ -367,7 +368,7 @@ public class InputDefinition {
     public String getSynopsis() {
         StringBuilder sb = new StringBuilder();
         for (InputOption option : options.values()) {
-            String shortcut = (null != option.getShortcut()) ? "-" + option.getShortcut() + "|" : "";
+            String shortcut = (null != option.getShortcut()) ? "-" + option.getShortcut() + "|" : EMPTY;
             sb.append("[");
 
             if (option.isValueRequired()) {
@@ -383,9 +384,9 @@ public class InputDefinition {
 
         for (InputArgument argument : arguments.values()) {
             if (argument.isRequired()) {
-                sb.append(String.format("%s%s", argument.getName(), argument.isArray() ? "1" : ""));
+                sb.append(String.format("%s%s", argument.getName(), argument.isArray() ? "1" : EMPTY));
             } else {
-                sb.append(String.format("[%s%s]", argument.getName(), (argument.isArray() ? "1" : "")));
+                sb.append(String.format("[%s%s]", argument.getName(), (argument.isArray() ? "1" : EMPTY)));
             }
 
             if (argument.isArray()) {

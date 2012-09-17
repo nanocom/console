@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 import static org.junit.Assert.*;
 import org.junit.Test;
+import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 public class ArgvInputTest {
 
@@ -76,7 +77,8 @@ public class ArgvInputTest {
         input = new ArgvInput(new String[]{"-f", "-b", "foo"});
         input.bind(new InputDefinition(Arrays.<Object>asList(new InputArgument("name"), new InputOption("foo", "f", InputOption.VALUE_OPTIONAL), new InputOption("bar", "b"))));
         foobar.clear();
-        foobar.put("foo", true);
+        foobar.put("foo", null);
+        foobar.put("bar", true);
         assertEquals("parse() parses short options with an optional value which is not present", foobar, input.getOptions());
 
         try {
@@ -191,10 +193,10 @@ public class ArgvInputTest {
         foobar.put("foo", "bar");
         assertEquals("parse() parses arguments with leading dashes as options before having encountered a double-dash sequence", foobar, input.getOptions());
 
-        input = new ArgvInput(new String[]{"-f", "bar", ""});
+        input = new ArgvInput(new String[]{"-f", "bar", EMPTY});
         input.bind(new InputDefinition(Arrays.<Object>asList(new InputArgument("empty"), new InputOption("foo", "f", InputOption.VALUE_OPTIONAL))));
         foobar.clear();
-        foobar.put("empty", "");
+        foobar.put("empty", EMPTY);
         assertEquals("parse() parses empty string arguments", foobar, input.getArguments());
     }
 

@@ -324,11 +324,11 @@ public class Command extends Executable {
     }
 
     public void addArgument(String name, int mode) {
-        addArgument(name, mode, "", null);
+        addArgument(name, mode, EMPTY, null);
     }
 
     public void addArgument(String name) {
-        addArgument(name, InputArgument.OPTIONAL, "", null);
+        addArgument(name, InputArgument.OPTIONAL, EMPTY, null);
     }
 
     /**
@@ -349,7 +349,7 @@ public class Command extends Executable {
     }
 
     public void addOption(String name, String shortcut, int mode) {
-        addOption(name, shortcut, mode, "");
+        addOption(name, shortcut, mode, EMPTY);
     }
 
     public void addOption(String name, String shortcut) {

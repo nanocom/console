@@ -77,7 +77,7 @@ public class ArgvInput extends Input {
                 parseArgument(token);
             } else if (parseOptions && "--".equals(token)) {
                 parseOptions = false;
-            } else if (parseOptions && 0 == token.indexOf("--")) {
+            } else if (parseOptions && token.startsWith("--")) {
                 parseLongOption(token);
             } else if (parseOptions && '-' == token.charAt(0)) {
                 parseShortOption(token);
@@ -162,25 +162,23 @@ public class ArgvInput extends Input {
     private void parseArgument(String token) throws RuntimeException {
         int c = arguments.size();
 
-        // If input is expecting another argument, add it
         if (definition.hasArgument(c)) {
+            // If input is expecting another argument, add it
             InputArgument arg = definition.getArgument(c);
 
             if (arg.isArray()) {
-                ArrayList<String> tokenAsList = new ArrayList<String>();
-                tokenAsList.add(token);
-                arguments.put(arg.getName(), tokenAsList);
+                List<String> tokensList = new ArrayList<String>();
+                tokensList.add(token);
+                arguments.put(arg.getName(), tokensList);
             } else {
                 arguments.put(arg.getName(), token);
             }
-
-        // If last argument isArray(), append token to last argument
         } else if (definition.hasArgument(c - 1) && definition.getArgument(c - 1).isArray()) {
+            // If last argument isArray(), append token to last argument
             InputArgument arg = definition.getArgument(c - 1);
-            arguments.put(arg.getName(), token);
-
-        // Unexpected argument
+            ((List<String>) arguments.get(arg.getName())).add(token);
         } else {
+            // Unexpected argument
             throw new RuntimeException("Too many arguments.");
         }
     }
@@ -217,15 +215,13 @@ public class ArgvInput extends Input {
 
         InputOption option = definition.getOption(name);
 
-        if (null == value && option.acceptValue()) {
+        if (null == value && option.acceptValue() && !parsed.isEmpty()) {
             // If option accepts an optional or mandatory argument
             // Let's see if there is one provided
-            if (!parsed.isEmpty()) {
-                String next = parsed.get(0);
-                if (!next.startsWith("-")) {
-                    value = next;
-                    parsed.remove(0);
-                }
+            String next = parsed.get(0);
+            if ('-' != next.charAt(0)) {
+                value = next;
+                parsed.remove(0);
             }
         }
 
@@ -238,7 +234,13 @@ public class ArgvInput extends Input {
         }
 
         if (option.isArray()) {
-            ((List<Object>) options.get(name)).add(value);
+            if (options.containsKey(name)) {
+                 ((List<Object>) options.get(name)).add(value);
+            } else {
+                List<Object> valueList = new ArrayList<Object>();
+                valueList.add(value);
+                options.put(name, valueList);
+            }
         } else {
             options.put(name, value);
         }

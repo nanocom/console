@@ -172,7 +172,7 @@ public class OutputFormatter implements OutputFormatterInterface {
         String match2 = defaultString(matchResult.group(2));
         String match3 = defaultString(matchResult.group(3));
 
-        if ("".equals(match2)) {
+        if (EMPTY.equals(match2)) {
             if ("/".equals(match1)) {
                 // Closing tag ("</>")
                 styleStack.pop();
