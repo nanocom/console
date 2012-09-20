@@ -45,7 +45,7 @@ public class ListCommand extends Command {
      */
     @Override
     protected int execute(InputInterface input, OutputInterface output) {
-        output.writeln(getApplication().asText((String) input.getArgument("namespace"), false));
+        output.writeln(getApplication().asText((String) input.getArgument("namespace"), (Boolean) input.getOption("raw")));
         return 0;
     }
 

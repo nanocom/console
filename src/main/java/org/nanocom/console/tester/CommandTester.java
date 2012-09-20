@@ -26,6 +26,8 @@ public class CommandTester {
     private InMemoryOutput output;
 
     /**
+     * Constructor.
+     *
      * @param command A Command instance to test.
      */
     public CommandTester(Command command) {

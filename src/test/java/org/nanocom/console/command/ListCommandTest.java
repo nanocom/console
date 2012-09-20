@@ -8,29 +8,32 @@
 package org.nanocom.console.command;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
+import static org.apache.commons.lang3.SystemUtils.LINE_SEPARATOR;
+import static org.junit.Assert.*;
 import org.junit.Test;
 import org.nanocom.console.Application;
 import org.nanocom.console.tester.CommandTester;
 
 public class ListCommandTest {
 
-	// @Test
+	@Test
 	public void testExecute() {
 		Application application = new Application();
 
 		Command command = application.get("list");
-		CommandTester commandTester = new CommandTester(command = application.get("list"));
-		Map<String, String> input = new HashMap<String, String>();
+		CommandTester commandTester = new CommandTester(command);
+		Map<String, String> input = new LinkedHashMap<String, String>();
 		input.put("command", command.getName());
 		Map<String, Object> options = new HashMap<String, Object>();
 		options.put("decorated", false);
         commandTester.execute(input, options);
-        // assertRegExp("/help   Displays help for a command/", commandTester.getDisplay(), "execute() returns a list of available commands");
+        assertTrue("execute() returns a list of available commands", commandTester.getDisplay().contains("help   Displays help for a command"));
 
-        input.put("--raw", "true");
-        commandTester.execute(input);
-        String output = "help   Displays help for a command\nlist   Lists commands\n\n";
-        // assertEquals(output.replace("\n", LINE_SEPARATOR), commandTester.getDisplay(), "boo");
+        input.put("--raw", null);
+        commandTester.execute(input, options);
+        String output = String.format("help   Displays help for a command%slist   Lists commands%s", LINE_SEPARATOR, LINE_SEPARATOR);
+        assertEquals("boo", output, commandTester.getDisplay());
     }
 }

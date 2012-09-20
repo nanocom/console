@@ -164,7 +164,7 @@ public class ArrayInput extends Input {
      *
      * @throws RuntimeException When option given doesn't exist
      */
-    private void addShortOption(String shortcut, Object value) throws RuntimeException {
+    private void addShortOption(String shortcut, String value) throws RuntimeException {
         if (!definition.hasShortcut(shortcut)) {
             throw new IllegalArgumentException(String.format("The \"-%s\" option does not exist.", shortcut));
         }
@@ -181,7 +181,7 @@ public class ArrayInput extends Input {
      * @throws IllegalArgumentException When option given doesn't exist
      * @throws IllegalArgumentException When a required value is missing
      */
-    private void addLongOption(String name, Object value) throws IllegalArgumentException {
+    private void addLongOption(String name, String value) throws IllegalArgumentException {
         if (!definition.hasOption(name)) {
             throw new IllegalArgumentException(String.format("The \"--%s\" option does not exist.", name));
         }
@@ -193,10 +193,12 @@ public class ArrayInput extends Input {
                 throw new IllegalArgumentException(String.format("The \"--%s\" option requires a value.", name));
             }
 
-            value = option.isValueOptional() ? option.getDefaultValue() : true;
+            value = option.isValueOptional() ? String.valueOf(option.getDefaultValue()) : "true";
         }
 
-        options.put(name, value);
+        Object parsedValue = "true".equalsIgnoreCase(value) ? true : "false".equalsIgnoreCase(value) ? false : value;
+
+        options.put(name, parsedValue);
     }
 
     /**

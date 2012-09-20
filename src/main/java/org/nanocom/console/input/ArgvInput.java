@@ -119,18 +119,19 @@ public class ArgvInput extends Input {
      */
     private void parseShortOptionSet(String name) throws RuntimeException {
         int nameLength = name.length();
+
         for (int i = 0; i < nameLength; i++) {
             if (!definition.hasShortcut(name.substring(i, i + 1))) {
                 throw new RuntimeException(String.format("The \"-%s\" option does not exist.", name.substring(i, i + 1)));
             }
 
             InputOption option = definition.getOptionForShortcut(name.substring(i, i + 1));
+
             if (option.acceptValue()) {
                 addLongOption(option.getName(), i == nameLength - 1 ? null : name.substring(i + 1));
-
                 break;
             } else {
-                addLongOption(option.getName(), true);
+                addLongOption(option.getName(), null);
             }
         }
     }
@@ -191,7 +192,7 @@ public class ArgvInput extends Input {
      *
      * @throws RuntimeException When option given doesn't exist
      */
-    private void addShortOption(String shortcut, Object value) throws RuntimeException {
+    private void addShortOption(String shortcut, String value) throws RuntimeException {
         if (!definition.hasShortcut(shortcut)) {
             throw new RuntimeException(String.format("The \"-%s\" option does not exist.", shortcut));
         }
@@ -208,7 +209,7 @@ public class ArgvInput extends Input {
      * @throws RuntimeException When option given doesn't exist
      */
     @SuppressWarnings("unchecked")
-    private void addLongOption(String name, Object value) throws RuntimeException {
+    private void addLongOption(String name, String value) throws RuntimeException {
         if (!definition.hasOption(name)) {
             throw new RuntimeException(String.format("The \"--%s\" option does not exist.", name));
         }
@@ -225,12 +226,16 @@ public class ArgvInput extends Input {
             }
         }
 
+        Object parsedValue;
+
         if (null == value) {
             if (option.isValueRequired()) {
                 throw new RuntimeException(String.format("The \"--%s\" option requires a value.", name));
             }
 
-            value = option.isValueOptional() ? option.getDefaultValue() : true;
+            parsedValue = option.isValueOptional() ? option.getDefaultValue() : true;
+        } else {
+            parsedValue = value;
         }
 
         if (option.isArray()) {
@@ -242,7 +247,7 @@ public class ArgvInput extends Input {
                 options.put(name, valueList);
             }
         } else {
-            options.put(name, value);
+            options.put(name, parsedValue);
         }
     }
 

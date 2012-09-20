@@ -650,7 +650,7 @@ public class Application {
             for (Map<String, Command> commandsMap : sortCommands(cmds).values()) {
                 for (Command command : commandsMap.values()) {
                     String description = null != command.getDescription() ? command.getDescription() : EMPTY;
-                    messages.add(String.format("%-" + String.valueOf(width) + "s %s", name, description));
+                    messages.add(String.format("%-" + String.valueOf(width) + "s %s", command.getName(), description));
                 }
             }
 
