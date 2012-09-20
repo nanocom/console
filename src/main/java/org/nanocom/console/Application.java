@@ -157,9 +157,7 @@ public class Application {
                 commandName = "help";
                 Map<String, String> arrayInputParams = new HashMap<String, String>();
                 arrayInputParams.put("command", "help");
-                try {
-                	input = new ArrayInput(arrayInputParams);
-                } catch (Exception e) {}
+                input = new ArrayInput(arrayInputParams);
             } else {
                 wantHelps = true;
             }

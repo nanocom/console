@@ -74,7 +74,7 @@ public class InputDefinition {
      * @param arguments An array of InputArgument objects
      */
     public void setArguments(List<InputArgument> arguments) {
-        this.arguments     = new HashMap<String, InputArgument>();
+        this.arguments     = new LinkedHashMap<String, InputArgument>();
         requiredCount      = 0;
         hasOptional        = false;
         hasAnArrayArgument = false;

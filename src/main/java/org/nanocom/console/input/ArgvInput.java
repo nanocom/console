@@ -54,7 +54,12 @@ public class ArgvInput extends Input {
      * @param definition An InputDefinition instance
      */
     public ArgvInput(String[] argv, InputDefinition definition) {
-        tokens = new ArrayList<String>(Arrays.asList(argv));
+        tokens = new ArrayList<String>();
+
+        if (null != argv) {
+            tokens.addAll(Arrays.asList(argv));
+        }
+
         super.init(definition);
     }
 

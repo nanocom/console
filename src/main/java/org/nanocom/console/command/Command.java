@@ -252,15 +252,12 @@ public class Command extends Executable {
             return;
         }
 
-        List<InputArgument> currentArguments = new ArrayList<InputArgument>();
-        currentArguments.addAll(definition.getArguments().values());
-        List<InputArgument> applicationArguments = new ArrayList<InputArgument>();
-        applicationArguments.addAll(application.getDefinition().getArguments().values());
+        List<InputArgument> currentArguments = new ArrayList<InputArgument>(definition.getArguments().values());
+        List<InputArgument> applicationArguments = new ArrayList<InputArgument>(application.getDefinition().getArguments().values());
         definition.setArguments(applicationArguments);
         definition.addArguments(currentArguments);
 
-        List<InputOption> applicationOptions = new ArrayList<InputOption>();
-        applicationOptions.addAll(application.getDefinition().getOptions().values());
+        List<InputOption> applicationOptions = new ArrayList<InputOption>(application.getDefinition().getOptions().values());
         definition.addOptions(applicationOptions);
 
         applicationDefinitionMerged = true;
