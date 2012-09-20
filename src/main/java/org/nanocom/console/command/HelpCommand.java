@@ -12,7 +12,6 @@ import static org.apache.commons.lang3.SystemUtils.LINE_SEPARATOR;
 import org.nanocom.console.input.InputArgument;
 import org.nanocom.console.input.InputInterface;
 import org.nanocom.console.output.OutputInterface;
-import org.nanocom.console.output.OutputInterface.OutputType;
 
 /**
  * HelpCommand displays the help for a given command.
@@ -33,11 +32,9 @@ public class HelpCommand extends Command {
         setName("help");
         setDefinition(Arrays.<Object>asList(
             new InputArgument("command_name", InputArgument.OPTIONAL, "The command name", "help")
-            // new InputOption("xml", null, InputOption.VALUE_NONE, "To output help as XML"),
         ));
         setDescription("Displays help for a command");
-        String lineSeparator = LINE_SEPARATOR + LINE_SEPARATOR;
-        setHelp("The <info>%command.name%</info> command displays help for a given command:" + lineSeparator
+        setHelp("The <info>%command.name%</info> command displays help for a given command:" + LINE_SEPARATOR + LINE_SEPARATOR
                 + "  <info>java -jar %command.full_name% list</info>"
         );
     }
@@ -60,7 +57,7 @@ public class HelpCommand extends Command {
             command = getApplication().get((String) input.getArgument("command_name"));
         }
 
-        output.writeln(Arrays.asList(command.asText()), OutputType.NORMAL);
+        output.writeln(command.asText());
 
         command = null;
 

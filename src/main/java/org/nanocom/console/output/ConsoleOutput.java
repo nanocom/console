@@ -10,6 +10,16 @@ package org.nanocom.console.output;
 import org.nanocom.console.formatter.OutputFormatterInterface;
 
 /**
+ * ConsoleOutput is the default class for all console output. It uses STDOUT.
+ *
+ * This class is a convenient wrapper around `StreamOutput`.
+ *
+ *     OutputInterface output = new ConsoleOutput();
+ *
+ * This is equivalent to:
+ *
+ *     OutputInterface output = new StreamOutput(System.out);
+ *
  * @author Arnaud Kleinpeter <arnaud.kleinpeter at gmail dot com>
  */
 public class ConsoleOutput extends StreamOutput implements ConsoleOutputInterface {
@@ -23,7 +33,6 @@ public class ConsoleOutput extends StreamOutput implements ConsoleOutputInterfac
      */
     public ConsoleOutput(VerbosityLevel verbosity, Boolean decorated, OutputFormatterInterface formatter) {
         super(System.out, verbosity, decorated, formatter);
-
         stderr = new StreamOutput(System.err, verbosity, decorated, formatter);
     }
 

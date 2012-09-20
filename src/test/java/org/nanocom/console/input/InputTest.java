@@ -1,9 +1,16 @@
+/*
+ * This file is part of the Console package.
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 package org.nanocom.console.input;
 
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import org.junit.Assert;
+import static org.junit.Assert.*;
 import org.junit.Test;
 
 public class InputTest {
@@ -16,7 +23,7 @@ public class InputTest {
         Map<String, String> foobar = new HashMap<String, String>();
         foobar.put("name", "foo");
         ArrayInput input = new ArrayInput(foobar, new InputDefinition(Arrays.asList((Object) new InputArgument("name"))));
-        Assert.assertEquals(".__construct() takes a InputDefinition as an argument", "foo", input.getArgument("name"));
+        assertEquals("Constructor takes a InputDefinition as an argument", "foo", input.getArgument("name"));
     }
 
     @Test
@@ -24,37 +31,37 @@ public class InputTest {
         Map<String, String> foobar = new HashMap<String, String>();
         foobar.put("--name", "foo");
         ArrayInput input = new ArrayInput(foobar, new InputDefinition(Arrays.asList((Object) new InputOption("name"))));
-        Assert.assertEquals(".getOption() returns the value for the given option", "foo", input.getOption("name"));
+        assertEquals("getOption() returns the value for the given option", "foo", input.getOption("name"));
 
         input.setOption("name", "bar");
         foobar.clear();
         foobar.put("name", "bar");
-        Assert.assertEquals(".setOption() sets the value for a given option", "bar", input.getOption("name"));
-        Assert.assertEquals(".getOptions() returns all option values", foobar, input.getOptions());
+        assertEquals("setOption() sets the value for a given option", "bar", input.getOption("name"));
+        assertEquals("getOptions() returns all option values", foobar, input.getOptions());
 
         foobar.clear();
         foobar.put("--name", "foo");
         input = new ArrayInput(foobar, new InputDefinition(Arrays.asList((Object) new InputOption("name"), new InputOption("bar", "", InputOption.VALUE_OPTIONAL, "", "default"))));
-        Assert.assertEquals(".getOption() returns the default value for optional options", "default", input.getOption("bar"));
+        assertEquals("getOption() returns the default value for optional options", "default", input.getOption("bar"));
         foobar.clear();
         foobar.put("name", "foo");
         foobar.put("bar", "default");
-        Assert.assertEquals(".getOptions() returns all option values, even optional ones", foobar, input.getOptions());
+        assertEquals("getOptions() returns all option values, even optional ones", foobar, input.getOptions());
 
         try {
             input.setOption("foo", "bar");
-            Assert.fail(".setOption() throws an Exception if the option does not exist");
+            fail("setOption() throws an IllegalArgumentException if the option does not exist");
         } catch (Exception e) {
-            // Assert.assertInstanceOf("\InvalidArgumentException", e, ".setOption() throws a \InvalidArgumentException if the option does not exist");
-            Assert.assertEquals("The \"foo\" option does not exist.", e.getMessage());
+            assertTrue("setOption() throws an IllegalArgumentException if the option does not exist", e instanceof IllegalArgumentException);
+            assertEquals("The \"foo\" option does not exist.", e.getMessage());
         }
 
         try {
             input.getOption("foo");
-            Assert.fail(".getOption() throws an Exception if the option does not exist");
+            fail("getOption() throws an IllegalArgumentException if the option does not exist");
         } catch (Exception e) {
-            // Assert.assertInstanceOf("\InvalidArgumentException", e, ".setOption() throws a \InvalidArgumentException if the option does not exist");
-            Assert.assertEquals("The \"foo\" option does not exist.", e.getMessage());
+            assertTrue("setOption() throws an IllegalArgumentException if the option does not exist", e instanceof IllegalArgumentException);
+            assertEquals("The \"foo\" option does not exist.", e.getMessage());
         }
     }
 
@@ -64,70 +71,68 @@ public class InputTest {
         foobar.put("name", "foo");
 
         ArrayInput input = new ArrayInput(foobar, new InputDefinition(Arrays.asList((Object) new InputArgument("name"))));
-        Assert.assertEquals(".getArgument() returns the value for the given argument", "foo", input.getArgument("name"));
+        assertEquals("getArgument() returns the value for the given argument", "foo", input.getArgument("name"));
 
         input.setArgument("name", "bar");
         foobar = new HashMap<String, String>();
-        foobar.clear();
         foobar.put("name", "bar");
-        Assert.assertEquals(".setArgument() sets the value for a given argument", "bar", input.getArgument("name"));
-        Assert.assertEquals(".getArguments() returns all argument values", foobar, input.getArguments());
+        assertEquals("setArgument() sets the value for a given argument", "bar", input.getArgument("name"));
+        assertEquals("getArguments() returns all argument values", foobar, input.getArguments());
 
         foobar.clear();
         foobar.put("name", "foo");
         foobar.put("bar", "default");
         input = new ArrayInput(foobar, new InputDefinition(Arrays.asList((Object) new InputArgument("name"), new InputArgument("bar", InputArgument.OPTIONAL, "", "default"))));
-        Assert.assertEquals(".getArgument() returns the default value for optional arguments", "default", input.getArgument("bar"));
-        Assert.assertEquals(".getArguments() returns all argument values, even optional ones", foobar, input.getArguments());
+        assertEquals("getArgument() returns the default value for optional arguments", "default", input.getArgument("bar"));
+        assertEquals("getArguments() returns all argument values, even optional ones", foobar, input.getArguments());
 
         try {
             input.setArgument("foo", "bar");
-            Assert.fail(".setArgument() throws an Exception if the argument does not exist");
+            fail("setArgument() throws an IllegalArgumentException if the argument does not exist");
         } catch (Exception e) {
-            // Assert.assertInstanceOf("\InvalidArgumentException", e, ".setOption() throws a \InvalidArgumentException if the option does not exist");
-            Assert.assertEquals("The \"foo\" argument does not exist.", e.getMessage());
+            assertTrue("setOption() throws an IllegalArgumentException if the option does not exist", e instanceof IllegalArgumentException);
+            assertEquals("The \"foo\" argument does not exist.", e.getMessage());
         }
 
         try {
             input.getArgument("foo");
-            Assert.fail(".getArgument() throws an Exception if the argument does not exist");
+            fail("getArgument() throws an IllegalArgumentException if the argument does not exist");
         } catch (Exception e) {
-            // Assert.assertInstanceOf("\InvalidArgumentException", e, ".setOption() throws a \InvalidArgumentException if the option does not exist");
-            Assert.assertEquals("The \"foo\" argument does not exist.", e.getMessage());
+            assertTrue("setOption() throws an IllegalArgumentException if the option does not exist", e instanceof IllegalArgumentException);
+            assertEquals("The \"foo\" argument does not exist.", e.getMessage());
         }
     }
 
     @Test
     public void testValidate() {
-        ArrayInput input = new ArrayInput(new HashMap<String, String>());
+        Map<String, String> foobar = new HashMap<String, String>();
+        ArrayInput input = new ArrayInput(foobar);
         input.bind(new InputDefinition(Arrays.asList((Object) new InputArgument("name", InputArgument.REQUIRED))));
 
         try {
             input.validate();
-            Assert.fail(".validate() throws an Exception if not enough arguments are given");
+            fail("validate() throws a RuntimeException if not enough arguments are given");
         } catch (Exception e) {
-            // Assert.assertInstanceOf("\RuntimeException", e, ".validate() throws a \RuntimeException if not enough arguments are given");
-            Assert.assertEquals("Not enough arguments.", e.getMessage());
+            assertTrue("validate() throws a RuntimeException if not enough arguments are given", e instanceof RuntimeException);
+            assertEquals("Not enough arguments.", e.getMessage());
         }
 
-        Map<String, String> foobar = new HashMap<String, String>();
         foobar.put("name", "foo");
         input = new ArrayInput(foobar);
         input.bind(new InputDefinition(Arrays.asList((Object) new InputArgument("name", InputArgument.REQUIRED))));
 
         try {
             input.validate();
-        } catch (Exception e) {
-            Assert.fail(".validate() does not throw an Exception if enough arguments are given");
+        } catch (RuntimeException e) {
+            fail("validate() does not throw a RuntimeException if enough arguments are given");
         }
     }
 
     @Test
-    public void testSetFetInteractive() {
+    public void testSetGetInteractive() {
         ArrayInput input = new ArrayInput(new HashMap<String, String>());
-        Assert.assertTrue(".isInteractive() returns whether the input should be interactive or not", input.isInteractive());
+        assertTrue("isInteractive() returns whether the input should be interactive or not", input.isInteractive());
         input.setInteractive(false);
-        Assert.assertFalse(".setInteractive() changes the interactive flag", input.isInteractive());
+        assertFalse("setInteractive() changes the interactive flag", input.isInteractive());
     }
-
 }

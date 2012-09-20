@@ -12,9 +12,9 @@ import java.util.Map;
 import org.nanocom.console.command.Command;
 import org.nanocom.console.input.ArrayInput;
 import org.nanocom.console.input.InputInterface;
+import org.nanocom.console.output.InMemoryOutput;
 import org.nanocom.console.output.OutputInterface;
 import org.nanocom.console.output.OutputInterface.VerbosityLevel;
-import org.nanocom.console.output.StreamOutput;
 
 /**
  * @author Arnaud Kleinpeter <arnaud.kleinpeter at gmail dot com>
@@ -23,7 +23,7 @@ public class CommandTester {
 
     private Command command;
     private InputInterface input;
-    private StreamOutput output;
+    private InMemoryOutput output;
 
     /**
      * @param command A Command instance to test.
@@ -52,8 +52,8 @@ public class CommandTester {
             this.input.setInteractive((Boolean) options.get("interactive"));
         }
 
-        output = new StreamOutput(System.out);
-        // StreamOutput output = new StreamOutput(fopen("php://memory", "w", false));
+        output = new InMemoryOutput();
+
         if (options.containsKey("decorated")) {
             output.setDecorated((Boolean) options.get("decorated"));
         }
@@ -74,11 +74,9 @@ public class CommandTester {
      *
      * @return The display
      */
-    /*public String getDisplay() {
-        // rewind(output.getStream());
-        // TODO return stream_get_contents(output.getStream());
-        return "";
-    }*/
+    public String getDisplay() {
+        return output.getBuffer().toString();
+    }
 
     /**
      * Gets the input instance used by the last execution of the command.

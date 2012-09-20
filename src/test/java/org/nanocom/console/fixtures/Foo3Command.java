@@ -8,7 +8,6 @@ public class Foo3Command extends Command {
 
     public Foo3Command() {
         super("foo3:bar");
-
         setDescription("The foo3:bar command");
     }
 

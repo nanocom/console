@@ -1,9 +1,9 @@
 package org.nanocom.console.fixtures;
 
+import java.util.Arrays;
 import org.nanocom.console.command.Command;
 import org.nanocom.console.input.InputInterface;
 import org.nanocom.console.output.OutputInterface;
-import java.util.Arrays;
 
 public class TestCommand extends Command {
 
@@ -18,8 +18,7 @@ public class TestCommand extends Command {
     @Override
     protected int execute(InputInterface input, OutputInterface output) {
         output.writeln("execute called");
-
-        return 1;
+        return 0;
     }
 
     @Override

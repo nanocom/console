@@ -185,7 +185,6 @@ public class Application {
 
         if (true == input.hasParameterOption(Arrays.asList("--version", "-V"))) {
             output.writeln(getLongVersion());
-
             return 0;
         }
 
@@ -650,7 +649,8 @@ public class Application {
             List<String> messages = new ArrayList<String>();
             for (Map<String, Command> commandsMap : sortCommands(cmds).values()) {
                 for (Command command : commandsMap.values()) {
-                    messages.add(String.format("%-" + String.valueOf(width) + "s %s", name, command.getDescription()));
+                    String description = null != command.getDescription() ? command.getDescription() : EMPTY;
+                    messages.add(String.format("%-" + String.valueOf(width) + "s %s", name, description));
                 }
             }
 
@@ -671,7 +671,8 @@ public class Application {
             }
 
             for (Entry<String, Command> command : commandsMap.getValue().entrySet()) {
-                messages.add(String.format("  <info>%-" + String.valueOf(width) + "s</info> %s", command.getKey(), command.getValue().getDescription()));
+                String description = null != command.getValue().getDescription() ? command.getValue().getDescription() : EMPTY;
+                messages.add(String.format("  <info>%-" + String.valueOf(width) + "s</info> %s", command.getKey(), description));
             }
         }
 

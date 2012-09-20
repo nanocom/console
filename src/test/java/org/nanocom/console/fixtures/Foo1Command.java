@@ -1,9 +1,9 @@
 package org.nanocom.console.fixtures;
 
+import java.util.Arrays;
 import org.nanocom.console.command.Command;
 import org.nanocom.console.input.InputInterface;
 import org.nanocom.console.output.OutputInterface;
-import java.util.Arrays;
 
 public class Foo1Command extends Command {
 
@@ -22,6 +22,6 @@ public class Foo1Command extends Command {
         this.input = input;
         this.output = output;
 
-        return 1;
+        return 0;
     }
 }

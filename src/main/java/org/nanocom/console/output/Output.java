@@ -30,7 +30,7 @@ public abstract class Output implements OutputInterface {
     private OutputFormatterInterface formatter;
 
     /**
-     * @param verbosity The verbosity level (self::VERBOSITY_QUIET, self::VERBOSITY_NORMAL, self::VERBOSITY_VERBOSE)
+     * @param verbosity The verbosity level
      * @param decorated Whether to decorate messages or not (null for auto-guessing)
      * @param formatter Output formatter instance
      */

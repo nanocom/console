@@ -8,10 +8,10 @@
 package org.nanocom.console.fixtures;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import org.nanocom.console.command.Command;
 import org.nanocom.console.input.InputInterface;
 import org.nanocom.console.output.OutputInterface;
-import java.util.Arrays;
 
 public class FooCommand extends Command {
 
@@ -37,6 +37,6 @@ public class FooCommand extends Command {
 
         output.writeln("called");
 
-        return 1;
+        return 0;
     }
 }
