@@ -5,6 +5,7 @@ import static org.apache.commons.lang3.SystemUtils.LINE_SEPARATOR;
 import org.nanocom.console.input.InputArgument;
 import org.nanocom.console.input.InputDefinition;
 import org.nanocom.console.input.InputInterface;
+import org.nanocom.console.input.InputOption;
 import org.nanocom.console.output.OutputInterface;
 
 /**
@@ -50,7 +51,8 @@ public class ListCommand extends Command {
 
     private InputDefinition createDefinition() {
         return new InputDefinition(Arrays.<Object>asList(
-            new InputArgument("namespace", InputArgument.OPTIONAL, "The namespace name")
+            new InputArgument("namespace", InputArgument.OPTIONAL, "The namespace name"),
+            new InputOption("raw", null, InputOption.VALUE_NONE, "To output raw command list")
         ));
     }
 }

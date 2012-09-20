@@ -28,12 +28,9 @@ public class HelpCommandTest {
         commandTester.execute(new HashMap<String, String>());
         assertTrue("execute() returns a text help for the given command", commandTester.getDisplay().contains("list [--raw] [namespace]"));
 
-        command.setCommand(new ListCommand());
-        Map<String, String> input = new HashMap<String, String>();
-
         Application application = new Application();
         commandTester = new CommandTester(application.get("help"));
-        input.clear();
+        Map<String, String> input = new HashMap<String, String>();
         input.put("command_name", "list");
         commandTester.execute(input);
         assertTrue("execute() returns a text help for the given command", commandTester.getDisplay().contains("list [--raw] [namespace]"));
