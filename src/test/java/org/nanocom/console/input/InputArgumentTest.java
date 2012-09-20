@@ -10,6 +10,7 @@ package org.nanocom.console.input;
 import java.util.Arrays;
 import static org.junit.Assert.*;
 import org.junit.Test;
+import org.nanocom.console.exception.LogicException;
 
 public class InputArgumentTest {
 
@@ -42,52 +43,52 @@ public class InputArgumentTest {
     @Test
     public void testIsArray() {
         InputArgument argument = new InputArgument("foo", InputArgument.IS_ARRAY);
-        assertTrue(".isArray() returns true if the argument can be an array", argument.isArray());
+        assertTrue("isArray() returns true if the argument can be an array", argument.isArray());
         argument = new InputArgument("foo", InputArgument.OPTIONAL | InputArgument.IS_ARRAY);
-        assertTrue(".isArray() returns true if the argument can be an array", argument.isArray());
+        assertTrue("isArray() returns true if the argument can be an array", argument.isArray());
         argument = new InputArgument("foo", InputArgument.OPTIONAL);
-        assertFalse(".isArray() returns false if the argument can not be an array", argument.isArray());
+        assertFalse("isArray() returns false if the argument can not be an array", argument.isArray());
     }
 
     @Test
     public void testGetDescription() {
         InputArgument argument = new InputArgument("foo", InputArgument.OPTIONAL, "Some description");
-        assertEquals(".getDescription() return the message description", "Some description", argument.getDescription());
+        assertEquals("getDescription() return the message description", "Some description", argument.getDescription());
     }
 
     @Test
     public void testGetDefault() {
         InputArgument argument = new InputArgument("foo", InputArgument.OPTIONAL, "", "default");
-        assertEquals(".getDefault() return the default value", "default", argument.getDefaultValue());
+        assertEquals("getDefault() return the default value", "default", argument.getDefaultValue());
     }
 
     @Test
-    public void testSetDefault() {
+    public void testsetDefaultValue() {
         InputArgument argument = new InputArgument("foo", InputArgument.OPTIONAL, "", "default");
         argument.setDefaultValue(null);
-        assertNull(".setDefault() can reset the default value by passing null", argument.getDefaultValue());
+        assertNull("setDefaultValue() can reset the default value by passing null", argument.getDefaultValue());
         argument.setDefaultValue("another");
-        assertEquals(".setDefaultValue() changes the default value", "another", argument.getDefaultValue());
+        assertEquals("setDefaultValue() changes the default value", "another", argument.getDefaultValue());
 
         argument = new InputArgument("foo", InputArgument.OPTIONAL | InputArgument.IS_ARRAY);
         argument.setDefaultValue(Arrays.asList(1, 2));
-        assertEquals(".setDefaultValue() changes the default value", Arrays.asList(1, 2), argument.getDefaultValue());
+        assertEquals("setDefaultValue() changes the default value", Arrays.asList(1, 2), argument.getDefaultValue());
 
         try {
             argument = new InputArgument("foo", InputArgument.REQUIRED);
             argument.setDefaultValue("default");
-            fail(".setDefault() throws an Exception if you give a default value for a required argument");
+            fail("setDefaultValue() throws a LogicException if you give a default value for a required argument");
         } catch (Exception e) {
-            // assertInstanceOf("\Exception", e, ".parse() throws an \InvalidArgumentException exception if an invalid option is passed");
+            assertTrue("parse() throws a LogicException if an invalid option is passed", e instanceof LogicException);
             assertEquals("Cannot set a default value except for Parameter.OPTIONAL mode.", e.getMessage());
         }
 
         try {
             argument = new InputArgument("foo", InputArgument.IS_ARRAY);
             argument.setDefaultValue((Object) "default");
-            fail(".setDefaultValue() throws an Exception if you give a default value which is not an array for a IS_ARRAY option");
+            fail("setDefaultValue() throws a LogicException if you give a default value which is not an array for a IS_ARRAY option");
         } catch (Exception e) {
-            // assertInstanceOf("\Exception", e, ".setDefault() throws an Exception if you give a default value which is not an array for a IS_ARRAY option");
+            assertTrue("setDefaultValue() throws a LogicException if you give a default value which is not an array for a IS_ARRAY option", e instanceof LogicException);
             assertEquals("A default value for an array argument must be an array.", e.getMessage());
         }
     }
