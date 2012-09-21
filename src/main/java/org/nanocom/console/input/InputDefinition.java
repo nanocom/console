@@ -414,6 +414,7 @@ public class InputDefinition {
 
             max = Math.max(max, nameLength);
         }
+
         for (InputArgument argument : arguments.values()) {
             max = Math.max(max, argument.getName().length());
         }
@@ -424,19 +425,24 @@ public class InputDefinition {
         if (!getArguments().isEmpty()) {
             text.add("<comment>Arguments:</comment>");
             String defaultValue;
+
             for (InputArgument argument : getArguments().values()) {
-                if (null != argument.getDefaultValue()
-                        && (
-                                !(argument.getDefaultValue() instanceof List)
-                                || ((List<Object>) argument.getDefaultValue()).isEmpty()
-                        )
+                Object argumentDefaultValue = argument.getDefaultValue();
+                if (null != argumentDefaultValue
+                        && ((
+                                !(argumentDefaultValue instanceof Iterable)
+                                || ((List<Object>) argumentDefaultValue).isEmpty()
+                        ) || (
+                                !(argumentDefaultValue instanceof Map)
+                                || ((Map<String, Object>) argumentDefaultValue).isEmpty()
+                        ))
                 ) {
                     defaultValue = String.format("<comment> (default: %s)</comment>", formatDefaultValue(argument.getDefaultValue()));
                 } else {
                     defaultValue = EMPTY;
                 }
 
-                String description = argument.getDescription().replace("\n", "\n" + repeat(' ', max + 2));
+                String description = argument.getDescription().replaceAll("\n", "\n" + repeat(' ', max + 2));
 
                 text.add(String.format(" <info>%-" + max + "s</info> %s%s", argument.getName(), description, defaultValue));
             }
@@ -449,13 +455,18 @@ public class InputDefinition {
 
             for (InputOption option : getOptions().values()) {
                 String defaultValue;
+                Object optionDefaultValue = option.getDefaultValue();
+
                 if (
                         option.acceptValue()
-                        && null != option.getDefaultValue()
-                        && (
-                                !(option.getDefaultValue() instanceof List)
-                                || ((List<Object>) option.getDefaultValue()).isEmpty()
-                        )
+                        && null != optionDefaultValue
+                        && ((
+                                !(optionDefaultValue instanceof Iterable)
+                                || ((List<Object>) optionDefaultValue).isEmpty()
+                        ) || (
+                                !(optionDefaultValue instanceof Map)
+                                || ((Map<String, Object>) optionDefaultValue).isEmpty()
+                        ))
                 ) {
                     defaultValue = String.format("<comment> (default: %s)</comment>", formatDefaultValue(option.getDefaultValue()));
                 } else {
@@ -485,18 +496,20 @@ public class InputDefinition {
 	private String formatDefaultValue(Object defaultValue) {
         // PHP's json_encode equivalent
         if (defaultValue instanceof Iterable<?>) {
-            return String.format("{\"%s\"}", join((Iterable) defaultValue, "\", \""));
+            return String.format("[\"%s\"]", join((Iterable) defaultValue, "\",\""));
         } else if (defaultValue instanceof Map) {
             Map<?, ?> map = (Map<?, ?>) defaultValue;
             StringBuilder sb = new StringBuilder();
 
             sb.append("{");
             for (Entry<?, ?> entry : map.entrySet()) {
-                sb.append(String.format("\"%s\": \"%s\"", entry.getKey().toString(), entry.getValue().toString()));
+                sb.append(String.format("\"%s\":\"%s\"", entry.getKey().toString(), entry.getValue().toString()));
             }
             sb.append("}");
 
             return sb.toString();
+        } else if (defaultValue instanceof Boolean) {
+            return ((Boolean) defaultValue).toString();
         }
 
         return String.format("\"%s\"", defaultValue.toString().replace("\n", EMPTY));

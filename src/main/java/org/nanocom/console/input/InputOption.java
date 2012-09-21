@@ -9,6 +9,7 @@ package org.nanocom.console.input;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import org.nanocom.console.exception.LogicException;
 
 /**
@@ -161,7 +162,7 @@ public class InputOption {
         if (isArray()) {
             if (null == defaultValue) {
                 defaultValue = new ArrayList<Object>();
-            } else if (!(defaultValue instanceof List)) {
+            } else if (!(defaultValue instanceof List || defaultValue instanceof Map)) {
                 throw new LogicException("A default value for an array option must be an array.");
             }
         }
