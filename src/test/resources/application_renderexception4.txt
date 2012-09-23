@@ -1,7 +1,7 @@
 
 
                                
-  [InvalidArgumentException]   
+  [IllegalArgumentException]   
   Command "foo" is not define  
   d.                           
                                

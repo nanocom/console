@@ -1,17 +1,17 @@
 
 
-                    
-  [Exception]       
-  Second exception  
-                    
+                      
+  [RuntimeException]  
+  Second exception    
+                      
 
 
 
 
-                   
-  [Exception]      
-  First exception  
-                   
+                      
+  [RuntimeException]  
+  First exception     
+                      
 
 
 foo3:bar

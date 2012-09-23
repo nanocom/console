@@ -1,11 +1,11 @@
 
 
                                       
-  [InvalidArgumentException]          
+  [IllegalArgumentException]          
   The "--foo" option does not exist.  
                                       
 
 
-list [--xml] [--raw] [namespace]
+list [--raw] [namespace]
 
 

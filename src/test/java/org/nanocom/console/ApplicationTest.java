@@ -33,6 +33,7 @@ import org.nanocom.console.input.InputInterface;
 import org.nanocom.console.input.InputOption;
 import org.nanocom.console.output.ConsoleOutput;
 import org.nanocom.console.output.NullOutput;
+import org.nanocom.console.output.Output;
 import org.nanocom.console.output.OutputInterface;
 import org.nanocom.console.tester.ApplicationTester;
 
@@ -374,27 +375,35 @@ public class ApplicationTest {
         }
     }
 
-    /*public void testSetCatchExceptions() {
-        Application application = this.getMock("Symfony\Component\Console\Application", array("getTerminalWidth"));
-        application.setAutoExit(false);
-        application.expects(this.any())
-            .method("getTerminalWidth")
-            .will(this.returnValue(120));
-        tester = new ApplicationTester(application);
+    @Test
+    public void testSetCatchExceptions() {
+        Application application = new Application() {
 
+            @Override
+            protected Integer getTerminalWidth() {
+                return 120;
+            }
+        };
+        application.setAutoExit(false);
+
+        ApplicationTester tester = new ApplicationTester(application);
         application.setCatchExceptions(true);
-        tester.run(array("command" => "foo"), array("decorated" => false));
-        assertStringEqualsFile(self.fixturesPath."/application_renderexception1.txt", this.normalizeLineBreaks(tester.getDisplay()), ".setCatchExceptions() sets the catch exception flag");
+        Map<String, String> input = new HashMap<String, String>();
+        input.put("command", "foo");
+        Map<String, Object> options = new HashMap<String, Object>();
+        options.put("decorated", false);
+        tester.run(input, options);
+        assertEquals("setCatchExceptions() sets the catch exception flag", getResource("application_renderexception1.txt"), normalizeLineBreaks(tester.getDisplay()));
 
         application.setCatchExceptions(false);
         try {
-            tester.run(array("command" => "foo"), array("decorated" => false));
-            fail(".setCatchExceptions() sets the catch exception flag");
+            tester.run(input, options);
+            fail("setCatchExceptions() sets the catch exception flag");
         } catch (Exception e) {
-            assertInstanceOf("\Exception", e, ".setCatchExceptions() sets the catch exception flag");
-            assertEquals("Command \"foo\" is not defined.", e.getMessage(), ".setCatchExceptions() sets the catch exception flag");
+            assertTrue("setCatchExceptions() sets the catch exception flag", e instanceof IllegalArgumentException);
+            assertEquals("setCatchExceptions() sets the catch exception flag", "Command \"foo\" is not defined.", e.getMessage());
         }
-    }*/
+    }
 
     @Test
     public void testAsText() {
@@ -405,45 +414,58 @@ public class ApplicationTest {
         assertEquals("asText() returns a text representation of the application", getResource("application_astext2.txt"), normalizeLineBreaks(application.asText("foo")));
     }
 
-    /*public void testRenderException() {
-        Application application = this.getMock("Symfony\Component\Console\Application", array("getTerminalWidth"));
+    @Test
+    public void testRenderException() {
+        Application application = new Application() {
+
+            @Override
+            protected Integer getTerminalWidth() {
+                return 120;
+            }
+        };
         application.setAutoExit(false);
-        application.expects(this.any())
-            .method("getTerminalWidth")
-            .will(this.returnValue(120));
+
+        ApplicationTester tester = new ApplicationTester(application);
+        Map<String, String> input = new HashMap<String, String>();
+        input.put("command", "foo");
+        Map<String, Object> options = new HashMap<String, Object>();
+        options.put("decorated", false);
+        tester.run(input, options);
+        assertEquals("renderException() renders a pretty exception", getResource("application_renderexception1.txt"), normalizeLineBreaks(tester.getDisplay()));
+
+        options.put("verbosity", Output.VerbosityLevel.VERBOSE);
+        tester.run(input, options);
+        assertTrue("renderException() renders a pretty exception with a stack trace when verbosity is verbose", tester.getDisplay().contains("Exception trace"));
+
+        input.put("command", "list");
+        input.put("--foo", null);
+        options.remove("verbosity");
+        tester.run(input, options);
+        assertEquals("renderException() renders the command synopsis when an exception occurs in the context of a command", getResource("application_renderexception2.txt"), normalizeLineBreaks(tester.getDisplay()));
+
+        application.add(new Foo3Command());
         tester = new ApplicationTester(application);
+        input.clear();
+        input.put("command", "foo3:bar");
+        tester.run(input, options);
+        assertEquals("renderException() renders a pretty exceptions with previous exceptions", getResource("application_renderexception3.txt"), normalizeLineBreaks(tester.getDisplay()));
 
-        tester.run(array("command" => "foo"), array("decorated" => false));
-        assertStringEqualsFile(self.fixturesPath."/application_renderexception1.txt", this.normalizeLineBreaks(tester.getDisplay()), ".renderException() renders a pretty exception");
+        /*application = new Application() {
 
-        tester.run(array("command" => "foo"), array("decorated" => false, "verbosity" => Output.VERBOSITY_VERBOSE));
-        assertContains("Exception trace", tester.getDisplay(), ".renderException() renders a pretty exception with a stack trace when verbosity is verbose");
-
-        tester.run(array("command" => "list", "--foo" => true), array("decorated" => false));
-        assertStringEqualsFile(self.fixturesPath."/application_renderexception2.txt", this.normalizeLineBreaks(tester.getDisplay()), ".renderException() renders the command synopsis when an exception occurs in the context of a command");
-
-        application.add(new \Foo3Command);
-        tester = new ApplicationTester(application);
-        tester.run(array("command" => "foo3:bar"), array("decorated" => false));
-        assertStringEqualsFile(self.fixturesPath."/application_renderexception3.txt", this.normalizeLineBreaks(tester.getDisplay()), ".renderException() renders a pretty exceptions with previous exceptions");
-
-        application = this.getMock("Symfony\Component\Console\Application", array("getTerminalWidth"));
+            @Override
+            protected Integer getTerminalWidth() {
+                return 32;
+            }
+        };
         application.setAutoExit(false);
-        application.expects(this.any())
-            .method("getTerminalWidth")
-            .will(this.returnValue(32));
+
         tester = new ApplicationTester(application);
 
-        application = this.getMock("Symfony\Component\Console\Application", array("getTerminalWidth"));
-        application.setAutoExit(false);
-        application.expects(this.any())
-            .method("getTerminalWidth")
-            .will(this.returnValue(32));
-        tester = new ApplicationTester(application);
-
-        tester.run(array("command" => "foo"), array("decorated" => false));
-        assertStringEqualsFile(self.fixturesPath."/application_renderexception4.txt", this.normalizeLineBreaks(tester.getDisplay()), ".renderException() wraps messages when they are bigger than the terminal");
-    }*/
+        input.clear();
+        input.put("command", "foo");
+        tester.run(input, options);
+        assertEquals("renderException() wraps messages when they are bigger than the terminal", getResource("application_renderexception4.txt"), normalizeLineBreaks(tester.getDisplay()));*/
+    }
 
     @Test
     public void testRun() {

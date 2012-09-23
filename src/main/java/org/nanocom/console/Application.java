@@ -694,9 +694,70 @@ public class Application {
      * @param e      An exception instance
      * @param output An OutputInterface instance
      */
-    public void renderException(Exception e, OutputInterface output) throws RuntimeException {
-        // TODO
-        output.writeln(String.format("An exception occured: %s", e.getMessage()));
+    public void renderException(Exception e, OutputInterface output) {
+        Throwable t = e;
+        do {
+            String title = String.format("  [%s]  ", t.getClass().getSimpleName());
+            int len = title.length();
+            int width = null != getTerminalWidth() ? getTerminalWidth() - 1 : Integer.MAX_VALUE;
+            List<String> lines = new ArrayList<String>();
+            String message = t.getMessage().replaceAll("\r\n", "\n");
+            String[] splittedMessage = message.split("\n");
+
+            for (String line : splittedMessage) {
+                //foreach (str_split(line, width - 4) as line) {
+                    lines.add(String.format("  %s  ", line));
+                    len = Math.max(line.length() + 4, len);
+                //}
+            }
+
+            List<String> messages = new ArrayList<String>();
+            messages.add(repeat(" ", len));
+            messages.add(title + repeat(" ", Math.max(0, len - title.length())));
+
+            for (String line : lines) {
+                messages.add(line + repeat(" ", len - line.length()));
+            }
+
+            messages.add(repeat(" ", len));
+
+            output.writeln("");
+            output.writeln("");
+            for (String mess : messages) {
+                output.writeln(String.format("<error>%s</error>", mess));
+            }
+            output.writeln("");
+            output.writeln("");
+
+            if (OutputInterface.VerbosityLevel.VERBOSE.equals(output.getVerbosity())) {
+                output.writeln("<comment>Exception trace:</comment>");
+
+                // exception related properties
+                StackTraceElement[] trace = t.getStackTrace();
+                StackTraceElement[] fullTrace = ArrayUtils.addAll(new StackTraceElement[] {
+                    new StackTraceElement(EMPTY, trace[0].getMethodName(), trace[0].getFileName(), trace[0].getLineNumber())
+                }, trace);
+
+                int count = fullTrace.length;
+                int i;
+                for (i = 0; i < count; i++) {
+                    String clazz = null != fullTrace[i].getClassName() ? fullTrace[i].getClassName() : EMPTY;
+                    String function = fullTrace[i].getMethodName();
+                    String file = null != fullTrace[i].getFileName() ? fullTrace[i].getFileName() : "n/a";
+                    String line = String.valueOf(fullTrace[i].getLineNumber());
+
+                    output.writeln(String.format(" %s%s() at <info>%s:%s</info>", clazz, function, file, line));
+                }
+
+                output.writeln("");
+                output.writeln("");
+            }
+        } while (null != (t = t.getCause()));
+
+        if (null != runningCommand) {
+            output.writeln(String.format("<info>%s</info>", String.format(runningCommand.getSynopsis(), getName())));
+            output.writeln(EMPTY);
+        }
     }
 
     /**
@@ -753,7 +814,7 @@ public class Application {
      * @return An InputDefinition instance
      */
     protected InputDefinition getDefaultInputDefinition() {
-        return new InputDefinition(Arrays.asList((Object)
+        return new InputDefinition(Arrays.<Object>asList(
             new InputArgument("command", InputArgument.REQUIRED, "The command to execute"),
             new InputOption("--help",           "-h", InputOption.VALUE_NONE, "Display this help message."),
             new InputOption("--quiet",          "-q", InputOption.VALUE_NONE, "Do not output any message."),
@@ -771,7 +832,7 @@ public class Application {
      * @return An array of default Command instances
      */
     protected List<Command> getDefaultCommands() {
-        return Arrays.asList(new HelpCommand(), new ListCommand());
+        return Arrays.<Command>asList(new HelpCommand(), new ListCommand());
     }
 
     /**

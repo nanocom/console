@@ -12,7 +12,6 @@ import org.nanocom.console.Application;
 import org.nanocom.console.input.ArrayInput;
 import org.nanocom.console.input.InputInterface;
 import org.nanocom.console.output.InMemoryOutput;
-import org.nanocom.console.output.OutputInterface;
 import org.nanocom.console.output.OutputInterface.VerbosityLevel;
 
 /**
