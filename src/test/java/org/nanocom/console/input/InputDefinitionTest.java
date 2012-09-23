@@ -382,11 +382,11 @@ public class InputDefinitionTest {
         InputDefinition definition = new InputDefinition(Arrays.asList((Object)
             new InputArgument("foo", InputArgument.OPTIONAL, "The foo argument"),
             new InputArgument("baz", InputArgument.OPTIONAL, "The baz argument", true),
-            new InputArgument("bar", InputArgument.OPTIONAL | InputArgument.IS_ARRAY, "The bar argument", Arrays.asList("bar")),
+            new InputArgument("bar", InputArgument.OPTIONAL | InputArgument.IS_ARRAY, "The bar argument", Arrays.asList("http://foo.com/")),
             new InputOption("foo", "f", InputOption.VALUE_REQUIRED, "The foo option"),
             new InputOption("baz", null, InputOption.VALUE_OPTIONAL, "The baz option", false),
             new InputOption("bar", "b", InputOption.VALUE_OPTIONAL, "The bar option", "bar"),
-            new InputOption("qux", "", InputOption.VALUE_OPTIONAL | InputOption.VALUE_IS_ARRAY, "The qux option", Arrays.asList("foo", "bar")),
+            new InputOption("qux", "", InputOption.VALUE_OPTIONAL | InputOption.VALUE_IS_ARRAY, "The qux option", Arrays.asList("http://foo.com/", "bar")),
             new InputOption("qux2", "", InputOption.VALUE_OPTIONAL | InputOption.VALUE_IS_ARRAY, "The qux2 option", foobar)
         ));
         assertEquals("asText() returns a textual representation of the InputDefinition", getResource("definition_astext.txt"), definition.asText());

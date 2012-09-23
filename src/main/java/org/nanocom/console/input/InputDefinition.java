@@ -446,11 +446,13 @@ public class InputDefinition {
 
                 text.add(String.format(" <info>%-" + max + "s</info> %s%s", argument.getName(), description, defaultValue));
             }
-
-            text.add(EMPTY);
         }
 
         if (!getOptions().isEmpty()) {
+            if (!text.isEmpty()) {
+                text.add(EMPTY);
+            }
+
             text.add("<comment>Options:</comment>");
 
             for (InputOption option : getOptions().values()) {
@@ -485,8 +487,6 @@ public class InputDefinition {
                     multiple
                 ));
             }
-
-            text.add(EMPTY);
         }
 
         return join(text, "\n");
