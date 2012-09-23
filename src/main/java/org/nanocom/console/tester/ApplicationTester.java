@@ -7,27 +7,28 @@
 
 package org.nanocom.console.tester;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.PrintStream;
 import java.util.Map;
 import org.nanocom.console.Application;
 import org.nanocom.console.input.ArrayInput;
 import org.nanocom.console.input.InputInterface;
+import org.nanocom.console.output.InMemoryOutput;
 import org.nanocom.console.output.OutputInterface;
 import org.nanocom.console.output.OutputInterface.VerbosityLevel;
-import org.nanocom.console.output.StreamOutput;
 
 /**
+ * Eases the testing of console applications.
+ *
  * @author Arnaud Kleinpeter <arnaud.kleinpeter at gmail dot com>
  */
 public class ApplicationTester {
 
     private Application application;
     private InputInterface input;
-    private OutputInterface output;
+    private InMemoryOutput output;
 
     /**
+     * Constructor.
+     *
      * @param application An Application instance to test.
      */
     public ApplicationTester(Application application) {
@@ -54,23 +55,15 @@ public class ApplicationTester {
             this.input.setInteractive((Boolean) options.get("interactive"));
         }
 
-        // TODO Make a memory stream
-        // this.output = new StreamOutput(fopen("php://memory", "w", false));
-        output = new StreamOutput(new PrintStream(new OutputStream() {
-
-            @Override
-            public void write(int i) throws IOException {
-
-            }
-        }));
+        output = new InMemoryOutput();
         if (options.containsKey("decorated")) {
             output.setDecorated((Boolean) options.get("decorated"));
         }
         if (options.containsKey("verbosity")) {
-            output.setVerbosity(VerbosityLevel.createFromInt((Integer) options.get("verbosity")));
+            output.setVerbosity((VerbosityLevel) options.get("verbosity"));
         }
 
-        return application.run(this.input, this.output);
+        return application.run(this.input, output);
     }
 
     /**
@@ -79,10 +72,7 @@ public class ApplicationTester {
      * @return The display
      */
     public String getDisplay() {
-        // TODO rewind(this.output.getStream());
-
-        // TODO return stream_get_contents(this.output.getStream());
-        return "";
+        return output.getBuffer().toString();
     }
 
     /**
@@ -99,7 +89,7 @@ public class ApplicationTester {
      *
      * @return The current output instance
      */
-    public OutputInterface getOutput() {
+    public InMemoryOutput getOutput() {
         return output;
     }
 }

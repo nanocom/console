@@ -61,7 +61,7 @@ public class CommandTester {
         }
 
         if (options.containsKey("verbosity")) {
-            output.setVerbosity(VerbosityLevel.createFromInt((Integer) options.get("verbosity")));
+            output.setVerbosity((VerbosityLevel) options.get("verbosity"));
         }
 
         return command.run(this.input, (OutputInterface) output);
@@ -94,7 +94,7 @@ public class CommandTester {
      *
      * @return The current output instance
      */
-    public OutputInterface getOutput() {
+    public InMemoryOutput getOutput() {
         return output;
     }
 }

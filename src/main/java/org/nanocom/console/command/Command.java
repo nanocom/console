@@ -312,20 +312,21 @@ public class Command extends Executable {
      * @param description  A description text
      * @param defaultValue The default value (for InputArgument::OPTIONAL mode only)
      */
-    public void addArgument(String name, int mode, String description, Object defaultValue) {
+    public Command addArgument(String name, int mode, String description, Object defaultValue) {
         definition.addArgument(new InputArgument(name, mode, description, defaultValue));
+        return this;
     }
 
-    public void addArgument(String name, int mode, String description) {
-        addArgument(name, mode, description, null);
+    public Command addArgument(String name, int mode, String description) {
+        return addArgument(name, mode, description, null);
     }
 
-    public void addArgument(String name, int mode) {
-        addArgument(name, mode, EMPTY, null);
+    public Command addArgument(String name, int mode) {
+        return addArgument(name, mode, EMPTY, null);
     }
 
-    public void addArgument(String name) {
-        addArgument(name, InputArgument.OPTIONAL, EMPTY, null);
+    public Command addArgument(String name) {
+        return addArgument(name, InputArgument.OPTIONAL, EMPTY, null);
     }
 
     /**
