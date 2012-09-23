@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import static org.junit.Assert.*;
 import org.junit.Test;
+import org.nanocom.console.exception.LogicException;
 
 public class InputOptionTest {
 
@@ -61,9 +62,9 @@ public class InputOptionTest {
 
         try {
             option = new InputOption("foo", "f", -1);
-            fail("Constructor throws an Exception if the mode is not valid");
+            fail("Constructor throws an IllegalArgumentException if the mode is not valid");
         } catch (Exception e) {
-            // assertInstanceOf("Constructor throws an Exception if the mode is not valid", "Exception", e);
+            assertTrue("Constructor throws an IllegalArgumentException if the mode is not valid", e instanceof IllegalArgumentException);
             assertEquals("Option mode \"-1\" is not valid.", e.getMessage());
         }
     }
@@ -71,62 +72,62 @@ public class InputOptionTest {
     @Test
     public void testIsArray() {
         InputOption option = new InputOption("foo", null, InputOption.VALUE_OPTIONAL | InputOption.VALUE_IS_ARRAY);
-        assertTrue(".isArray() returns true if the option can be an array", option.isArray());
+        assertTrue("isArray() returns true if the option can be an array", option.isArray());
         option = new InputOption("foo", null, InputOption.VALUE_NONE);
-        assertFalse(".isArray() returns false if the option can not be an array", option.isArray());
+        assertFalse("isArray() returns false if the option can not be an array", option.isArray());
     }
 
     @Test
     public void testGetDescription() {
         InputOption option = new InputOption("foo", "f", InputOption.VALUE_NONE, "Some description");
-        assertEquals(".getDescription() returns the description message", "Some description", option.getDescription());
+        assertEquals("getDescription() returns the description message", "Some description", option.getDescription());
     }
 
     @Test
     public void testgetDefaultValue() {
         InputOption option = new InputOption("foo", null, InputOption.VALUE_OPTIONAL, "", "default");
-        assertEquals(".getDefaultValue() returns the default value", "default", option.getDefaultValue());
+        assertEquals("getDefaultValue() returns the default value", "default", option.getDefaultValue());
 
         option = new InputOption("foo", null, InputOption.VALUE_REQUIRED, "", "default");
-        assertEquals(".getDefaultValue() returns the default value", "default", option.getDefaultValue());
+        assertEquals("getDefaultValue() returns the default value", "default", option.getDefaultValue());
 
         option = new InputOption("foo", null, InputOption.VALUE_REQUIRED);
-        assertNull(".getDefaultValue() returns null if no default value is configured", option.getDefaultValue());
+        assertNull("getDefaultValue() returns null if no default value is configured", option.getDefaultValue());
 
         option = new InputOption("foo", null, InputOption.VALUE_OPTIONAL | InputOption.VALUE_IS_ARRAY);
-        assertEquals(".getDefaultValue() returns an empty array if option is an array", new ArrayList<Object>(), option.getDefaultValue());
+        assertEquals("getDefaultValue() returns an empty array if option is an array", new ArrayList<Object>(), option.getDefaultValue());
 
         option = new InputOption("foo", null, InputOption.VALUE_NONE);
-        assertFalse(".getDefaultValue() returns false if the option does not take a value", (Boolean) option.getDefaultValue());
+        assertFalse("getDefaultValue() returns false if the option does not take a value", (Boolean) option.getDefaultValue());
     }
 
     @Test
     public void testsetDefaultValue() {
         InputOption option = new InputOption("foo", null, InputOption.VALUE_REQUIRED, "", "default");
         option.setDefaultValue(null);
-        assertNull(".setDefaultValue() can reset the default value by passing null", option.getDefaultValue());
+        assertNull("setDefaultValue() can reset the default value by passing null", option.getDefaultValue());
         option.setDefaultValue("another");
-        assertEquals(".setDefaultValue() changes the default value", "another", option.getDefaultValue());
+        assertEquals("setDefaultValue() changes the default value", "another", option.getDefaultValue());
 
         option = new InputOption("foo", null, InputOption.VALUE_REQUIRED | InputOption.VALUE_IS_ARRAY);
         option.setDefaultValue(Arrays.asList(1, 2));
-        assertEquals(".setDefaultValue() changes the default value", Arrays.asList(1, 2), option.getDefaultValue());
+        assertEquals("setDefaultValue() changes the default value", Arrays.asList(1, 2), option.getDefaultValue());
 
         option = new InputOption("foo", "f", InputOption.VALUE_NONE);
         try {
             option.setDefaultValue("default");
-            fail(".setDefaultValue() throws an Exception if you give a default value for a VALUE_NONE option");
+            fail("setDefaultValue() throws a LogicException if you give a default value for a VALUE_NONE option");
         } catch (Exception e) {
-            // assertInstanceOf("\Exception", e, ".setDefaultValue() throws an Exception if you give a default value for a VALUE_NONE option");
+            assertTrue("setDefaultValue() throws a LogicException if you give a default value for a VALUE_NONE option", e instanceof LogicException);
             assertEquals("Cannot set a default value when using Option.VALUE_NONE mode.", e.getMessage());
         }
 
         option = new InputOption("foo", "f", InputOption.VALUE_OPTIONAL | InputOption.VALUE_IS_ARRAY);
         try {
             option.setDefaultValue("default");
-            fail(".setDefaultValue() throws an Exception if you give a default value which is not an array for a VALUE_IS_ARRAY option");
+            fail("setDefaultValue() throws a LogicException if you give a default value which is not an array for a VALUE_IS_ARRAY option");
         } catch (Exception e) {
-            // assertInstanceOf("\Exception", e, ".setDefaultValue() throws an Exception if you give a default value which is not an array for a VALUE_IS_ARRAY option");
+            assertTrue("setDefaultValue() throws a LogicException if you give a default value which is not an array for a VALUE_IS_ARRAY option", e instanceof LogicException);
             assertEquals("A default value for an array option must be an array.", e.getMessage());
         }
     }

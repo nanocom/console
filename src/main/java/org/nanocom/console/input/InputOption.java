@@ -189,9 +189,10 @@ public class InputOption {
     }
 
     /**
-     * Checks whether the given option equals this one
+     * Checks whether the given option equals this one.
      *
      * @param option Option to compare
+     *
      * @return
      */
     public boolean equals(InputOption option) {
