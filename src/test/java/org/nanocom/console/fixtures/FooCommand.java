@@ -22,7 +22,7 @@ public class FooCommand extends Command {
     protected void configure() {
         setName("foo:bar");
         setDescription("The foo:bar command");
-        setAliases(new ArrayList<String>(Arrays.asList("afoobar")));
+        setAliases(Arrays.asList("afoobar"));
     }
 
     @Override

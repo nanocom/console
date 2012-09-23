@@ -544,7 +544,7 @@ public class Application {
             }
         }
 
-        Map<String, List<String>> aliasesMap = getAbbreviations(new ArrayList<String>(aliases));
+        Map<String, List<String>> aliasesMap = getAbbreviations(aliases);
         if (!aliasesMap.containsKey(searchName)) {
         	StringBuilder message = new StringBuilder();
             message.append(String.format("Command \"%s\" is not defined.", name));
@@ -605,7 +605,7 @@ public class Application {
      *
      * @return A map of abbreviations
      */
-    static public Map<String, List<String>> getAbbreviations(Collection<String> names) {
+    public static Map<String, List<String>> getAbbreviations(Collection<String> names) {
         Map<String, List<String>> abbrevs = new LinkedHashMap<String, List<String>>();
         for (String name : names) {
             for (int len = name.length() - 1; len > 0; --len) {
@@ -655,7 +655,10 @@ public class Application {
             return join(messages, LINE_SEPARATOR);
         }
 
-        List<String> messages = new ArrayList<String>(Arrays.asList(getHelp(), EMPTY));
+        List<String> messages = new ArrayList<String>();
+        messages.add(getHelp());
+        messages.add(EMPTY);
+
         if (null != namespace) {
             messages.add(String.format("<comment>Available commands for the \"%s\" namespace:</comment>", namespace));
         } else {
@@ -868,7 +871,7 @@ public class Application {
      * @return A sorted array of similar commands
      */
     private Set<String> findAlternativeCommands(String name, Map<String, List<String>> abbrevs) {
-        return findAlternatives(name, new ArrayList<String>(commands.keySet()), abbrevs);
+        return findAlternatives(name, commands.keySet(), abbrevs);
     }
 
     /**

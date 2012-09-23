@@ -34,6 +34,7 @@ import org.nanocom.console.input.InputOption;
 import org.nanocom.console.output.ConsoleOutput;
 import org.nanocom.console.output.NullOutput;
 import org.nanocom.console.output.OutputInterface;
+import org.nanocom.console.tester.ApplicationTester;
 
 public class ApplicationTest {
 
@@ -41,7 +42,7 @@ public class ApplicationTest {
     }
 
     protected String normalizeLineBreaks(String text) {
-        return text.replace(LINE_SEPARATOR, "\n");
+        return text.replaceAll(LINE_SEPARATOR, "\n");
     }
 
     /**
@@ -52,7 +53,7 @@ public class ApplicationTest {
     protected void ensureStaticCommandHelp(Application application) {
         for (Command command : application.all().values()) {
             if (null != command.getHelp()) {
-                command.setHelp(command.getHelp().replace("%command.full_name%", "app/console %command.name%"));
+                command.setHelp(command.getHelp().replaceAll("%command.full_name%", "console.jar %command.name%"));
             }
         }
     }
@@ -255,51 +256,51 @@ public class ApplicationTest {
         }
     }
 
-    /*public function testFindAlternativeExceptionMessage()
-    {
-        $application = new Application();
-        $application->add(new \FooCommand());
+    @Test
+    public void testFindAlternativeExceptionMessage() {
+        Application application = new Application();
+        application.add(new FooCommand());
 
         // Command + singular
         try {
-            $application->find('foo:baR');
-            $this->fail('->find() throws an \InvalidArgumentException if command does not exist, with one alternative');
-        } catch (\Exception $e) {
-            $this->assertInstanceOf('\InvalidArgumentException', $e, '->find() throws an \InvalidArgumentException if command does not exist, with one alternative');
-            $this->assertRegExp('/Did you mean this/', $e->getMessage(), '->find() throws an \InvalidArgumentException if command does not exist, with one alternative');
+            application.find("foo:baR");
+            fail("find() throws an IllegalArgumentException if command does not exist, with one alternative");
+        } catch (Exception e) {
+            assertTrue("find() throws an IllegalArgumentException if command does not exist, with one alternative", e instanceof IllegalArgumentException);
+            assertTrue("find() throws an IllegalArgumentException if command does not exist, with one alternative", e.getMessage().contains("Did you mean this"));
         }
 
         // Namespace + singular
         try {
-            $application->find('foO:bar');
-            $this->fail('->find() throws an \InvalidArgumentException if command does not exist, with one alternative');
-        } catch (\Exception $e) {
-            $this->assertInstanceOf('\InvalidArgumentException', $e, '->find() throws an \InvalidArgumentException if command does not exist, with one alternative');
-            $this->assertRegExp('/Did you mean this/', $e->getMessage(), '->find() throws an \InvalidArgumentException if command does not exist, with one alternative');
+            application.find("foO:bar");
+            fail("find() throws an IllegalArgumentException if command does not exist, with one alternative");
+        } catch (Exception e) {
+            assertTrue("find() throws an IllegalArgumentException if command does not exist, with one alternative", e instanceof IllegalArgumentException);
+            assertTrue("find() throws an IllegalArgumentException if command does not exist, with one alternative", e.getMessage().contains("Did you mean this"));
         }
 
 
-        $application->add(new \Foo1Command());
-        $application->add(new \Foo2Command());
+        application.add(new Foo1Command());
+        application.add(new Foo2Command());
 
         // Command + plural
         try {
-            $application->find('foo:baR');
-            $this->fail('->find() throws an \InvalidArgumentException if command does not exist, with alternatives');
-        } catch (\Exception $e) {
-            $this->assertInstanceOf('\InvalidArgumentException', $e, '->find() throws an \InvalidArgumentException if command does not exist, with alternatives');
-            $this->assertRegExp('/Did you mean one of these/', $e->getMessage(), '->find() throws an \InvalidArgumentException if command does not exist, with alternatives');
+            application.find("foo:baR");
+            fail("find() throws an IllegalArgumentException if command does not exist, with alternatives");
+        } catch (Exception e) {
+            assertTrue("find() throws an IllegalArgumentException if command does not exist, with alternatives", e instanceof IllegalArgumentException);
+            assertTrue("find() throws an IllegalArgumentException if command does not exist, with alternatives", e.getMessage().contains("Did you mean one of these"));
         }
 
         // Namespace + plural
         try {
-            $application->find('foo2:bar');
-            $this->fail('->find() throws an \InvalidArgumentException if command does not exist, with alternatives');
-        } catch (\Exception $e) {
-            $this->assertInstanceOf('\InvalidArgumentException', $e, '->find() throws an \InvalidArgumentException if command does not exist, with alternatives');
-            $this->assertRegExp('/Did you mean one of these/', $e->getMessage(), '->find() throws an \InvalidArgumentException if command does not exist, with alternatives');
+            application.find("foo2:bar");
+            fail("find() throws an IllegalArgumentException if command does not exist, with alternatives");
+        } catch (Exception e) {
+            assertTrue("find() throws an IllegalArgumentException if command does not exist, with alternatives", e instanceof IllegalArgumentException);
+            assertTrue("find() throws an IllegalArgumentException if command does not exist, with alternatives", e.getMessage().contains("Did you mean one of these"));
         }
-    }*/
+    }
 
     @Test
     public void testFindAlternativeCommands() {
@@ -325,7 +326,7 @@ public class ApplicationTest {
             fail("find() throws an IllegalArgumentException if command does not exist");
         } catch (Exception e) {
             assertTrue("find() throws an IllegalArgumentException if command does not exist", e instanceof IllegalArgumentException);
-            assertEquals("find() throws an IllegalArgumentException if command does not exist, with alternatives", String.format("Command \"%s\" is not defined.", commandName), e.getMessage());
+            assertTrue("find() throws an IllegalArgumentException if command does not exist, with alternatives", e.getMessage().contains(String.format("Command \"%s\" is not defined.", commandName)));
 //            assertTrue("find() throws an IllegalArgumentException if command does not exist, with alternative : \"foo:bar\"", e.getMessage().contains("foo:bar"));
 //            assertTrue("find() throws an IllegalArgumentException if command does not exist, with alternative : \"foo1:bar\"", e.getMessage().contains("foo1:bar"));
 //            assertTrue("find() throws an IllegalArgumentException if command does not exist, with alternative : \"foo:bar1\"", e.getMessage().contains("foo:bar1"));
@@ -344,6 +345,7 @@ public class ApplicationTest {
         }
     }
 
+    @Test
     public void testFindAlternativeNamespace() {
         Application application = new Application();
 
@@ -459,9 +461,10 @@ public class ApplicationTest {
         application.setCatchExceptions(false);
 
         ensureStaticCommandHelp(application);
-        /*ApplicationTester tester = new ApplicationTester(application);
+        ApplicationTester tester = new ApplicationTester(application);
 
-        tester.run(new ArgvInput(), array("decorated" => false));
+        Map<String, Object> options = new HashMap<String, Object>();
+        /*tester.run(new ArgvInput(), array("decorated" => false));
         assertStringEqualsFile(self.fixturesPath."/application_run1.txt", this.normalizeLineBreaks(tester.getDisplay()), ".run() runs the list command if no argument is passed");
 
         tester.run(array("--help" => true), array("decorated" => false));
@@ -498,13 +501,13 @@ public class ApplicationTest {
         assertSame(Output.VERBOSITY_VERBOSE, tester.getOutput().getVerbosity(), ".run() sets the output to verbose if --verbose is passed");
 
         tester.run(array("command" => "list", "-v" => true));
-        assertSame(Output.VERBOSITY_VERBOSE, tester.getOutput().getVerbosity(), ".run() sets the output to verbose if -v is passed");*/
+        assertSame(Output.VERBOSITY_VERBOSE, tester.getOutput().getVerbosity(), ".run() sets the output to verbose if -v is passed");
 
         application = new Application();
         application.setAutoExit(false);
         application.setCatchExceptions(false);
         application.add(new FooCommand());
-        /*tester = new ApplicationTester(application);
+        tester = new ApplicationTester(application);
 
         tester.run(array("command" => "foo:bar", "--no-interaction" => true), array("decorated" => false));
         assertSame("called".PHP_EOL, tester.getDisplay(), ".run() does not call interact() if --no-interaction is passed");

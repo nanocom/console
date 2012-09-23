@@ -10,6 +10,7 @@ package org.nanocom.console.helper;
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
+import static org.apache.commons.lang3.StringUtils.*;
 import org.nanocom.console.output.OutputInterface;
 
 /**
@@ -69,15 +70,15 @@ public class DialogHelper extends Helper {
      */
     public boolean askConfirmation(OutputInterface output, List<String> question, boolean defaultAnswer) {
         String answer = "z";
-        while (null != answer && !("y".equals(answer.substring(0, 1).toLowerCase()) || "n".equals(answer.substring(0, 1).toLowerCase()))) {
+        while (isNotEmpty(answer) && !startsWithIgnoreCase(answer, "y") && !startsWithIgnoreCase(answer, "n")) {
             answer = ask(output, question, null);
         }
 
         if (false == defaultAnswer) {
-            return null != answer && "y".equals(answer.substring(0, 1).toLowerCase());
+            return isNotEmpty(answer) && startsWithIgnoreCase(answer, "y");
         }
 
-        return null == answer || "y".equals(answer.substring(0, 1).toLowerCase());
+        return isEmpty(answer) || startsWithIgnoreCase(answer, "y");
     }
 
     /**
