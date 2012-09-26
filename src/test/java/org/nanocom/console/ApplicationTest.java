@@ -68,13 +68,13 @@ public class ApplicationTest {
                 String line;
                 while (null != (line = input.readLine())) {
                     contents.append(line);
-                    contents.append(LINE_SEPARATOR);
+                    contents.append("\n");
                 }
             } finally {
                 input.close();
             }
 
-            contents.deleteCharAt(contents.lastIndexOf(LINE_SEPARATOR));
+            contents.deleteCharAt(contents.lastIndexOf("\n"));
         } catch (IOException ex){
             ex.printStackTrace();
             fail();

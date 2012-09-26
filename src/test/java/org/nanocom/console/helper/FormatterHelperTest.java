@@ -56,8 +56,8 @@ public class FormatterHelperTest {
 
         assertEquals(
             "formatBlock() formats a message in a block",
-            "<error>                       </error>" + "\n" +
-            "<error>  Du texte à afficher  </error>" + "\n" +
+            "<error>                       </error>\n" +
+            "<error>  Du texte à afficher  </error>\n" +
             "<error>                       </error>",
             formatter.formatBlock("Du texte à afficher", "error", true)
         );

@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import static org.apache.commons.lang3.SystemUtils.LINE_SEPARATOR;
 import static org.junit.Assert.*;
 import org.junit.Test;
 import org.nanocom.console.exception.LogicException;
@@ -38,13 +37,13 @@ public class InputDefinitionTest {
                 String line;
                 while (null != (line = input.readLine())) {
                     contents.append(line);
-                    contents.append(LINE_SEPARATOR);
+                    contents.append("\n");
                 }
             } finally {
                 input.close();
             }
 
-            contents.deleteCharAt(contents.lastIndexOf(LINE_SEPARATOR));
+            contents.deleteCharAt(contents.lastIndexOf("\n"));
         } catch (IOException ex){
             ex.printStackTrace();
             fail();
