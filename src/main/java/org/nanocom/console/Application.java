@@ -516,14 +516,14 @@ public class Application {
         }
 
         // Name
-        Set<String> locCommands = new LinkedHashSet<String>();
+        Set<String> searchCommands = new LinkedHashSet<String>();
         for (Command command : commands.values()) {
-            if (extractNamespace(command.getName()).equals(namespace)) {
-                locCommands.add(command.getName());
-            }
+             if (extractNamespace(command.getName()).equals(namespace)) {
+                searchCommands.add(command.getName());
+             }
         }
 
-        Map<String, List<String>> abbrevs = getAbbreviations(locCommands);
+        Map<String, List<String>> abbrevs = getAbbreviations(searchCommands);
         if (abbrevs.containsKey(searchName) && 1 == abbrevs.get(searchName).size()) {
             return get(abbrevs.get(searchName).get(0));
         }
@@ -535,7 +535,7 @@ public class Application {
         }
 
         // Aliases
-        Set<String> aliases = new HashSet<String>();
+        Set<String> aliases = new LinkedHashSet<String>();
         for (Command command : commands.values()) {
             for (String alias : command.getAliases()) {
                 if (extractNamespace(alias).equals(namespace)) {
@@ -563,7 +563,7 @@ public class Application {
             throw new IllegalArgumentException(message.toString());
         }
 
-        if (aliasesMap.get(searchName).size() > 1) {
+        if (1 < aliasesMap.get(searchName).size()) {
             throw new IllegalArgumentException(String.format("Command \"%s\" is ambiguous (%s).", name, getAbbreviationSuggestions(aliasesMap.get(searchName))));
         }
 
@@ -958,17 +958,16 @@ public class Application {
      * @return A sorted set of similar string
      */
     private Set<String> findAlternatives(String name, Collection<String> collection, Map<String, List<String>> abbrevs) {
-        Map<String, Integer> alternatives = new HashMap<String, Integer>();
+        Map<String, Integer> alternatives = new LinkedHashMap<String, Integer>();
 
         for (String item : collection) {
             int lev = getLevenshteinDistance(name, item);
-            if (lev <= name.length() / 3 || -1 < name.indexOf(item)) {
+            if (lev <= name.length() / 3 || item.contains(name)) {
                 alternatives.put(item, lev);
             }
         }
 
         if (alternatives.isEmpty()) {
-            int i = 0;
             for (Entry<String, List<String>> values : abbrevs.entrySet()) {
                 int lev = getLevenshteinDistance(name, values.getKey());
                 if (lev <= name.length() / 3 || values.getKey().indexOf(name) > -1) {
@@ -976,11 +975,10 @@ public class Application {
                         alternatives.put(value, lev);
                     }
                 }
-                i++;
             }
         }
 
-        // asort(alternatives); // TODO Sort by ascending distance
+        //  TODO Sort alternatives by ascending distance
 
         return alternatives.keySet();
     }

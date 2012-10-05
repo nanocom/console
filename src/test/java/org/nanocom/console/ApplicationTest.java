@@ -86,9 +86,9 @@ public class ApplicationTest {
     @Test
     public void testConstructor() {
         Application application = new Application("foo", "bar");
-        assertEquals("Application() takes the application name as its first argument", "foo", application.getName());
-        assertEquals("Application() takes the application version as its first argument", "bar", application.getVersion());
-        assertTrue("Application() registered the help and list commands by default", application.all().containsKey("help") && application.all().containsKey("list"));
+        assertEquals("Constructor takes the application name as its first argument", "foo", application.getName());
+        assertEquals("Constructor takes the application version as its first argument", "bar", application.getVersion());
+        assertTrue("Constructor registers the help and list commands by default", application.all().containsKey("help") && application.all().containsKey("list"));
     }
 
     @Test
@@ -237,7 +237,7 @@ public class ApplicationTest {
             fail("find() throws an IllegalArgumentException if the abbreviation is ambiguous for a namespace");
         } catch (Exception e) {
             assertTrue("find() throws an IllegalArgumentException if the abbreviation is ambiguous for a namespace", e instanceof IllegalArgumentException);
-            assertEquals("find() throws an IllegalArgumentException if the abbreviation is ambiguous for a namespace", "Command \"f\" is not defined.", e.getMessage());
+            assertTrue("find() throws an IllegalArgumentException if the abbreviation is ambiguous for a namespace", e.getMessage().contains("Command \"f\" is not defined."));
         }
 
         try {
@@ -313,7 +313,7 @@ public class ApplicationTest {
         String commandName = null;
 
         try {
-            commandName = "Unknow command";
+            commandName = "Unknown command";
             application.find(commandName);
             fail("find() throws an IllegalArgumentException if command does not exist");
         } catch (Exception e) {
@@ -328,9 +328,9 @@ public class ApplicationTest {
         } catch (Exception e) {
             assertTrue("find() throws an IllegalArgumentException if command does not exist", e instanceof IllegalArgumentException);
             assertTrue("find() throws an IllegalArgumentException if command does not exist, with alternatives", e.getMessage().contains(String.format("Command \"%s\" is not defined.", commandName)));
-//            assertTrue("find() throws an IllegalArgumentException if command does not exist, with alternative : \"foo:bar\"", e.getMessage().contains("foo:bar"));
-//            assertTrue("find() throws an IllegalArgumentException if command does not exist, with alternative : \"foo1:bar\"", e.getMessage().contains("foo1:bar"));
-//            assertTrue("find() throws an IllegalArgumentException if command does not exist, with alternative : \"foo:bar1\"", e.getMessage().contains("foo:bar1"));
+            assertTrue("find() throws an IllegalArgumentException if command does not exist, with alternative: \"foo:bar\"", e.getMessage().contains("foo:bar"));
+            assertTrue("find() throws an IllegalArgumentException if command does not exist, with alternative: \"foo1:bar\"", e.getMessage().contains("foo1:bar"));
+            assertTrue("find() throws an IllegalArgumentException if command does not exist, with alternative: \"foo:bar1\"", e.getMessage().contains("foo:bar1"));
         }
 
         // Test if "foo1" command throws an "IllegalArgumentException" and does not contain
@@ -341,7 +341,7 @@ public class ApplicationTest {
             fail("find() throws an IllegalArgumentException if command does not exist");
         } catch (Exception e) {
             assertTrue("find() throws an IllegalArgumentException if command does not exist", e instanceof IllegalArgumentException);
-            assertEquals("find() throws an IllegalArgumentException if command does not exist, with alternatives", String.format("Command \"%s\" is not defined.", commandName), e.getMessage());
+            assertTrue("find() throws an IllegalArgumentException if command does not exist, with alternatives", e.getMessage().contains(String.format("Command \"%s\" is not defined.", commandName)));
             assertFalse("find() throws an IllegalArgumentException if command does not exist, without \"foo:bar\" alternative", e.getMessage().indexOf("foo:bar") > -1);
         }
     }
