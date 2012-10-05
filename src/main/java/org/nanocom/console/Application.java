@@ -50,6 +50,8 @@ public class Application {
     private HelperSet helperSet;
 
     /**
+     * Constructor.
+     *
      * @param name    The name of the application
      * @param version The version of the application
      */
@@ -57,10 +59,18 @@ public class Application {
         init(name, version);
     }
 
+    /**
+     * Constructor.
+     *
+     * @param name The name of the application
+     */
     public Application(String name) {
         init(name, "UNKNOWN");
     }
 
+    /**
+     * Constructor.
+     */
     public Application() {
         init("UNKNOWN", "UNKNOWN");
     }
@@ -699,16 +709,24 @@ public class Application {
         do {
             String title = String.format("  [%s]  ", t.getClass().getSimpleName());
             int len = title.length();
-            int width = null != getTerminalWidth() ? getTerminalWidth() - 1 : Integer.MAX_VALUE;
+            Integer width = getTerminalWidth();
+
+            if (null == width) {
+                width = Integer.MAX_VALUE;
+            } else {
+                width--;
+            }
+
             List<String> lines = new ArrayList<String>();
-            String message = t.getMessage().replaceAll("\r\n", "\n");
-            String[] splittedMessage = message.split("\n");
+            String[] splittedMessage = t.getMessage().split("\r?\n");
 
             for (String line : splittedMessage) {
-                //foreach (str_split(line, width - 4) as line) {
-                    lines.add(String.format("  %s  ", line));
-                    len = Math.max(line.length() + 4, len);
-                //}
+                String[] lines2 = split(line, width - 4);
+
+                for (String line2 : lines2) {
+                    lines.add(String.format("  %s  ", line2));
+                    len = Math.max(line2.length() + 4, len);
+                }
             }
 
             List<String> messages = new ArrayList<String>();
@@ -721,13 +739,15 @@ public class Application {
 
             messages.add(repeat(" ", len));
 
-            output.writeln("");
-            output.writeln("");
-            for (String mess : messages) {
-                output.writeln(String.format("<error>%s</error>", mess));
+            output.writeln(EMPTY);
+            output.writeln(EMPTY);
+
+            for (String message : messages) {
+                output.writeln(String.format("<error>%s</error>", message));
             }
-            output.writeln("");
-            output.writeln("");
+
+            output.writeln(EMPTY);
+            output.writeln(EMPTY);
 
             if (OutputInterface.VerbosityLevel.VERBOSE.equals(output.getVerbosity())) {
                 output.writeln("<comment>Exception trace:</comment>");
@@ -749,13 +769,14 @@ public class Application {
                     output.writeln(String.format(" %s%s() at <info>%s:%s</info>", clazz, function, file, line));
                 }
 
-                output.writeln("");
-                output.writeln("");
+                output.writeln(EMPTY);
+                output.writeln(EMPTY);
             }
         } while (null != (t = t.getCause()));
 
         if (null != runningCommand) {
             output.writeln(String.format("<info>%s</info>", String.format(runningCommand.getSynopsis(), getName())));
+            output.writeln(EMPTY);
             output.writeln(EMPTY);
         }
     }
@@ -981,5 +1002,17 @@ public class Application {
         //  TODO Sort alternatives by ascending distance
 
         return alternatives.keySet();
+    }
+
+    private String[] split(String string, int width) {
+        List<String> strings = new ArrayList<String>();
+
+        int offset = 0;
+        while (offset < length(string) - 1) {
+            strings.add(string.substring(offset, Math.min(offset + width, length(string))));
+            offset += width;
+        }
+
+        return strings.toArray(ArrayUtils.EMPTY_STRING_ARRAY);
     }
 }

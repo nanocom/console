@@ -76,8 +76,7 @@ public class ApplicationTest {
 
             contents.deleteCharAt(contents.lastIndexOf("\n"));
         } catch (IOException ex){
-            ex.printStackTrace();
-            fail();
+            fail(String.format("Unaccessible resource file: %s", file));
         }
 
         return contents.toString();
@@ -448,9 +447,9 @@ public class ApplicationTest {
         input.clear();
         input.put("command", "foo3:bar");
         tester.run(input, options);
-        assertEquals("renderException() renders a pretty exceptions with previous exceptions", getResource("application_renderexception3.txt"), normalizeLineBreaks(tester.getDisplay()));
+        assertEquals("renderException() renders a pretty exception with previous exceptions", getResource("application_renderexception3.txt"), normalizeLineBreaks(tester.getDisplay()));
 
-        /*application = new Application() {
+        application = new Application() {
 
             @Override
             protected Integer getTerminalWidth() {
@@ -464,7 +463,7 @@ public class ApplicationTest {
         input.clear();
         input.put("command", "foo");
         tester.run(input, options);
-        assertEquals("renderException() wraps messages when they are bigger than the terminal", getResource("application_renderexception4.txt"), normalizeLineBreaks(tester.getDisplay()));*/
+        assertEquals("renderException() wraps messages when they are bigger than the terminal", getResource("application_renderexception4.txt"), normalizeLineBreaks(tester.getDisplay()));
     }
 
     @Test
