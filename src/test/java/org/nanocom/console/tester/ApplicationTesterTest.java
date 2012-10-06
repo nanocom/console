@@ -25,6 +25,9 @@ public class ApplicationTesterTest {
     protected Application application;
     protected ApplicationTester tester;
 
+    public ApplicationTesterTest() {
+    }
+
     @Before
     public void setUp() {
         application = new Application();

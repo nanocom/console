@@ -13,6 +13,9 @@ import org.junit.Test;
 
 public class FormatterHelperTest {
 
+    public FormatterHelperTest() {
+    }
+
     @Test
     public void testFormatSection() {
         FormatterHelper formatter = new FormatterHelper();

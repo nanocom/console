@@ -7,15 +7,18 @@
 
 package org.nanocom.console.output;
 
-import org.junit.Assert;
+import static org.junit.Assert.*;
 import org.junit.Test;
 
 public class NullOutputTest  {
+
+    public NullOutputTest() {
+    }
 
     @Test
     public void testConstructor() {
         OutputInterface output = new NullOutput();
         output.write("foo");
-        Assert.assertTrue("write() does nothing", true); // FIXME
+        assertTrue("write() does nothing", true); // FIXME
     }
 }

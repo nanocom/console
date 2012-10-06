@@ -13,7 +13,9 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import static org.apache.commons.lang3.StringUtils.*;
 import static org.junit.Assert.*;
 import org.junit.Test;
 import org.nanocom.console.exception.LogicException;
@@ -29,27 +31,24 @@ public class InputDefinitionTest {
     }
 
     protected String getResource(String file) {
-        StringBuilder contents = new StringBuilder();
+        List<String> contents = new ArrayList<String>();
 
         try {
             BufferedReader input = new BufferedReader(new InputStreamReader(getClass().getClassLoader().getResourceAsStream(file)));
             try {
                 String line;
                 while (null != (line = input.readLine())) {
-                    contents.append(line);
-                    contents.append("\n");
+                    contents.add(line);
                 }
             } finally {
                 input.close();
             }
 
-            contents.deleteCharAt(contents.lastIndexOf("\n"));
         } catch (IOException ex){
-            ex.printStackTrace();
-            fail();
+            fail("Unaccessible resource file");
         }
 
-        return contents.toString();
+        return join(contents, "\n");
     }
 
     @Test
@@ -266,6 +265,7 @@ public class InputDefinitionTest {
         definition.addOption((InputOption) bar);
         foobar.put("bar", (InputOption) bar);
         assertEquals("addOption() adds a InputOption object", foobar, definition.getOptions());
+
         try {
             definition.addOption((InputOption) foo2);
             fail("addOption() throws a LogicException if the another option is already registered with the same name");
@@ -273,6 +273,7 @@ public class InputDefinitionTest {
             assertTrue("addOption() throws a LogicException if the another option is already registered with the same name", e instanceof LogicException);
             assertEquals("An option named \"foo\" already exist.", e.getMessage());
         }
+
         try {
             definition.addOption((InputOption) foo1);
             fail("addOption() throws a LogicException if the another option is already registered with the same shortcut");
@@ -284,10 +285,11 @@ public class InputDefinitionTest {
 
     @Test
     public void testGetOption() {
-        this.initializeOptions();
+        initializeOptions();
 
         InputDefinition definition = new InputDefinition(Arrays.asList(foo));
         assertEquals("getOption() returns a InputOption by its name", foo, definition.getOption("foo"));
+
         try {
             definition.getOption("bar");
             fail("getOption() throws an IllegalArgumentException if the option name does not exist");
@@ -299,7 +301,7 @@ public class InputDefinitionTest {
 
     @Test
     public void testHasOption() {
-        this.initializeOptions();
+        initializeOptions();
 
         InputDefinition definition = new InputDefinition(Arrays.asList(this.foo));
         assertTrue("hasOption() returns true if a InputOption exists for the given name", definition.hasOption("foo"));
@@ -308,7 +310,7 @@ public class InputDefinitionTest {
 
     @Test
     public void testHasShortcut() {
-        this.initializeOptions();
+        initializeOptions();
 
         InputDefinition definition = new InputDefinition(Arrays.asList(this.foo));
         assertTrue("hasShortcut() returns true if a InputOption exists for the given shortcut", definition.hasShortcut("f"));
@@ -317,7 +319,7 @@ public class InputDefinitionTest {
 
     @Test
     public void testGetOptionForShortcut() {
-        this.initializeOptions();
+        initializeOptions();
 
         InputDefinition definition = new InputDefinition(Arrays.asList(this.foo));
         assertEquals("getOptionForShortcut() returns a InputOption by its shortcut", foo, definition.getOptionForShortcut("f"));
@@ -341,6 +343,7 @@ public class InputDefinitionTest {
             new InputOption("foo6", null, InputOption.VALUE_OPTIONAL | InputOption.VALUE_IS_ARRAY),
             new InputOption("foo7", null, InputOption.VALUE_OPTIONAL | InputOption.VALUE_IS_ARRAY, "", Arrays.asList(1, 2))
         ));
+
         Map<String, Object> defaults = new HashMap<String, Object>();
         defaults.put("foo1", false); // TODO was null before, but getOptionDefaults returns false
         defaults.put("foo2", null);
@@ -388,6 +391,7 @@ public class InputDefinitionTest {
             new InputOption("qux", "", InputOption.VALUE_OPTIONAL | InputOption.VALUE_IS_ARRAY, "The qux option", Arrays.asList("http://foo.com/", "bar")),
             new InputOption("qux2", "", InputOption.VALUE_OPTIONAL | InputOption.VALUE_IS_ARRAY, "The qux2 option", foobar)
         ));
+
         assertEquals("asText() returns a textual representation of the InputDefinition", getResource("definition_astext.txt"), definition.asText());
     }
 

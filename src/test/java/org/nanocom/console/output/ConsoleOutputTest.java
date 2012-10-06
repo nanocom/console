@@ -12,6 +12,9 @@ import org.junit.Test;
 
 public class ConsoleOutputTest {
 
+    public ConsoleOutputTest() {
+    }
+
     @Test
     public void testConstructor() {
         OutputInterface output = new ConsoleOutput(Output.VerbosityLevel.QUIET, true);

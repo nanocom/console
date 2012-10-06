@@ -10,8 +10,8 @@ package org.nanocom.console.tester;
 import java.util.HashMap;
 import java.util.Map;
 import static org.apache.commons.lang3.SystemUtils.LINE_SEPARATOR;
-import static org.junit.Assert.*;
 import org.junit.After;
+import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.nanocom.console.command.Command;
@@ -24,6 +24,9 @@ public class CommandTesterTest {
 
     protected Command command;
     protected CommandTester tester;
+
+    public CommandTesterTest() {
+    }
 
     @Before
     public void setUp() {

@@ -55,7 +55,7 @@ public class OutputFormatterStyleStackTest {
     public void testPopNotLast() {
         OutputFormatterStyleStack stack = new OutputFormatterStyleStack();
         OutputFormatterStyle s1 = new OutputFormatterStyle("white", "black");
-        stack.push(s1);;
+        stack.push(s1);
         OutputFormatterStyle s2 = new OutputFormatterStyle("yellow", "blue");
         stack.push(s2);
         OutputFormatterStyle s3 = new OutputFormatterStyle("green", "red");

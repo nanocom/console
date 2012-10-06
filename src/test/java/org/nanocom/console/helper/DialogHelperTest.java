@@ -7,19 +7,6 @@
 
 package org.nanocom.console.helper;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.ObjectInputStream;
-import java.util.Arrays;
-import static org.junit.Assert.*;
-import org.junit.Test;
-import org.nanocom.console.output.InMemoryOutput;
-import org.nanocom.console.output.Output;
-
-/**
- *
- * @author nanocom
- */
 public class DialogHelperTest {
 
     public DialogHelperTest() {
