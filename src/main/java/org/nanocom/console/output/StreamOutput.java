@@ -29,6 +29,8 @@ public class StreamOutput extends Output {
     private PrintStream stream;
 
    /**
+    * Constructor.
+    *
     * @param stream    A stream resource
     * @param verbosity The verbosity level (VERBOSITY_QUIET, VERBOSITY_NORMAL, VERBOSITY_VERBOSE)
     * @param decorated Whether to decorate messages or not (null for auto-guessing)
@@ -50,10 +52,20 @@ public class StreamOutput extends Output {
         init(verbosity, decorated, formatter);
     }
 
+    /**
+    * Constructor.
+    *
+    * @param stream A stream resource
+    *
+    * @throws IllegalArgumentException When first argument is not a real stream
+    */
     public StreamOutput(PrintStream stream) {
         this(stream, VerbosityLevel.NORMAL, null, null);
     }
 
+    /**
+    * Constructor.
+    */
     public StreamOutput() {
         super();
     }
@@ -99,6 +111,6 @@ public class StreamOutput extends Output {
             return null != System.getenv("ANSICON");
         }
 
-        return null != System.console();
+        return null != System.console(); // FIXME
     }
 }

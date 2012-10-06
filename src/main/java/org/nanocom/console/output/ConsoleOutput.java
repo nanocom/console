@@ -27,6 +27,8 @@ public class ConsoleOutput extends StreamOutput implements ConsoleOutputInterfac
     private OutputInterface stderr;
 
     /**
+     * Constructor.
+     *
      * @param verbosity The verbosity level
      * @param decorated Whether to decorate messages or not (null for auto-guessing)
      * @param formatter Output formatter instance
@@ -36,14 +38,28 @@ public class ConsoleOutput extends StreamOutput implements ConsoleOutputInterfac
         stderr = new StreamOutput(System.err, verbosity, decorated, formatter);
     }
 
+    /**
+     * Constructor.
+     *
+     * @param verbosity The verbosity level
+     * @param decorated Whether to decorate messages or not (null for auto-guessing)
+     */
     public ConsoleOutput(VerbosityLevel verbosity, Boolean decorated) {
         this(verbosity, decorated, null);
     }
 
+    /**
+     * Constructor.
+     *
+     * @param verbosity The verbosity level
+     */
     public ConsoleOutput(VerbosityLevel verbosity) {
         this(verbosity, null);
     }
 
+    /**
+     * Constructor.
+     */
     public ConsoleOutput() {
         this(VerbosityLevel.NORMAL);
     }

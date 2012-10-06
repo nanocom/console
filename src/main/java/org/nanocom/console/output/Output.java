@@ -30,6 +30,8 @@ public abstract class Output implements OutputInterface {
     private OutputFormatterInterface formatter;
 
     /**
+     * Constructor.
+     *
      * @param verbosity The verbosity level
      * @param decorated Whether to decorate messages or not (null for auto-guessing)
      * @param formatter Output formatter instance
@@ -38,14 +40,28 @@ public abstract class Output implements OutputInterface {
         init(verbosity, decorated, formatter);
     }
 
+    /**
+     * Constructor.
+     *
+     * @param verbosity The verbosity level
+     * @param decorated Whether to decorate messages or not (null for auto-guessing)
+     */
     public Output(VerbosityLevel verbosity, boolean decorated) {
         this(verbosity, decorated, null);
     }
 
+    /**
+     * Constructor.
+     *
+     * @param verbosity The verbosity level
+     */
     public Output(VerbosityLevel verbosity) {
         this(verbosity, false);
     }
 
+    /**
+     * Constructor.
+     */
     public Output() {
         this(VerbosityLevel.NORMAL);
     }
@@ -116,12 +132,6 @@ public abstract class Output implements OutputInterface {
         return verbosity;
     }
 
-    /**
-     * Writes a message to the output and adds a newline at the end.
-     *
-     * @param messages The message as an array of lines of a single string
-     * @param type     The type of output
-     */
     @Override
     public void writeln(List<String> messages, OutputType type) {
         write(messages, true, type);

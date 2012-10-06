@@ -67,6 +67,13 @@ public class CommandTester {
         return command.run(this.input, (OutputInterface) output);
     }
 
+    /**
+     * Executes the command.
+     *
+     * @param input An array of arguments and options
+     *
+     * @return The command exit code
+     */
     public int execute(Map<String, String> input) {
         return execute(input, new HashMap<String, Object>());
     }

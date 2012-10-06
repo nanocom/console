@@ -89,12 +89,28 @@ public class Application {
         }
     }
 
+    /**
+     * Runs the current application.
+     *
+     * @return 0 if everything went fine, or an error code
+     *
+     * @throws RuntimeException When doRun returns a RuntimeException
+     */
     public int run() throws RuntimeException {
-    	return run(null);
+        return run(null);
     }
 
+    /**
+     * Runs the current application.
+     *
+     * @param input  An Input instance
+     *
+     * @return 0 if everything went fine, or an error code
+     *
+     * @throws RuntimeException When doRun returns a RuntimeException
+     */
     public int run(InputInterface input) throws RuntimeException {
-    	return run(input, null);
+        return run(input, null);
     }
 
     /**
@@ -105,7 +121,7 @@ public class Application {
      *
      * @return 0 if everything went fine, or an error code
      *
-     * @throws RuntimeException When doRun returns Exception
+     * @throws RuntimeException When doRun returns a RuntimeException
      */
     public int run(InputInterface input, OutputInterface output) throws RuntimeException {
         if (null == input) {
@@ -580,14 +596,21 @@ public class Application {
         return get(aliasesMap.get(searchName).get(0));
     }
 
+    /**
+     * Gets the commands.
+     *
+     * The map keys are the full names and the values the command instances.
+     *
+     * @return A map of Command instances
+     */
     public Map<String, Command> all() {
         return all(null);
     }
 
     /**
-     * Gets the commands (registered in the given namespace if provided).
+     * Gets the commands registered in the given namespace.
      *
-     * The array keys are the full names and the values the command instances.
+     * The map keys are the full names and the values the command instances.
      *
      * @param namespace A namespace name
      *
@@ -609,7 +632,7 @@ public class Application {
     }
 
     /**
-     * Returns an array of possible abbreviations given a set of names.
+     * Returns a map of possible abbreviations given a set of names.
      *
      * @param names A collection of names
      *
@@ -690,10 +713,22 @@ public class Application {
         return join(messages, LINE_SEPARATOR);
     }
 
+    /**
+     * Returns a text representation of the Application.
+     *
+     * @param namespace An optional namespace name
+     *
+     * @return A string representing the Application
+     */
     public String asText(String namespace) {
         return asText(namespace, false);
     }
 
+    /**
+     * Returns a text representation of the Application.
+     *
+     * @return A string representing the Application
+     */
     public String asText() {
         return asText(null, false);
     }
@@ -787,12 +822,12 @@ public class Application {
      * @return
      */
     protected Integer getTerminalWidth() {
-        // TODO
         String ansicon = System.getenv("ANSICON");
         if (IS_OS_WINDOWS && null != ansicon) {
-            return Integer.valueOf(ansicon.replaceAll("{^(d+)x.*}", "1"));
+            return Integer.valueOf(ansicon.replaceAll("^(d+)x.*", "1"));
         }
 
+        // TODO
         /*if (preg_match(\"{rows.(\d+);.columns.(\d+);}i\", this.getSttyColumns(), match)) {
             return match[1];
         }*/
@@ -808,9 +843,10 @@ public class Application {
     protected Integer getTerminalHeight() {
         String ansicon = System.getenv("ANSICON");
         if (IS_OS_WINDOWS && null != ansicon) {
-            return Integer.valueOf(ansicon.trim().replaceAll("{^d+xd+ (d+x(d+))}", "1"));
+            return Integer.valueOf(ansicon.trim().replaceAll("^d+xd+ (d+x(d+))", "1"));
         }
 
+        // TODO
         /*if (preg_match("{rows.(\d+);.columns.(\d+);}i", getSttyColumns(), match)) {
             return match[2];
         }*/

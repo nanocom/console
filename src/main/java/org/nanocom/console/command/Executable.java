@@ -18,7 +18,7 @@ import org.nanocom.console.output.OutputInterface;
  */
 public abstract class Executable {
 
-	/**
+    /**
      * Executes the current command.
      *
      * @param  input  An InputInterface instance
@@ -29,5 +29,5 @@ public abstract class Executable {
      * @throws LogicException When this abstract method is not implemented
      * @see    Command#setCode(Executable)
      */
-	protected abstract int execute(InputInterface input, OutputInterface output);
+    protected abstract int execute(InputInterface input, OutputInterface output);
 }

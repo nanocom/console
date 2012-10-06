@@ -34,13 +34,8 @@ public class NullOutput extends Output {
         super(VerbosityLevel.NORMAL);
     }
 
-    /**
-     * Writes a message to the output.
-     *
-     * @param message A message to write to the output
-     * @param newline Whether to add a newline or not
-     */
     @Override
     public void doWrite(String message, boolean newline) {
+        // Do nothing
     }
 }

@@ -41,6 +41,8 @@ public class Command extends Executable {
     private HelperSet helperSet;
 
     /**
+     * Constructor.
+     *
      * @param name The name of the command
      *
      * @throws LogicException When the command name is empty
@@ -49,6 +51,11 @@ public class Command extends Executable {
         init(name);
     }
 
+     /**
+     * Constructor.
+     *
+     * @throws LogicException When the command name is empty
+     */
     public Command() {
         init(null);
     }
