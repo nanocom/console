@@ -19,7 +19,7 @@ public class HelpCommandTest {
     public HelpCommandTest() {
     }
 
-	@Test
+    @Test
     public void testExecute() {
         HelpCommand command = new HelpCommand();
 

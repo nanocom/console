@@ -18,16 +18,16 @@ import org.nanocom.console.tester.CommandTester;
 
 public class ListCommandTest {
 
-	@Test
-	public void testExecute() {
-		Application application = new Application();
+    @Test
+    public void testExecute() {
+        Application application = new Application();
 
-		Command command = application.get("list");
-		CommandTester commandTester = new CommandTester(command);
-		Map<String, String> input = new LinkedHashMap<String, String>();
-		input.put("command", command.getName());
-		Map<String, Object> options = new HashMap<String, Object>();
-		options.put("decorated", false);
+        Command command = application.get("list");
+        CommandTester commandTester = new CommandTester(command);
+        Map<String, String> input = new LinkedHashMap<String, String>();
+        input.put("command", command.getName());
+        Map<String, Object> options = new HashMap<String, Object>();
+        options.put("decorated", false);
         commandTester.execute(input, options);
         assertTrue("execute() returns a list of available commands", commandTester.getDisplay().contains("help   Displays help for a command"));
 

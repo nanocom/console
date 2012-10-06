@@ -7,12 +7,19 @@
 
 package org.nanocom.console.command;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import static org.apache.commons.lang3.StringUtils.*;
+import static org.apache.commons.lang3.SystemUtils.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -34,18 +41,42 @@ import org.nanocom.console.tester.CommandTester;
 
 public class CommandTest {
 
+    public CommandTest() {
+    }
+
+    protected String getResource(String file) {
+        List<String> contents = new ArrayList<String>();
+
+        try {
+            BufferedReader input = new BufferedReader(new InputStreamReader(getClass().getClassLoader().getResourceAsStream(file)));
+            try {
+                String line;
+                while (null != (line = input.readLine())) {
+                    contents.add(line);
+                }
+            } finally {
+                input.close();
+            }
+
+        } catch (IOException ex){
+            fail("Unaccessible resource file");
+        }
+
+        return join(contents, "\n");
+    }
+
     @Test
     public void testConstructor() {
         Command command;
         try {
             command = new Command();
-            fail("Command() throws a LogicException if the name is null");
+            fail("Constructor throws a LogicException if the name is null");
         } catch (Exception e) {
-            assertTrue("Command() throws a LogicException if the name is null", e instanceof LogicException);
-            assertEquals("Command() throws a LogicException if the name is null", "The command name cannot be empty.", e.getMessage());
+            assertTrue("Constructor throws a LogicException if the name is null", e instanceof LogicException);
+            assertEquals("Constructor throws a LogicException if the name is null", "The command name cannot be empty.", e.getMessage());
         }
         command = new Command("foo:bar");
-        assertEquals("Command() takes the command name as its first argument", "foo:bar", command.getName());
+        assertEquals("Constructor takes the command name as its first argument", "foo:bar", command.getName());
     }
 
     @Test
@@ -209,12 +240,12 @@ public class CommandTest {
         Map<String, Object> foobar2 = new HashMap<String, Object>();
         foobar2.put("interactive", true);
         tester.execute(new HashMap<String, String>(), foobar2);
-        // assertTrue("run() calls the interact() method if the input is interactive", "interact called" + LINE_SEPARATOR + "execute called" + LINE_SEPARATOR, tester.getDisplay());
+        assertEquals("run() calls the interact() method if the input is interactive", "interact called" + LINE_SEPARATOR + "execute called" + LINE_SEPARATOR, tester.getDisplay());
 
         foobar2.clear();
         foobar2.put("interactive", false);
         tester.execute(new HashMap<String, String>(), foobar2);
-        // assertEquals(".run() does not call the interact() method if the input is not interactive", "execute called" + LINE_SEPARATOR, tester.getDisplay());
+        assertEquals("run() does not call the interact() method if the input is not interactive", "execute called" + LINE_SEPARATOR, tester.getDisplay());
 
         command = new Command("foo");
         try {
@@ -230,20 +261,20 @@ public class CommandTest {
     public void testSetCode() {
         Command command = new TestCommand();
         Command ret = command.setCode(new Executable() {
-			@Override
-			protected int execute(InputInterface input, OutputInterface output) {
-				output.writeln("from the code...");
+            @Override
+            protected int execute(InputInterface input, OutputInterface output) {
+                output.writeln("from the code...");
 
-				return 0;
-			}
-		});
+                return 0;
+            }
+        });
         assertEquals("setCode() implements a fluent interface", command, ret);
         CommandTester tester = new CommandTester(command);
         tester.execute(new HashMap<String, String>());
-        // assertEquals("interact called" + LINE_SEPARATOR + "from the code..." + LINE_SEPARATOR, tester.getDisplay());
+        assertEquals("interact called" + LINE_SEPARATOR + "from the code..." + LINE_SEPARATOR, tester.getDisplay());
     }
 
-    /*@Test
+    @Test
     public void testAsText() {
         Command command = new TestCommand();
         command.setApplication(new Application());
@@ -251,15 +282,6 @@ public class CommandTest {
         Map<String, String> foobar = new HashMap<String, String>();
         foobar.put("command", command.getName());
         tester.execute(foobar);
-        // assertStringEqualsFile(self.fixturesPath."/command_astext.txt", command.asText(), ".asText() returns a text representation of the command");
-    }*/
-
-    /*@Test
-    public void testAsXml() {
-        Command command = new TestCommand();
-        command.setApplication(new Application());
-        tester = new CommandTester(command);
-        tester.execute(array("command" => command.getName()));
-        assertXmlStringEqualsXmlFile(fixturesPath + "/command_asxml.txt", command.asXml(), ".asXml() returns an XML representation of the command");
-    }*/
+        assertEquals("asText() returns a text representation of the command", getResource("command_astext.txt"), command.asText());
+    }
 }
