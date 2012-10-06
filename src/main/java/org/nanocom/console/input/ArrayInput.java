@@ -83,7 +83,7 @@ public class ArrayInput extends Input {
     @Override
     public boolean hasParameterOption(List<String> values) {
         for (Entry<String, String> parameter : parameters.entrySet()) {
-            if (values.contains(parameter.getValue())) {
+            if (values.contains(parameter.getKey())) {
                 return true;
             }
         }

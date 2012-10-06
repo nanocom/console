@@ -9,12 +9,14 @@ package org.nanocom.console;
 
 import java.io.*;
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import static org.apache.commons.lang3.StringUtils.*;
 import static org.apache.commons.lang3.SystemUtils.*;
 import static org.junit.Assert.*;
 import org.junit.Test;
@@ -60,26 +62,24 @@ public class ApplicationTest {
     }
 
     protected String getResource(String file) {
-        StringBuilder contents = new StringBuilder();
+        List<String> contents = new ArrayList<String>();
 
         try {
             BufferedReader input = new BufferedReader(new InputStreamReader(getClass().getClassLoader().getResourceAsStream(file)));
             try {
                 String line;
                 while (null != (line = input.readLine())) {
-                    contents.append(line);
-                    contents.append("\n");
+                    contents.add(line);
                 }
             } finally {
                 input.close();
             }
 
-            contents.deleteCharAt(contents.lastIndexOf("\n"));
         } catch (IOException ex){
-            fail(String.format("Unaccessible resource file: %s", file));
+            fail("Unaccessible resource file");
         }
 
-        return contents.toString();
+        return join(contents, "\n");
     }
 
     @Test
@@ -485,44 +485,71 @@ public class ApplicationTest {
         ApplicationTester tester = new ApplicationTester(application);
 
         Map<String, Object> options = new HashMap<String, Object>();
-        /*tester.run(new ArgvInput(), array("decorated" => false));
-        assertStringEqualsFile(self.fixturesPath."/application_run1.txt", this.normalizeLineBreaks(tester.getDisplay()), ".run() runs the list command if no argument is passed");
+        Map<String, String> input = new HashMap<String, String>();
+        options.put("decorated", false);
+        tester.run(input, options);
+        assertEquals("run() runs the list command if no argument is passed", getResource("application_run1.txt"), normalizeLineBreaks(tester.getDisplay()));
 
-        tester.run(array("--help" => true), array("decorated" => false));
-        assertStringEqualsFile(self.fixturesPath."/application_run2.txt", this.normalizeLineBreaks(tester.getDisplay()), ".run() runs the help command if --help is passed");
+        input.put("--help", null);
+        tester.run(input, options);
+        assertEquals("run() runs the help command if --help is passed", getResource("application_run2.txt"), normalizeLineBreaks(tester.getDisplay()));
 
-        tester.run(array("-h" => true), array("decorated" => false));
-        assertStringEqualsFile(self.fixturesPath."/application_run2.txt", this.normalizeLineBreaks(tester.getDisplay()), ".run() runs the help command if -h is passed");
+        input.clear();
+        input.put("-h", null);
+        tester.run(input, options);
+        assertEquals("run() runs the help command if -h is passed", getResource("application_run2.txt"), normalizeLineBreaks(tester.getDisplay()));
 
-        tester.run(array("command" => "list", "--help" => true), array("decorated" => false));
-        assertStringEqualsFile(self.fixturesPath."/application_run3.txt", this.normalizeLineBreaks(tester.getDisplay()), ".run() displays the help if --help is passed");
+        input.clear();
+        input.put("command", "list");
+        input.put("--help", null);
+        tester.run(input, options);
+        assertEquals("run() displays the help if --help is passed", getResource("application_run3.txt"), normalizeLineBreaks(tester.getDisplay()));
 
-        tester.run(array("command" => "list", "-h" => true), array("decorated" => false));
-        assertStringEqualsFile(self.fixturesPath."/application_run3.txt", this.normalizeLineBreaks(tester.getDisplay()), ".run() displays the help if -h is passed");
+        input.remove("--help");
+        input.put("-h", null);
+        tester.run(input, options);
+        assertEquals("run() displays the help if -h is passed", getResource("application_run3.txt"), normalizeLineBreaks(tester.getDisplay()));
 
-        tester.run(array("--ansi" => true));
-        assertTrue(tester.getOutput().isDecorated(), ".run() forces color output if --ansi is passed");
+        input.clear();
+        input.put("--ansi", null);
+        tester.run(input, new HashMap<String, Object>());
+        assertTrue("run() forces color output if --ansi is passed", tester.getOutput().isDecorated());
 
-        tester.run(array("--no-ansi" => true));
-        assertFalse(tester.getOutput().isDecorated(), ".run() forces color output to be disabled if --no-ansi is passed");
+        input.clear();
+        input.put("--no-ansi", null);
+        tester.run(input, new HashMap<String, Object>());
+        assertFalse("run() forces color output to be disabled if --no-ansi is passed", tester.getOutput().isDecorated());
 
-        tester.run(array("--version" => true), array("decorated" => false));
-        assertStringEqualsFile(self.fixturesPath."/application_run4.txt", this.normalizeLineBreaks(tester.getDisplay()), ".run() displays the program version if --version is passed");
+        input.clear();
+        input.put("--version", null);
+        tester.run(input, options);
+        assertEquals("run() displays the program version if --version is passed", getResource("application_run4.txt"), normalizeLineBreaks(tester.getDisplay()));
 
-        tester.run(array("-V" => true), array("decorated" => false));
-        assertStringEqualsFile(self.fixturesPath."/application_run4.txt", this.normalizeLineBreaks(tester.getDisplay()), ".run() displays the program version if -v is passed");
+        input.clear();
+        input.put("-V", null);
+        tester.run(input, options);
+        assertEquals("run() displays the program version if -V is passed", getResource("application_run4.txt"), normalizeLineBreaks(tester.getDisplay()));
 
-        tester.run(array("command" => "list", "--quiet" => true));
-        assertSame("", tester.getDisplay(), ".run() removes all output if --quiet is passed");
+        input.clear();
+        input.put("command", "list");
+        input.put("--quiet", null);
+        tester.run(input, new HashMap<String, Object>());
+        assertEquals("run() removes all output if --quiet is passed", EMPTY, tester.getDisplay());
 
-        tester.run(array("command" => "list", "-q" => true));
-        assertSame("", tester.getDisplay(), ".run() removes all output if -q is passed");
+        input.remove("--quiet");
+        input.put("-q", null);
+        tester.run(input, new HashMap<String, Object>());
+        assertEquals("run() removes all output if -q is passed", EMPTY, tester.getDisplay());
 
-        tester.run(array("command" => "list", "--verbose" => true));
-        assertSame(Output.VERBOSITY_VERBOSE, tester.getOutput().getVerbosity(), ".run() sets the output to verbose if --verbose is passed");
+        input.remove("-q");
+        input.put("--verbose", null);
+        tester.run(input, new HashMap<String, Object>());
+        assertSame("run() sets the output to verbose if --verbose is passed", Output.VerbosityLevel.VERBOSE, tester.getOutput().getVerbosity());
 
-        tester.run(array("command" => "list", "-v" => true));
-        assertSame(Output.VERBOSITY_VERBOSE, tester.getOutput().getVerbosity(), ".run() sets the output to verbose if -v is passed");
+        input.remove("--verbose");
+        input.put("-v", null);
+        tester.run(input, new HashMap<String, Object>());
+        assertSame("run() sets the output to verbose if -v is passed", Output.VerbosityLevel.VERBOSE, tester.getOutput().getVerbosity());
 
         application = new Application();
         application.setAutoExit(false);
@@ -530,11 +557,16 @@ public class ApplicationTest {
         application.add(new FooCommand());
         tester = new ApplicationTester(application);
 
-        tester.run(array("command" => "foo:bar", "--no-interaction" => true), array("decorated" => false));
-        assertSame("called".PHP_EOL, tester.getDisplay(), ".run() does not call interact() if --no-interaction is passed");
+        input.clear();
+        input.put("command", "foo:bar");
+        input.put("--no-interaction", null);
+        tester.run(input, options);
+        assertEquals("run() does not call interact() if --no-interaction is passed", "called" + LINE_SEPARATOR, tester.getDisplay());
 
-        tester.run(array("command" => "foo:bar", "-n" => true), array("decorated" => false));
-        assertSame("called".PHP_EOL, tester.getDisplay(), ".run() does not call interact() if -n is passed");*/
+        input.remove("--no-interaction");
+        input.put("-n", null);
+        tester.run(input, options);
+        assertEquals("run() does not call interact() if -n is passed", "called" + LINE_SEPARATOR, tester.getDisplay());
     }
 
     @Test(expected=LogicException.class)

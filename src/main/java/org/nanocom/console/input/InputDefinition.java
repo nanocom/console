@@ -403,7 +403,7 @@ public class InputDefinition {
      * @return A string representing the InputDefinition
      */
     @SuppressWarnings("unchecked")
-	public String asText() {
+    public String asText() {
         // Find the largest option or argument name
         int max = 0;
         for (InputOption option : options.values()) {
@@ -446,13 +446,11 @@ public class InputDefinition {
 
                 text.add(String.format(" <info>%-" + max + "s</info> %s%s", argument.getName(), description, defaultValue));
             }
+
+            text.add(EMPTY);
         }
 
         if (!getOptions().isEmpty()) {
-            if (!text.isEmpty()) {
-                text.add(EMPTY);
-            }
-
             text.add("<comment>Options:</comment>");
 
             for (InputOption option : getOptions().values()) {
@@ -487,6 +485,8 @@ public class InputDefinition {
                     multiple
                 ));
             }
+
+            text.add(EMPTY);
         }
 
         return join(text, "\n");

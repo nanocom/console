@@ -9,3 +9,4 @@
  <info>--bar</info> (-b) The bar option<comment> (default: "bar")</comment>
  <info>--qux</info>      The qux option<comment> (default: ["http://foo.com/","bar"])</comment><comment> (multiple values allowed)</comment>
  <info>--qux2</info>     The qux2 option<comment> (default: {"foo":"bar"})</comment><comment> (multiple values allowed)</comment>
+

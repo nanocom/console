@@ -203,7 +203,7 @@ public class Command extends Executable {
 
         // Bind the input against the command specific arguments/options
         try {
-            input.bind(this.definition);
+            input.bind(definition);
         } catch (RuntimeException e) {
             if (!ignoreValidationErrors) {
                 throw e;
@@ -218,7 +218,7 @@ public class Command extends Executable {
 
         input.validate();
 
-		if (null != code) {
+        if (null != code) {
             return code.execute(input, output);
         }
 
@@ -516,8 +516,9 @@ public class Command extends Executable {
         messages.add(' ' + getSynopsis());
         messages.add(EMPTY);
 
-        if (null != getAliases() && !getAliases().isEmpty()) {
-            messages.add("<comment>Aliases:</comment> <info>" + join(getAliases(), ", ") + "</info>");
+        List<String> aliases = getAliases();
+        if (null != aliases && !aliases.isEmpty()) {
+            messages.add("<comment>Aliases:</comment> <info>" + join(aliases, ", ") + "</info>");
         }
 
         messages.add(getNativeDefinition().asText());

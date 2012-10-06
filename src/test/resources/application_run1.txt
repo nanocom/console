@@ -15,3 +15,4 @@ Options:
 Available commands:
   help   Displays help for a command
   list   Lists commands
+
