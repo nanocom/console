@@ -16,7 +16,7 @@ import org.nanocom.console.exception.LogicException;
 import org.nanocom.console.output.OutputInterface;
 
 /**
- * The Progress class providers helpers to display progress output.
+ * The Progress class helper to display progress output.
  *
  * @author Arnaud Kleinpeter <arnaud.kleinpeter at gmail dot com>
  */
@@ -28,6 +28,8 @@ public class ProgressHelper extends Helper {
     private static final String FORMAT_QUIET_NOMAX   = " %current%";
     private static final String FORMAT_NORMAL_NOMAX  = " %current% [%bar%]";
     private static final String FORMAT_VERBOSE_NOMAX = " %current% [%bar%] Elapsed: %elapsed%";
+
+    private static final char BACKSPACE = ')';
 
     // Options
     private int barWidth        = 28;
@@ -74,10 +76,8 @@ public class ProgressHelper extends Helper {
 
     /**
      * Stored format part widths (used for padding)
-     *
-     * @var array
      */
-    private Map<String, Integer> widths = new HashMap<String, Integer>();
+    private Map<String, Integer> widths;
 
     /**
      * Various time formats
@@ -95,6 +95,7 @@ public class ProgressHelper extends Helper {
     };
 
     public ProgressHelper() {
+        widths = new HashMap<String, Integer>();
         widths.put("current", 4);
         widths.put("max", 4);
         widths.put("percent", 3);
@@ -158,8 +159,8 @@ public class ProgressHelper extends Helper {
     /**
      * Starts the progress output.
      *
-     * @param output  An Output instance
-     * @param max     Maximum steps
+     * @param output An Output instance
+     * @param max    Maximum steps
      */
     public void start(OutputInterface output, int max) {
         startTime   = System.currentTimeMillis();
@@ -236,7 +237,7 @@ public class ProgressHelper extends Helper {
     }
 
     /**
-     * Advances the progress output X steps.
+     * Advances the progress output 1 step.
      */
     public void advance() {
         advance(1);
@@ -300,8 +301,9 @@ public class ProgressHelper extends Helper {
         }
 
         if (max > 0) {
-            widths.put("max", String.valueOf(max).length());
-            widths.put("current", widths.get("max"));
+            int maxWidth = String.valueOf(max).length();
+            widths.put("max", maxWidth);
+            widths.put("current", maxWidth);
         } else {
             barCharOriginal = barChar;
             barChar         = emptyBarChar;
@@ -312,31 +314,27 @@ public class ProgressHelper extends Helper {
      * Generates the map of format variables to values.
      *
      * @param finish Forces the end result
-     * @return array Array of format vars and values
+     *
+     * @return A map of format vars and values
      */
     private Map<String, String> generate(boolean finish) {
         Map<String, String> vars = new LinkedHashMap<String, String>();
-        double percent = 0;
+        Double percent = Double.valueOf(0);
 
         if (max > 0) {
-            percent = round(current / max, 1);
+            percent = round((double) current / max, 1);
         }
 
         if (formatVars.containsKey("bar")) {
             int completeBars;
-            int emptyBars;
 
             if (max > 0) {
                 completeBars = Double.valueOf(Math.floor(percent * barWidth)).intValue();
             } else {
-                if (!finish) {
-                    completeBars = Double.valueOf(Math.floor(current % barWidth)).intValue();
-                } else {
-                    completeBars = barWidth;
-                }
+                completeBars = finish ? barWidth : Double.valueOf(Math.floor(current % barWidth)).intValue();
             }
 
-            emptyBars = barWidth - completeBars - progressChar.length();
+            int emptyBars = barWidth - completeBars - progressChar.length();
             String bar = repeat(barChar, completeBars);
             if (completeBars < barWidth) {
                 bar += progressChar;
@@ -405,25 +403,15 @@ public class ProgressHelper extends Helper {
      * @param size    The size of line
      */
     private void overwrite(OutputInterface output, String message, boolean newline, int size) {
-        String backspace = String.valueOf(0x08);
-
-        for (int place = size; place > 0; place--) {
-            output.write(backspace, false);
-        }
-
+        output.write(repeat(BACKSPACE, size));
         output.write(message, false);
-
-        for (int place = size - message.length(); place > 0; place--) {
-            output.write(" ", false);
-        }
+        output.write(repeat(" ", size - message.length()));
 
         // Clean up the end line
-        for (int place = size - message.length(); place > 0; place--) {
-            output.write(backspace, false);
-        }
+        output.write(repeat(BACKSPACE, size - message.length()));
 
         if (newline) {
-            output.write("");
+            output.writeln("");
         }
     }
 
@@ -445,7 +433,7 @@ public class ProgressHelper extends Helper {
      * @param message The message
      */
     private void overwrite(OutputInterface output, String message) {
-        overwrite(output, message, true);
+        overwrite(output, message, false);
     }
 
     /**

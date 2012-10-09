@@ -14,6 +14,8 @@ import org.nanocom.console.output.InMemoryOutput;
 
 public class ProgressHelperTest {
 
+    private static final char backspace = ')';
+
     public ProgressHelperTest() {
     }
 
@@ -24,7 +26,7 @@ public class ProgressHelperTest {
         progress.start(output);
         progress.advance();
 
-        assertEquals(generateOutput("    1 [.--------------------------]"), output.getBuffer().toString());
+        assertEquals(generateOutput("    1 [->--------------------------]"), output.getBuffer().toString());
     }
 
     @Test
@@ -34,7 +36,7 @@ public class ProgressHelperTest {
         progress.start(output);
         progress.advance(5);
 
-        assertEquals(generateOutput("    5 [----.----------------------]"), output.getBuffer().toString());
+        assertEquals(generateOutput("    5 [----->----------------------]"), output.getBuffer().toString());
     }
 
     @Test
@@ -45,7 +47,7 @@ public class ProgressHelperTest {
         progress.advance(3);
         progress.advance(2);
 
-        assertEquals(generateOutput("    3 [--.------------------------]") + generateOutput("    5 [----.----------------------]"), output.getBuffer().toString());
+        assertEquals(generateOutput("    3 [--->------------------------]") + generateOutput("    5 [----->----------------------]"), output.getBuffer().toString());
     }
 
     @Test
@@ -60,14 +62,10 @@ public class ProgressHelperTest {
         progress.start(output, 10);
         progress.advance();
 
-        assertEquals(generateOutput("  1/10 [_/        ]  10%"), output.getBuffer().toString());
-    }
-
-    protected InMemoryOutput getOutputStream() {
-        return new InMemoryOutput();
+        assertEquals(generateOutput("  1/10 [_/        ] 10.0%"), output.getBuffer().toString());
     }
 
     protected String generateOutput(String expected) {
-        return repeat(String.valueOf(0x08), 80) + expected + repeat(" ", 80 - expected.length()) + repeat(String.valueOf(0x08), 80 - expected.length());
+        return repeat(backspace, 80) + expected + repeat(" ", 80 - expected.length()) + repeat(backspace, 80 - expected.length());
     }
 }
