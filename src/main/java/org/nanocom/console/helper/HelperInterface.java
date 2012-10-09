@@ -21,6 +21,9 @@ public interface HelperInterface {
      */
     void setHelperSet(HelperSet helperSet);
 
+    /**
+     * Sets to null the helper set associated with this helper.
+     */
     void setHelperSet();
 
     /**
@@ -36,5 +39,4 @@ public interface HelperInterface {
      * @return The canonical name
      */
     String getName();
-
 }

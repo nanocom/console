@@ -50,17 +50,25 @@ public class OutputFormatter implements OutputFormatterInterface {
     /**
      * Initializes console output formatter.
      *
-     * @param decorated  Whether this formatter should actually decorate strings
-     * @param styles     Array of "name => FormatterStyle" instances
+     * @param decorated Whether this formatter should actually decorate strings
+     * @param styles    Array of "name => FormatterStyle" instances
      */
     public OutputFormatter(boolean decorated, Map<String, OutputFormatterStyleInterface> styles)  {
         init(decorated, styles);
     }
 
+    /**
+     * Initializes console output formatter.
+     *
+     * @param decorated Whether this formatter should actually decorate strings
+     */
     public OutputFormatter(boolean decorated)  {
         init(decorated, new HashMap<String, OutputFormatterStyleInterface>());
     }
 
+    /**
+     * Initializes console output formatter.
+     */
     public OutputFormatter()  {
         init(false, new HashMap<String, OutputFormatterStyleInterface>());
     }

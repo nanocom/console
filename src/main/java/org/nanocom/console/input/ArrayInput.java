@@ -26,11 +26,9 @@ public class ArrayInput extends Input {
 
     private Map<String, String> parameters;
 
-    public ArrayInput(Map<String, String> parameters) {
-        this(parameters, null);
-    }
-
     /**
+     * Constructor.
+     *
      * @param parameters An array of parameters
      * @param definition A InputDefinition instance
      */
@@ -40,9 +38,16 @@ public class ArrayInput extends Input {
     }
 
     /**
-     * Returns the first argument from the raw parameters (not parsed).
+     * Constructor.
      *
-     * @return The value of the first argument or null otherwise
+     * @param parameters An array of parameters
+     */
+    public ArrayInput(Map<String, String> parameters) {
+        this(parameters, null);
+    }
+
+    /**
+     * {@inheritDoc}
      */
     @Override
     public String getFirstArgument() {
@@ -59,18 +64,10 @@ public class ArrayInput extends Input {
     }
 
     /**
-     * Returns true if the raw parameters (not parsed) contain a value.
-     *
-     * This method is to be used to introspect the input parameters
-     * before they have been validated. It must be used carefully.
-     *
-     * @param value The values to look for in the raw parameters (can be an array)
-     *
-     * @return True if the value is contained in the raw parameters
+     * {@inheritDoc}
      */
     @Override
     public boolean hasParameterOption(String value) {
-
         for (Entry<String, String> parameter : parameters.entrySet()) {
             if (parameter.getKey().equals(value)) {
                 return true;
@@ -80,6 +77,9 @@ public class ArrayInput extends Input {
         return false;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean hasParameterOption(List<String> values) {
         for (Entry<String, String> parameter : parameters.entrySet()) {
@@ -91,6 +91,9 @@ public class ArrayInput extends Input {
         return false;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean hasParameterOption(Map<String, String> values) {
         for (Entry<String, String> parameter : parameters.entrySet()) {
@@ -103,15 +106,7 @@ public class ArrayInput extends Input {
     }
 
     /**
-     * Returns the value of a raw option (not parsed).
-     *
-     * This method is to be used to introspect the input parameters
-     * before they have been validated. It must be used carefully.
-     *
-     * @param values The value(s) to look for in the raw parameters (can be an array)
-     * @param defaultValue The default value to return if no result is found default false
-     *
-     * @return The option value
+     * {@inheritDoc}
      */
     @Override
     public Object getParameterOption(List<String> values, Object defaultValue) {
@@ -125,16 +120,25 @@ public class ArrayInput extends Input {
         return defaultValue;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Object getParameterOption(List<String> values) {
         return getParameterOption(values, false);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Object getParameterOption(String value, Object defaultValue) {
         return getParameterOption(Arrays.asList(value), defaultValue);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Object getParameterOption(String value) {
         return getParameterOption(value, false);
@@ -216,5 +220,4 @@ public class ArrayInput extends Input {
 
         arguments.put(name, value);
     }
-
 }

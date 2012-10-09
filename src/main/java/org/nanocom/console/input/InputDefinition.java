@@ -35,12 +35,17 @@ public class InputDefinition {
     private Map<String, String>        shortcuts;
 
     /**
+     * Constructor.
+     *
      * @param definition An array of InputArgument and InputOption instance
      */
     public InputDefinition(List<Object> definition) {
         setDefinition(definition);
     }
 
+    /**
+     * Constructor.
+     */
     public InputDefinition() {
         setDefinition(new ArrayList<Object>());
     }
@@ -348,6 +353,7 @@ public class InputDefinition {
      * Returns the InputOption name given a shortcut.
      *
      * @param shortcut The shortcut
+     *
      * @return The InputOption name
      *
      * @throws IllegalArgumentException When option given does not exist

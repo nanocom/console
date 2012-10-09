@@ -36,7 +36,7 @@ public class Command extends Executable {
     private String description;
     private Boolean ignoreValidationErrors;
     private Boolean applicationDefinitionMerged;
-	private Executable code;
+    private Executable code;
     private String synopsis;
     private HelperSet helperSet;
 
@@ -51,7 +51,7 @@ public class Command extends Executable {
         init(name);
     }
 
-     /**
+    /**
      * Constructor.
      *
      * @throws LogicException When the command name is empty
@@ -162,7 +162,7 @@ public class Command extends Executable {
      * @throws LogicException When this abstract method is not implemented
      * @see    setCode()
      */
-	@Override
+    @Override
     protected int execute(InputInterface input, OutputInterface output) {
         throw new LogicException("You must override the execute() method in the concrete command class.");
     }
@@ -233,18 +233,18 @@ public class Command extends Executable {
     }
 
 
-   /**
-	* Sets the code to execute when running this command.
-	*
-	* If this method is used, it overrides the code defined
-	* in the execute() method.
-	*
-	* @param Executable code An Executable instance
-	*
-	* @return Command The current instance
-	*
-	* @see #execute
-	*/
+    /**
+     * Sets the code to execute when running this command.
+     *
+     * If this method is used, it overrides the code defined
+     * in the execute() method.
+     *
+     * @param Executable code An Executable instance
+     *
+     * @return Command The current instance
+     *
+     * @see #execute
+     */
     public Command setCode(Executable code) {
         this.code = code;
 
@@ -324,14 +324,32 @@ public class Command extends Executable {
         return this;
     }
 
+    /**
+     * Adds an argument.
+     *
+     * @param name        The argument name
+     * @param mode        The argument mode: InputArgument.REQUIRED or InputArgument.OPTIONAL
+     * @param description A description text
+     */
     public Command addArgument(String name, int mode, String description) {
         return addArgument(name, mode, description, null);
     }
 
+    /**
+     * Adds an argument.
+     *
+     * @param name The argument name
+     * @param mode The argument mode: InputArgument.REQUIRED or InputArgument.OPTIONAL
+     */
     public Command addArgument(String name, int mode) {
         return addArgument(name, mode, EMPTY, null);
     }
 
+    /**
+     * Adds an argument.
+     *
+     * @param name The argument name
+     */
     public Command addArgument(String name) {
         return addArgument(name, InputArgument.OPTIONAL, EMPTY, null);
     }
@@ -349,18 +367,44 @@ public class Command extends Executable {
         definition.addOption(new InputOption(name, shortcut, mode, description, defaultValue));
     }
 
+    /**
+     * Adds an option.
+     *
+     * @param name        The option name
+     * @param shortcut    The shortcut (can be null)
+     * @param mode        The option mode: One of the InputOption.VALUE_* constants
+     * @param description A description text
+     */
     public void addOption(String name, String shortcut, int mode, String description) {
         addOption(name, shortcut, mode, description, null);
     }
 
+    /**
+     * Adds an option.
+     *
+     * @param name     The option name
+     * @param shortcut The shortcut (can be null)
+     * @param mode     The option mode: One of the InputOption.VALUE_* constants
+     */
     public void addOption(String name, String shortcut, int mode) {
         addOption(name, shortcut, mode, EMPTY);
     }
 
+    /**
+     * Adds an option.
+     *
+     * @param name     The option name
+     * @param shortcut The shortcut (can be null)
+     */
     public void addOption(String name, String shortcut) {
         addOption(name, shortcut, InputOption.VALUE_NONE);
     }
 
+    /**
+     * Adds an option.
+     *
+     * @param name The option name
+     */
     public void addOption(String name) {
         addOption(name, null);
     }
@@ -523,9 +567,9 @@ public class Command extends Executable {
         messages.add(' ' + getSynopsis());
         messages.add(EMPTY);
 
-        List<String> aliases = getAliases();
-        if (null != aliases && !aliases.isEmpty()) {
-            messages.add("<comment>Aliases:</comment> <info>" + join(aliases, ", ") + "</info>");
+        List<String> commandAliases = getAliases();
+        if (null != commandAliases && !commandAliases.isEmpty()) {
+            messages.add("<comment>Aliases:</comment> <info>" + join(commandAliases, ", ") + "</info>");
         }
 
         messages.add(getNativeDefinition().asText());

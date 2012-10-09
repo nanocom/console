@@ -28,6 +28,8 @@ public class InputArgument {
     private String  description;
 
     /**
+     * Constructor.
+     *
      * @param name         The argument name
      * @param mode         The argument mode: REQUIRED or OPTIONAL
      * @param description  A description text
@@ -39,14 +41,36 @@ public class InputArgument {
         init(name, mode, description, defaultValue);
     }
 
+    /**
+     * Constructor.
+     *
+     * @param name        The argument name
+     * @param mode        The argument mode: REQUIRED or OPTIONAL
+     * @param description A description text
+     *
+     * @throws IllegalArgumentException When argument mode is not valid
+     */
     public InputArgument(String name, int mode, String description) {
         this(name, mode, description, null);
     }
 
+    /**
+     * Constructor.
+     *
+     * @param name The argument name
+     * @param mode The argument mode: REQUIRED or OPTIONAL
+     *
+     * @throws IllegalArgumentException When argument mode is not valid
+     */
     public InputArgument(String name, int mode) {
         this(name, mode, "");
     }
 
+    /**
+     * Constructor.
+     *
+     * @param name The argument name
+     */
     public InputArgument(String name) {
         this(name, OPTIONAL);
     }

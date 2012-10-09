@@ -22,16 +22,21 @@ public class StringInput extends ArgvInput {
     // private final static String REGEX_QUOTED_STRING = "(?:\"([^\"\\\\]*(?:\\\\.[^\"\\\\]*)*)\"|\\'([^\'\\\\]*(?:\\\\.[^\'\\\\]*)*)\')";
 
     /**
-     * @param input An array of parameters from the CLI (in the argv format)
+     * Constructor.
+     *
+     * @param input      An array of parameters from the CLI (in the argv format)
      * @param definition An InputDefinition instance
-     * @throws Exception
      */
     public StringInput(String input, InputDefinition definition) {
         super(new String[0], definition);
-
         setTokens(tokenize(input));
     }
 
+    /**
+     * Constructor.
+     *
+     * @param input An array of parameters from the CLI (in the args format)
+     */
     public StringInput(String input) {
         this(input, null);
     }
@@ -40,11 +45,13 @@ public class StringInput extends ArgvInput {
      * Tokenizes a string.
      *
      * @param input The input to tokenize
+     *
      * @return The tokenized string
      *
      * @throws IllegalArgumentException When unable to parse input (should never happen)
      */
     private String[] tokenize(String input) throws IllegalArgumentException {
+        // TODO
         //input.replaceAll("(\r\n|\r|\n|\t)", " ");
 
         // tokens = new ArrayList<String>();
@@ -71,5 +78,4 @@ public class StringInput extends ArgvInput {
 
         return new String[0];
     }
-
 }

@@ -40,7 +40,7 @@ public class HelpCommand extends Command {
     }
 
     /**
-     * Sets the command
+     * Sets the command.
      *
      * @param command The command to set
      */

@@ -65,7 +65,7 @@ class OutputFormatterStyleStack {
             return styles.remove(styles.size() - 1);
         }
 
-        // array_reverse equivalent
+        // Reverse the map
         Map<Integer, OutputFormatterStyleInterface> reversedStyles = new LinkedHashMap<Integer, OutputFormatterStyleInterface>(styles.size());
         for (int i = styles.size() - 1; i >= 0; --i) {
             reversedStyles.put(i, styles.get(i));
@@ -74,7 +74,6 @@ class OutputFormatterStyleStack {
         for (Entry<Integer, OutputFormatterStyleInterface> stackedStyle : reversedStyles.entrySet()) {
             if (style.apply(EMPTY).equals(stackedStyle.getValue().apply(EMPTY))) {
                 styles = styles.subList(0, stackedStyle.getKey());
-
                 return stackedStyle.getValue();
             }
         }
@@ -106,7 +105,6 @@ class OutputFormatterStyleStack {
      */
     public OutputFormatterStyleStack setEmptyStyle(OutputFormatterStyleInterface emptyStyle) {
         this.emptyStyle = emptyStyle;
-
         return this;
     }
 

@@ -127,7 +127,7 @@ public class DialogHelper extends Helper {
      *
      * @return
      *
-     * @throws Exception When any of the validators return an error
+     * @throws RuntimeException When any of the validators return an error
      */
     public Object askAndValidate(OutputInterface output, List<String> question, Object validator, int attempts, String defaultAnswer) {
         RuntimeException error = null;

@@ -80,10 +80,7 @@ public class StreamOutput extends Output {
     }
 
     /**
-     * Writes a message to the output.
-     *
-     * @param message A message to write to the output
-     * @param newline Whether to add a newline or not
+     * {@inheritDoc}
      */
     @Override
     public void doWrite(String message, boolean newline) {

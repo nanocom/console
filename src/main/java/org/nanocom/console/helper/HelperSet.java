@@ -12,12 +12,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-
 import org.nanocom.console.command.Command;
 
 /**
  * HelperSet represents a set of helpers to be used with a command.
- * 
+ *
  * @author Arnaud Kleinpeter <arnaud.kleinpeter at gmail dot com>
  */
 public class HelperSet {
@@ -26,7 +25,9 @@ public class HelperSet {
     private Command command;
 
     /**
-     * @param helpers An array of helper.
+     * Constructor.
+     *
+     * @param helpers A map of helpers
      */
     public HelperSet(Map<String, Helper> helpers) {
         this.helpers = new HashMap<String, HelperInterface>();
@@ -35,6 +36,11 @@ public class HelperSet {
         }
     }
 
+    /**
+     * Constructor.
+     *
+     * @param helpers A list of helpers
+     */
     public HelperSet(List<Helper> helpers) {
         this.helpers = new HashMap<String, HelperInterface>();
         for (Helper helper : helpers) {
@@ -42,6 +48,11 @@ public class HelperSet {
         }
     }
 
+    /**
+     * Constructor.
+     *
+     * @param helpers A list of helpers
+     */
     public HelperSet() {
         this(new ArrayList<Helper>());
     }
@@ -52,7 +63,7 @@ public class HelperSet {
      * @param helper The helper instance
      * @param alias  An alias
      */
-    public void set(HelperInterface helper, String alias) {
+    public final void set(HelperInterface helper, String alias) {
         helpers.put(helper.getName(), helper);
         if (null != alias) {
             helpers.put(alias, helper);
@@ -61,7 +72,12 @@ public class HelperSet {
         helper.setHelperSet(this);
     }
 
-    public void set(HelperInterface helper) {
+    /**
+     * Sets a helper.
+     *
+     * @param helper The helper instance
+     */
+    public final void set(HelperInterface helper) {
         set(helper, null);
     }
 
@@ -102,6 +118,9 @@ public class HelperSet {
         this.command = command;
     }
 
+    /**
+     * Sets to null the command associated with this helper set.
+     */
     public void setCommand() {
         setCommand(null);
     }
@@ -114,5 +133,4 @@ public class HelperSet {
     public Command getCommand() {
         return command;
     }
-
 }

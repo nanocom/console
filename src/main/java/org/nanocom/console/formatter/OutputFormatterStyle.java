@@ -80,14 +80,28 @@ public class OutputFormatterStyle implements OutputFormatterStyleInterface {
         init(foreground, background, options);
     }
 
+    /**
+     * Initializes output formatter style.
+     *
+     * @param foreground The style foreground color name
+     * @param background The style background color name
+     */
     public OutputFormatterStyle(String foreground, String background) {
         init(foreground, background, new ArrayList<String>());
     }
 
+    /**
+     * Initializes output formatter style.
+     *
+     * @param foreground The style foreground color name
+     */
     public OutputFormatterStyle(String foreground) {
         init(foreground, null, new ArrayList<String>());
     }
 
+     /**
+     * Initializes output formatter style.
+     */
     public OutputFormatterStyle() {
         init(null, null, new ArrayList<String>());
     }
@@ -96,9 +110,11 @@ public class OutputFormatterStyle implements OutputFormatterStyleInterface {
         if (null != foreground) {
             setForeground(foreground);
         }
+
         if (null != background) {
             setBackground(background);
         }
+
         if (null != options && options.size() > 0) {
             setOptions(options);
         }
@@ -109,13 +125,12 @@ public class OutputFormatterStyle implements OutputFormatterStyleInterface {
      *
      * @param color The color name
      *
-     * @throws Exception When the color name isn't defined
+     * @throws IllegalArgumentException When the color name isn't defined
      */
     @Override
     public void setForeground(String color) {
         if (null == color) {
             foreground = null;
-
             return;
         }
 
@@ -141,8 +156,7 @@ public class OutputFormatterStyle implements OutputFormatterStyleInterface {
     @Override
     public void setBackground(String color) {
         if (null == color) {
-            this.background = null;
-
+            background = null;
             return;
         }
 
@@ -289,5 +303,4 @@ public class OutputFormatterStyle implements OutputFormatterStyleInterface {
 
         return true;
     }
-
 }

@@ -280,7 +280,7 @@ public class ArgvInput extends Input {
      * This method is to be used to introspect the input parameters
      * before they have been validated. It must be used carefully.
      *
-     * @param values The value(s) to look for in the raw parameters (can be an array)
+     * @param values The value to look for in the raw parameters
      *
      * @return True if the value is contained in the raw parameters
      */
@@ -289,6 +289,16 @@ public class ArgvInput extends Input {
         return hasParameterOption(Arrays.asList(value));
     }
 
+    /**
+     * Returns true if the raw parameters (not parsed) contain a value.
+     *
+     * This method is to be used to introspect the input parameters
+     * before they have been validated. It must be used carefully.
+     *
+     * @param values The values to look for in the raw parameters
+     *
+     * @return True if the values are contained in the raw parameters
+     */
     @Override
     public boolean hasParameterOption(List<String> values) {
         for (String value : tokens) {
@@ -300,6 +310,16 @@ public class ArgvInput extends Input {
         return false;
     }
 
+    /**
+     * Returns true if the raw parameters (not parsed) contain a value.
+     *
+     * This method is to be used to introspect the input parameters
+     * before they have been validated. It must be used carefully.
+     *
+     * @param values The values to look for in the raw parameters
+     *
+     * @return True if the values are contained in the raw parameters
+     */
     @Override
     public boolean hasParameterOption(Map<String, String> values) {
         for (String value : tokens) {
@@ -312,15 +332,7 @@ public class ArgvInput extends Input {
     }
 
     /**
-     * Returns the value of a raw option (not parsed).
-     *
-     * This method is to be used to introspect the input parameters
-     * before they have been validated. It must be used carefully.
-     *
-     * @param values  The value(s) to look for in the raw parameters (can be an array)
-     * @param default The default value to return if no result is found
-     *
-     * @return The option value
+     * {@inheritDoc}
      */
     @Override
     public Object getParameterOption(List<String> values, Object defaultValue) {
@@ -345,16 +357,25 @@ public class ArgvInput extends Input {
         return defaultValue;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Object getParameterOption(List<String> values) {
         return getParameterOption(values, false);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Object getParameterOption(String value) {
         return getParameterOption(Arrays.asList(value), false);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Object getParameterOption(String value, Object defaultValue) {
         return getParameterOption(Arrays.asList(value), defaultValue);

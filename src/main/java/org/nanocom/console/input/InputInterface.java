@@ -30,14 +30,34 @@ public interface InputInterface {
      * This method is to be used to introspect the input parameters
      * before they have been validated. It must be used carefully.
      *
-     * @param values The values to look for in the raw parameters
+     * @param value The value to look for in the raw parameters
      *
      * @return True if the value is contained in the raw parameters
      */
     boolean hasParameterOption(String value);
 
+    /**
+     * Returns true if the raw parameters (not parsed) contain a value.
+     *
+     * This method is to be used to introspect the input parameters
+     * before they have been validated. It must be used carefully.
+     *
+     * @param values The values to look for in the raw parameters
+     *
+     * @return True if the value is contained in the raw parameters
+     */
     boolean hasParameterOption(List<String> values);
 
+    /**
+     * Returns true if the raw parameters (not parsed) contain a value.
+     *
+     * This method is to be used to introspect the input parameters
+     * before they have been validated. It must be used carefully.
+     *
+     * @param values The values to look for in the raw parameters
+     *
+     * @return True if the value is contained in the raw parameters
+     */
     boolean hasParameterOption(Map<String, String> values);
 
     /**
@@ -46,17 +66,48 @@ public interface InputInterface {
      * This method is to be used to introspect the input parameters
      * before they have been validated. It must be used carefully.
      *
-     * @param value The value(s) to look for in the raw parameters
+     * @param value        The value to look for in the raw parameters
      * @param defaultValue The default value to return if no result is found
      *
      * @return The option value
      */
     Object getParameterOption(String value, Object defaultValue);
 
+    /**
+     * Returns the value of a raw option (not parsed).
+     *
+     * This method is to be used to introspect the input parameters
+     * before they have been validated. It must be used carefully.
+     *
+     * @param values       The values to look for in the raw parameters
+     * @param defaultValue The default value to return if no result is found
+     *
+     * @return The option value
+     */
     Object getParameterOption(List<String> values, Object defaultValue);
 
+    /**
+     * Returns the value of a raw option (not parsed).
+     *
+     * This method is to be used to introspect the input parameters
+     * before they have been validated. It must be used carefully.
+     *
+     * @param value The value to look for in the raw parameters
+     *
+     * @return The option value
+     */
     Object getParameterOption(String value);
 
+    /**
+     * Returns the value of a raw option (not parsed).
+     *
+     * This method is to be used to introspect the input parameters
+     * before they have been validated. It must be used carefully.
+     *
+     * @param values The values to look for in the raw parameters
+     *
+     * @return The option value
+     */
     Object getParameterOption(List<String> values);
 
     /**
@@ -76,16 +127,18 @@ public interface InputInterface {
     /**
      * Returns all the given arguments merged with the default values.
      *
-     * @return
+     * @return An array of argument values
      */
     Map<String, Object> getArguments();
 
     /**
-     * Gets argument by name.
+     * Returns the argument value for a given argument name.
      *
-     * @param name The name of the argument
+     * @param name The argument name
      *
-     * @return
+     * @return The argument value
+     *
+     * @throws IllegalArgumentException When argument given doesn't exist
      */
     Object getArgument(String name);
 
@@ -97,7 +150,7 @@ public interface InputInterface {
      *
      * @throws IllegalArgumentException When argument given doesn't exist
      */
-    void setArgument(String name, String value) throws IllegalArgumentException;
+    void setArgument(String name, String value);
 
     /**
      * Returns true if an InputArgument object exists by name.
@@ -107,7 +160,7 @@ public interface InputInterface {
      * @return True if the InputArgument object exists, false otherwise
      */
     boolean hasArgument(String name);
-    
+
     /**
      * Returns true if an InputArgument object exists by position.
      *
@@ -120,16 +173,18 @@ public interface InputInterface {
     /**
      * Returns all the given options merged with the default values.
      *
-     * @return
+     * @return An array of option values
      */
     Map<String, Object> getOptions();
 
     /**
-     * Gets an option by name.
+     * Returns the option value for a given option name.
      *
-     * @param name The name of the option
+     * @param name The option name
      *
-     * @return mixed
+     * @return The option value
+     *
+     * @throws IllegalArgumentException When option given doesn't exist
      */
     Object getOption(String name);
 
@@ -141,7 +196,7 @@ public interface InputInterface {
      *
      * @throws IllegalArgumentException When option given doesn't exist
      */
-    void setOption(String name, String value) throws IllegalArgumentException;
+    void setOption(String name, String value);
 
     /**
      * Returns true if an InputOption object exists by name.
@@ -153,9 +208,9 @@ public interface InputInterface {
     boolean hasOption(String name);
 
     /**
-     * Is this input means interactive?
+     * Checks if the input is interactive.
      *
-     * @return
+     * @return True if the input is interactive
      */
     boolean isInteractive();
 
@@ -165,5 +220,4 @@ public interface InputInterface {
      * @param interactive If the input should be interactive
      */
     void setInteractive(boolean interactive);
-
 }

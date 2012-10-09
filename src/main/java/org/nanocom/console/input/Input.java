@@ -28,10 +28,6 @@ abstract class Input implements InputInterface {
     protected Map<String, Object> arguments;
     protected Boolean             interactive = true;
 
-    public Input() {
-    	init(null);
-    }
-
     /**
      * Constructor.
      *
@@ -39,6 +35,13 @@ abstract class Input implements InputInterface {
      */
     public Input(InputDefinition definition) {
     	init(definition);
+    }
+
+    /**
+     * Constructor.
+     */
+    public Input() {
+    	init(null);
     }
 
     protected final void init(InputDefinition definition) {
@@ -51,9 +54,7 @@ abstract class Input implements InputInterface {
     }
 
     /**
-     * Binds the current Input instance with the given arguments and options.
-     *
-     * @param definition An InputDefinition instance
+     * {@inheritDoc}
      */
     @Override
     public void bind(InputDefinition definition) {
@@ -70,9 +71,7 @@ abstract class Input implements InputInterface {
     abstract protected void parse() throws RuntimeException;
 
     /**
-     * Validates the input.
-     *
-     * @throws RuntimeException When not enough arguments are given
+     * {@inheritDoc}
      */
     @Override
     public void validate() throws RuntimeException {
@@ -82,9 +81,7 @@ abstract class Input implements InputInterface {
     }
 
     /**
-     * Checks if the input is interactive.
-     *
-     * @return True if the input is interactive
+     * {@inheritDoc}
      */
     @Override
     public boolean isInteractive() {
@@ -92,9 +89,7 @@ abstract class Input implements InputInterface {
     }
 
     /**
-     * Sets the input interactivity.
-     *
-     * @param interactive If the input should be interactive
+     * {@inheritDoc}
      */
     @Override
     public void setInteractive(boolean interactive) {
@@ -102,9 +97,7 @@ abstract class Input implements InputInterface {
     }
 
     /**
-     * Returns the argument values.
-     *
-     * @return An array of argument values
+     * {@inheritDoc}
      */
     @Override
     public Map<String, Object> getArguments() {
@@ -115,13 +108,7 @@ abstract class Input implements InputInterface {
     }
 
     /**
-     * Returns the argument value for a given argument name.
-     *
-     * @param name The argument name
-     *
-     * @return The argument value
-     *
-     * @throws IllegalArgumentException When argument given doesn't exist
+     * {@inheritDoc}
      */
     @Override
     public Object getArgument(String name) throws IllegalArgumentException {
@@ -133,12 +120,7 @@ abstract class Input implements InputInterface {
     }
 
     /**
-     * Sets an argument value by name.
-     *
-     * @param name  The argument name
-     * @param value The argument value
-     *
-     * @throws IllegalArgumentException When argument given doesn't exist
+     * {@inheritDoc}
      */
     @Override
     public void setArgument(String name, String value) throws IllegalArgumentException {
@@ -150,11 +132,7 @@ abstract class Input implements InputInterface {
     }
 
     /**
-     * Returns true if an InputArgument object exists by name.
-     *
-     * @param name The InputArgument name or position
-     *
-     * @return True if the InputArgument object exists, false otherwise
+     * {@inheritDoc}
      */
     @Override
     public boolean hasArgument(String name) {
@@ -162,11 +140,7 @@ abstract class Input implements InputInterface {
     }
 
     /**
-     * Returns true if an InputArgument object exists by position.
-     *
-     * @param name The InputArgument name or position
-     *
-     * @return True if the InputArgument object exists, false otherwise
+     * {@inheritDoc}
      */
     @Override
     public boolean hasArgument(int position) {
@@ -174,9 +148,7 @@ abstract class Input implements InputInterface {
     }
 
     /**
-     * Returns the options values.
-     *
-     * @return array An array of option values
+     * {@inheritDoc}
      */
     @Override
     public Map<String, Object> getOptions() {
@@ -187,13 +159,7 @@ abstract class Input implements InputInterface {
     }
 
     /**
-     * Returns the option value for a given option name.
-     *
-     * @param name The option name
-     *
-     * @return The option value
-     *
-     * @throws IllegalArgumentException When option given doesn't exist
+     * {@inheritDoc}
      */
     @Override
     public Object getOption(String name) throws IllegalArgumentException {
@@ -205,12 +171,7 @@ abstract class Input implements InputInterface {
     }
 
     /**
-     * Sets an option value by name.
-     *
-     * @param name  The option name
-     * @param value The option value
-     *
-     * @throws IllegalArgumentException When option given doesn't exist
+     * {@inheritDoc}
      */
     @Override
     public void setOption(String name, String value) throws IllegalArgumentException {
@@ -222,11 +183,7 @@ abstract class Input implements InputInterface {
     }
 
     /**
-     * Returns true if an InputOption object exists by name.
-     *
-     * @param name The InputOption name
-     *
-     * @return True if the InputOption object exists, false otherwise
+     * {@inheritDoc}
      */
     @Override
     public boolean hasOption(String name) {

@@ -123,30 +123,40 @@ public abstract class Output implements OutputInterface {
     }
 
     /**
-     * Gets the current verbosity of the output.
-     *
-     * @return The current level of verbosity
+     * {@inheritDoc}
      */
     @Override
     public VerbosityLevel getVerbosity() {
         return verbosity;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void writeln(List<String> messages, OutputType type) {
         write(messages, true, type);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void writeln(String message, OutputType type) {
         write(message, true, type);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void writeln(List<String> messages) {
         write(messages, true, OutputType.NORMAL);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void writeln(String message) {
         write(message, true, OutputType.NORMAL);
@@ -185,26 +195,41 @@ public abstract class Output implements OutputInterface {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void write(String message, boolean newline, OutputType type) {
         write(Arrays.asList(message), newline, type);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void write(List<String> messages, boolean newline) {
         write(messages, newline, OutputType.NORMAL);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void write(String message, boolean newline) {
         write(message, newline, OutputType.NORMAL);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void write(List<String> messages) {
         write(messages, false, OutputType.NORMAL);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void write(String message) {
         write(message, false, OutputType.NORMAL);

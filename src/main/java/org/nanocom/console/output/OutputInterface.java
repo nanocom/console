@@ -50,7 +50,7 @@ public interface OutputInterface {
     /**
      * Writes a message to the output.
      *
-     * @param messages The message as an array of lines of a single string
+     * @param messages The message as an array of lines
      * @param newline  Whether to add a newline or not
      * @param type     The type of output
      *
@@ -58,28 +58,75 @@ public interface OutputInterface {
      */
     void write(List<String> messages, boolean newline, OutputType type);
 
+    /**
+     * Writes a message to the output.
+     *
+     * @param message The message as a single string
+     * @param newline Whether to add a newline or not
+     * @param type    The type of output
+     *
+     * @throws IllegalArgumentException When unknown output type is given
+     */
     void write(String message, boolean newline, OutputType type);
 
+    /**
+     * Writes a message to the output.
+     *
+     * @param messages The message as an array of lines
+     * @param newline  Whether to add a newline or not
+     */
     void write(List<String> messages, boolean newline);
 
+    /**
+     * Writes a message to the output.
+     *
+     * @param message The message as a single string
+     * @param newline Whether to add a newline or not
+     */
     void write(String message, boolean newline);
 
+    /**
+     * Writes a message to the output.
+     *
+     * @param messages The message as an array of lines
+     */
     void write(List<String> messages);
 
+    /**
+     * Writes a message to the output.
+     *
+     * @param message The message as a single string
+     */
     void write(String message);
 
     /**
      * Writes a message to the output and adds a newline at the end.
      *
-     * @param messages The message as an array of lines of a single string
+     * @param messages The message as an array of lines
      * @param type     The type of output
      */
     void writeln(List<String> messages, OutputType type);
 
+    /**
+     * Writes a message to the output and adds a newline at the end.
+     *
+     * @param message The message as a single string
+     * @param type    The type of output
+     */
     void writeln(String message, OutputType type);
 
+    /**
+     * Writes a message to the output and adds a newline at the end.
+     *
+     * @param messages The message as an array of lines
+     */
     void writeln(List<String> messages);
 
+    /**
+     * Writes a message to the output and adds a newline at the end.
+     *
+     * @param message The message as a single string
+     */
     void writeln(String message);
 
     /**

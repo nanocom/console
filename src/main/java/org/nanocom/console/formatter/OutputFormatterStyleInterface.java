@@ -55,6 +55,7 @@ public interface OutputFormatterStyleInterface {
      * Applies the style to a given text.
      *
      * @param text The text to style
+     *
      * @return
      */
     String apply(String text);

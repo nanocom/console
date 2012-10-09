@@ -46,6 +46,9 @@ public class InMemoryOutput extends Output {
         this(VerbosityLevel.NORMAL);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void doWrite(String message, boolean newline) {
         buffer.append(message);

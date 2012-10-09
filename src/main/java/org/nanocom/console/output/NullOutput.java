@@ -34,6 +34,9 @@ public class NullOutput extends Output {
         super(VerbosityLevel.NORMAL);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void doWrite(String message, boolean newline) {
         // Do nothing

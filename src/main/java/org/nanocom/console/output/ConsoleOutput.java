@@ -64,29 +64,44 @@ public class ConsoleOutput extends StreamOutput implements ConsoleOutputInterfac
         this(VerbosityLevel.NORMAL);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void setDecorated(boolean decorated) {
         super.setDecorated(decorated);
         stderr.setDecorated(decorated);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void setFormatter(OutputFormatterInterface formatter) {
         super.setFormatter(formatter);
         stderr.setFormatter(formatter);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void setVerbosity(VerbosityLevel level) {
         super.setVerbosity(level);
         stderr.setVerbosity(level);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public OutputInterface getErrorOutput() {
         return stderr;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void setErrorOutput(OutputInterface error) {
         stderr = error;

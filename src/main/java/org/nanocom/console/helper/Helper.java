@@ -17,24 +17,23 @@ public abstract class Helper implements HelperInterface {
     protected HelperSet helperSet = null;
 
     /**
-     * Sets the helper set associated with this helper.
-     *
-     * @param helperSet A HelperSet instance
+     * {@inheritDoc}
      */
     @Override
     public void setHelperSet(HelperSet helperSet) {
         this.helperSet = helperSet;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void setHelperSet() {
         setHelperSet(null);
     }
 
     /**
-     * Gets the helper set associated with this helper.
-     *
-     * @return A HelperSet instance
+     * {@inheritDoc}
      */
     @Override
     public HelperSet getHelperSet() {

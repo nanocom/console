@@ -31,6 +31,8 @@ public class InputOption {
     private String  description;
 
     /**
+     * Constructor.
+     *
      * @param name         The option name
      * @param shortcut     The shortcut (can be null)
      * @param mode         The option mode: One of the VALUE_* constants
@@ -43,18 +45,48 @@ public class InputOption {
         init(name, shortcut, mode, description, defaultValue);
     }
 
+    /**
+     * Constructor.
+     *
+     * @param name        The option name
+     * @param shortcut    The shortcut (can be null)
+     * @param mode        The option mode: One of the VALUE_* constants
+     * @param description A description text
+     *
+     * @throws IllegalArgumentException If option mode is invalid or incompatible
+     */
     public InputOption(String name, String shortcut, int mode, String description) {
         this(name, shortcut, mode, description, null);
     }
 
+    /**
+     * Constructor.
+     *
+     * @param name     The option name
+     * @param shortcut The shortcut (can be null)
+     * @param mode     The option mode: One of the VALUE_* constants
+     *
+     * @throws IllegalArgumentException If option mode is invalid or incompatible
+     */
     public InputOption(String name, String shortcut, int mode) {
         this(name, shortcut, mode, "");
     }
 
+    /**
+     * Constructor.
+     *
+     * @param name     The option name
+     * @param shortcut The shortcut (can be null)
+     */
     public InputOption(String name, String shortcut) {
         this(name, shortcut, VALUE_NONE);
     }
 
+    /**
+     * Constructor.
+     *
+     * @param name The option name
+     */
     public InputOption(String name) {
         this(name, null);
     }
