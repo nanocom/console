@@ -62,7 +62,7 @@ public class ProgressHelperTest {
         progress.start(output, 10);
         progress.advance();
 
-        assertEquals(generateOutput("  1/10 [_/        ] 10.0%"), output.getBuffer().toString());
+        assertEquals(generateOutput("  1/10 [_/        ]  10%"), output.getBuffer().toString());
     }
 
     protected String generateOutput(String expected) {

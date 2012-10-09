@@ -358,7 +358,7 @@ public class ProgressHelper extends Helper {
         }
 
         if (formatVars.containsKey("percent")) {
-            vars.put("percent", leftPad(String.valueOf(percent * 100), widths.get("percent"), " "));
+            vars.put("percent", leftPad(String.valueOf(new Double(percent * 100).intValue()), widths.get("percent"), " "));
         }
 
         return vars;
