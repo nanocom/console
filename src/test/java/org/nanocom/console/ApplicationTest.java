@@ -28,9 +28,13 @@ import org.nanocom.console.fixtures.Foo1Command;
 import org.nanocom.console.fixtures.Foo2Command;
 import org.nanocom.console.fixtures.Foo3Command;
 import org.nanocom.console.fixtures.FooCommand;
+import org.nanocom.console.helper.FormatterHelper;
+import org.nanocom.console.helper.Helper;
+import org.nanocom.console.helper.HelperSet;
 import org.nanocom.console.input.ArgvInput;
 import org.nanocom.console.input.ArrayInput;
 import org.nanocom.console.input.InputArgument;
+import org.nanocom.console.input.InputDefinition;
 import org.nanocom.console.input.InputInterface;
 import org.nanocom.console.input.InputOption;
 import org.nanocom.console.output.ConsoleOutput;
@@ -599,5 +603,116 @@ public class ApplicationTest {
             new InputOption("quiet", "", InputOption.VALUE_NONE),
             new InputOption("query", "q", InputOption.VALUE_NONE)
         );
+    }
+
+    @Test
+    public void testGetDefaultHelperSetReturnsDefaultValues() {
+        Application application = new Application();
+        application.setAutoExit(false);
+        application.setCatchExceptions(false);
+
+        HelperSet helperSet = application.getHelperSet();
+
+        assertTrue(helperSet.has("formatter"));
+        assertTrue(helperSet.has("dialog"));
+        // assertTrue(helperSet.has("progress"));
+    }
+
+    @Test
+    public void testAddingSingleHelperSetOverwritesDefaultValues() {
+        Application application = new Application();
+        application.setAutoExit(false);
+        application.setCatchExceptions(false);
+
+        application.setHelperSet(new HelperSet(Arrays.<Helper>asList(new FormatterHelper())));
+
+        HelperSet helperSet = application.getHelperSet();
+
+        assertTrue(helperSet.has("formatter"));
+
+        // No other default helper set should be returned
+        assertFalse(helperSet.has("dialog"));
+        // assertFalse(helperSet.has("progress"));
+    }
+
+    @Test
+    public void testOverwritingDefaultHelperSetOverwritesDefaultValues() {
+        Application application = new CustomApplication();
+        application.setAutoExit(false);
+        application.setCatchExceptions(false);
+
+        application.setHelperSet(new HelperSet(Arrays.<Helper>asList(new FormatterHelper())));
+
+        HelperSet helperSet = application.getHelperSet();
+
+        assertTrue(helperSet.has("formatter"));
+
+        // No other default helper set should be returned
+        assertFalse(helperSet.has("dialog"));
+        assertFalse(helperSet.has("progress"));
+    }
+
+    @Test
+    public void testGetDefaultInputDefinitionReturnsDefaultValues() {
+        Application application = new Application();
+        application.setAutoExit(false);
+        application.setCatchExceptions(false);
+
+        InputDefinition inputDefinition = application.getDefinition();
+
+        assertTrue(inputDefinition.hasArgument("command"));
+
+        assertTrue(inputDefinition.hasOption("help"));
+        assertTrue(inputDefinition.hasOption("quiet"));
+        assertTrue(inputDefinition.hasOption("verbose"));
+        assertTrue(inputDefinition.hasOption("version"));
+        assertTrue(inputDefinition.hasOption("ansi"));
+        assertTrue(inputDefinition.hasOption("no-ansi"));
+        assertTrue(inputDefinition.hasOption("no-interaction"));
+    }
+
+    @Test
+    public void testOverwritingDefaultInputDefinitionOverwritesDefaultValues() {
+        Application application = new CustomApplication();
+        application.setAutoExit(false);
+        application.setCatchExceptions(false);
+
+        InputDefinition inputDefinition = application.getDefinition();
+
+        // Check wether the default arguments and options are not returned anymore
+        assertFalse(inputDefinition.hasArgument("command"));
+
+        assertFalse(inputDefinition.hasOption("help"));
+        assertFalse(inputDefinition.hasOption("quiet"));
+        assertFalse(inputDefinition.hasOption("verbose"));
+        assertFalse(inputDefinition.hasOption("version"));
+        assertFalse(inputDefinition.hasOption("ansi"));
+        assertFalse(inputDefinition.hasOption("no-ansi"));
+        assertFalse(inputDefinition.hasOption("no-interaction"));
+
+        assertTrue(inputDefinition.hasOption("custom"));
+    }
+
+    class CustomApplication extends Application {
+
+        /**
+         * Overwrites the default input definition.
+         *
+         * @return InputDefinition An InputDefinition instance
+         */
+        @Override
+        protected InputDefinition getDefaultInputDefinition() {
+            return new InputDefinition(Arrays.<Object>asList(new InputOption("--custom", "-c", InputOption.VALUE_NONE, "Set the custom input definition.")));
+        }
+
+        /**
+         * Gets the default helper set with the helpers that should always be available.
+         *
+         * @return HelperSet A HelperSet instance
+         */
+        @Override
+        protected HelperSet getDefaultHelperSet() {
+            return new HelperSet(Arrays.<Helper>asList(new FormatterHelper()));
+        }
     }
 }

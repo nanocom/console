@@ -26,7 +26,7 @@ public class DialogHelper extends Helper {
      * Asks a question to the user.
      *
      * @param output        An Output instance
-     * @param question      The question to ask
+     * @param questions     The questions to ask
      * @param defaultAnswer The default answer if none is given by the user
      *
      * @return The user answer
@@ -45,14 +45,45 @@ public class DialogHelper extends Helper {
         return ret.length() > 0 ? ret : defaultAnswer;
     }
 
+    /**
+     * Asks a question to the user.
+     *
+     * @param output    An Output instance
+     * @param questions The questions to ask
+     *
+     * @return The user answer
+     *
+     * @throws RuntimeException If there is no data to read in the input stream
+     */
     public String ask(OutputInterface output, List<String> questions) {
         return ask(output, questions, null);
     }
 
+    /**
+     * Asks a question to the user.
+     *
+     * @param output        An Output instance
+     * @param question      The question to ask
+     * @param defaultAnswer The default answer if none is given by the user
+     *
+     * @return The user answer
+     *
+     * @throws RuntimeException If there is no data to read in the input stream
+     */
     public String ask(OutputInterface output, String question, String defaultValue) {
         return ask(output, Arrays.asList(question), defaultValue); // There's maybe something better to do
     }
 
+    /**
+     * Asks a question to the user.
+     *
+     * @param output   An Output instance
+     * @param question The question to ask
+     *
+     * @return The user answer
+     *
+     * @throws RuntimeException If there is no data to read in the input stream
+     */
     public String ask(OutputInterface output, String question) {
         return ask(output, question, null);
     }
@@ -128,7 +159,7 @@ public class DialogHelper extends Helper {
      * @param stream The input stream
      */
     public void setInputStream(InputStream stream) {
-        this.inputStream = stream;
+        inputStream = stream;
     }
 
     /**
@@ -141,7 +172,7 @@ public class DialogHelper extends Helper {
     }
 
     /**
-     * Returns the helper's canonical name.
+     * {@inheritDoc}
      */
     @Override
     public String getName() {

@@ -32,6 +32,14 @@ public class FormatterHelper extends Helper {
         return String.format("<%s>[%s]</%s> %s", style, section, style, message);
     }
 
+    /**
+     * Formats a message within a section.
+     *
+     * @param section The section name
+     * @param message The message
+     *
+     * @return The formatted section
+     */
     public String formatSection(String section, String message) {
         return formatSection(section, message, "info");
     }
@@ -39,7 +47,7 @@ public class FormatterHelper extends Helper {
     /**
      * Formats a message as a block of text.
      *
-     * @param messages The message to write in the block
+     * @param messages The messages to write in the block
      * @param style    The style to apply to the whole block
      * @param large    Whether to return a large block
      *
@@ -78,9 +86,9 @@ public class FormatterHelper extends Helper {
     /**
      * Formats a message as a block of text.
      *
-     * @param message  The message to write in the block
-     * @param style    The style to apply to the whole block
-     * @param large    Whether to return a large block
+     * @param message The message to write in the block
+     * @param style   The style to apply to the whole block
+     * @param large   Whether to return a large block
      *
      * @return The formatter message
      */
@@ -91,18 +99,32 @@ public class FormatterHelper extends Helper {
         return formatBlock(messages, style, large);
     }
 
+    /**
+     * Formats a message as a block of text.
+     *
+     * @param messages The messages to write in the block
+     * @param style    The style to apply to the whole block
+     *
+     * @return The formatter message
+     */
     public String formatBlock(List<String> messages, String style) {
         return formatBlock(messages, style, false);
     }
 
+    /**
+     * Formats a message as a block of text.
+     *
+     * @param message The message to write in the block
+     * @param style   The style to apply to the whole block
+     *
+     * @return The formatter message
+     */
     public String formatBlock(String message, String style) {
         return formatBlock(message, style, false);
     }
 
     /**
-     * Returns the helper's canonical name.
-     *
-     * @return The canonical name of the helper
+     * {@inheritDoc}
      */
     @Override
     public String getName() {
