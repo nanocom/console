@@ -9,6 +9,7 @@ package org.nanocom.console.command;
 
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import static org.apache.commons.lang3.StringUtils.*;
 import org.apache.commons.lang3.SystemUtils;
@@ -19,6 +20,7 @@ import org.nanocom.console.input.InputArgument;
 import org.nanocom.console.input.InputDefinition;
 import org.nanocom.console.input.InputInterface;
 import org.nanocom.console.input.InputOption;
+import org.nanocom.console.input.InputParameterInterface;
 import org.nanocom.console.output.OutputInterface;
 
 /**
@@ -281,8 +283,10 @@ public class Command extends Executable {
     public Command setDefinition(Object definition) {
         if (definition instanceof InputDefinition) {
             this.definition = (InputDefinition) definition;
-        } else if (definition instanceof List) {
-            this.definition.setDefinition((List<Object>) definition);
+        } else if (definition instanceof Collection) {
+            this.definition.setDefinition((Collection<InputParameterInterface>) definition);
+        } else if (definition instanceof InputParameterInterface[]) {
+            this.definition.setDefinition((InputParameterInterface[]) definition);
         }
 
         applicationDefinitionMerged = false;

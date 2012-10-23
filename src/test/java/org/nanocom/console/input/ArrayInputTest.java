@@ -50,7 +50,7 @@ public class ArrayInputTest {
     public void testParse() {
         Map<String, String> map = new HashMap<String, String>();
         map.put("name", "foo");
-        InputInterface input = new ArrayInput(map, new InputDefinition(Arrays.<Object>asList(new InputArgument("name"))));
+        InputInterface input = new ArrayInput(map, new InputDefinition(new InputParameterInterface[] {new InputArgument("name")}));
         Map<String, Object> map2 = new HashMap<String, Object>();
         map2.put("name", "foo");
         assertEquals("parse() parses required arguments", map2, input.getArguments());
@@ -58,7 +58,7 @@ public class ArrayInputTest {
         try {
             map.clear();
             map.put("foo", "foo");
-            input = new ArrayInput(map, new InputDefinition(Arrays.<Object>asList(new InputArgument("name"))));
+            input = new ArrayInput(map, new InputDefinition(new InputParameterInterface[] {new InputArgument("name")}));
             fail("parse() throws an IllegalArgumentException exception if an invalid argument is passed");
         } catch (Exception e) {
             assertTrue("parse() throws an IllegalArgumentException exception if an invalid argument is passed", e instanceof IllegalArgumentException);
@@ -67,23 +67,23 @@ public class ArrayInputTest {
 
         map.clear();
         map.put("--foo", "bar");
-        input = new ArrayInput(map, new InputDefinition(Arrays.<Object>asList(new InputOption("foo"))));
+        input = new ArrayInput(map, new InputDefinition(new InputParameterInterface[] {new InputOption("foo")}));
         map2.clear();
         map2.put("foo", "bar");
         assertEquals("parse() parses long options", map2, input.getOptions());
 
-        input = new ArrayInput(map, new InputDefinition(Arrays.<Object>asList(new InputOption("foo", "f", InputOption.VALUE_OPTIONAL, "", "default"))));
+        input = new ArrayInput(map, new InputDefinition(new InputParameterInterface[] {new InputOption("foo", "f", InputOption.VALUE_OPTIONAL, "", "default")}));
         assertEquals("parse() parses long options with a default value", map2, input.getOptions());
 
         map.clear();
         map.put("--foo", null);
-        input = new ArrayInput(map, new InputDefinition(Arrays.<Object>asList(new InputOption("foo", "f", InputOption.VALUE_OPTIONAL, "", "default"))));
+        input = new ArrayInput(map, new InputDefinition(new InputParameterInterface[] {new InputOption("foo", "f", InputOption.VALUE_OPTIONAL, "", "default")}));
         map2.clear();
         map2.put("foo", "default");
         assertEquals("parse() parses long options with a default value", map2, input.getOptions());
 
         try {
-            input = new ArrayInput(map, new InputDefinition(Arrays.<Object>asList(new InputOption("foo", "f", InputOption.VALUE_REQUIRED))));
+            input = new ArrayInput(map, new InputDefinition(new InputParameterInterface[] {new InputOption("foo", "f", InputOption.VALUE_REQUIRED)}));
             fail("parse() throws an IllegalArgumentException exception if a required option is passed without a value");
         } catch (Exception e) {
             assertTrue("parse() throws an IllegalArgumentException exception if a required option is passed without a value", e instanceof IllegalArgumentException);
@@ -102,7 +102,7 @@ public class ArrayInputTest {
 
         map.clear();
         map.put("-f", "bar");
-        input = new ArrayInput(map, new InputDefinition(Arrays.<Object>asList(new InputOption("foo", "f"))));
+        input = new ArrayInput(map, new InputDefinition(new InputParameterInterface[] {new InputOption("foo", "f")}));
         map2.clear();
         map2.put("foo", "bar");
         assertEquals("parse() parses short options", map2, input.getOptions());

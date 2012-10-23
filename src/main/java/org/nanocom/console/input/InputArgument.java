@@ -16,7 +16,7 @@ import org.nanocom.console.exception.LogicException;
  *
  * @author Arnaud Kleinpeter <arnaud.kleinpeter at gmail dot com>
  */
-public class InputArgument {
+public class InputArgument implements InputParameterInterface {
 
     public static final int REQUIRED = 1;
     public static final int OPTIONAL = 2;

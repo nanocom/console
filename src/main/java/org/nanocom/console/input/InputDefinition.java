@@ -17,9 +17,9 @@ import org.nanocom.console.exception.LogicException;
  *
  * Usage:
  *
- *     InputDefinition definition = new InputDefinition(Arrays.asList((Object)
+ *     InputDefinition definition = new InputDefinition(Arrays.<InputParameterInterface>asList(
  *       new InputArgument("name", InputArgument.REQUIRED),
- *       new InputOption("foo", "f", InputOption.VALUE_REQUIRED),
+ *       new InputOption("foo", "f", InputOption.VALUE_REQUIRED)
  *     ));
  *
  * @author Arnaud Kleinpeter <arnaud.kleinpeter at gmail dot com>
@@ -37,29 +37,38 @@ public class InputDefinition {
     /**
      * Constructor.
      *
-     * @param definition An array of InputArgument and InputOption instance
+     * @param definition A ist of InputParameterInterface instances
      */
-    public InputDefinition(List<Object> definition) {
+    public InputDefinition(Collection<InputParameterInterface> definition) {
         setDefinition(definition);
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param definition An array of InputParameterInterface instances
+     */
+    public InputDefinition(InputParameterInterface[] definition) {
+        setDefinition(Arrays.asList(definition));
     }
 
     /**
      * Constructor.
      */
     public InputDefinition() {
-        setDefinition(new ArrayList<Object>());
+        this(new ArrayList<InputParameterInterface>());
     }
 
     /**
      * Sets the definition of the input.
      *
-     * @param definition The definition array
+     * @param definition The definition collection
      */
-    public final void setDefinition(List<Object> definition) {
+    public final void setDefinition(Collection<InputParameterInterface> definition) {
         List<InputArgument> locArguments = new ArrayList<InputArgument>();
         List<InputOption> locOptions = new ArrayList<InputOption>();
 
-        for (Object item : definition) {
+        for (InputParameterInterface item : definition) {
             if (item instanceof InputOption) {
                 locOptions.add((InputOption) item);
             } else if (item instanceof InputArgument) {
@@ -71,6 +80,15 @@ public class InputDefinition {
 
         setArguments(locArguments);
         setOptions(locOptions);
+    }
+
+    /**
+     * Sets the definition of the input.
+     *
+     * @param definition The definition array
+     */
+    public final void setDefinition(InputParameterInterface[] definition) {
+        setDefinition(Arrays.asList(definition));
     }
 
     /**

@@ -13,6 +13,7 @@ import org.nanocom.console.input.InputArgument;
 import org.nanocom.console.input.InputDefinition;
 import org.nanocom.console.input.InputInterface;
 import org.nanocom.console.input.InputOption;
+import org.nanocom.console.input.InputParameterInterface;
 import org.nanocom.console.output.OutputInterface;
 
 /**
@@ -57,9 +58,9 @@ public class ListCommand extends Command {
     }
 
     private InputDefinition createDefinition() {
-        return new InputDefinition(Arrays.<Object>asList(
+        return new InputDefinition(new InputParameterInterface[] {
             new InputArgument("namespace", InputArgument.OPTIONAL, "The namespace name"),
             new InputOption("raw", null, InputOption.VALUE_NONE, "To output raw command list")
-        ));
+        });
     }
 }

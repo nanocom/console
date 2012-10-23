@@ -121,7 +121,7 @@ public class DialogHelper extends Helper {
      *
      * @param output        An Output instance
      * @param question      The question to ask
-     * @param callback      validator A PHP callback
+     * @param validator     A callback
      * @param attempts      Max number of times to ask before giving up (false by default, which means infinite)
      * @param defaultAnswer The default answer if none is given by the user
      *

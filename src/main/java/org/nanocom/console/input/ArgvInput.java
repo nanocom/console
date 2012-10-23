@@ -73,7 +73,7 @@ public class ArgvInput extends Input {
     @Override
     protected void parse() {
         boolean parseOptions = true;
-        parsed = new ArrayList<String>(tokens);
+        parsed = new LinkedList<String>(tokens);
         String token;
 
         while (!parsed.isEmpty()) {

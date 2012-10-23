@@ -37,6 +37,7 @@ import org.nanocom.console.input.InputArgument;
 import org.nanocom.console.input.InputDefinition;
 import org.nanocom.console.input.InputInterface;
 import org.nanocom.console.input.InputOption;
+import org.nanocom.console.input.InputParameterInterface;
 import org.nanocom.console.output.ConsoleOutput;
 import org.nanocom.console.output.NullOutput;
 import org.nanocom.console.output.Output;
@@ -597,12 +598,12 @@ public class ApplicationTest {
         application.run(input, output);
     }
 
-    public List<Object> getAddingAlreadySetDefinitionElementData() {
-        return Arrays.asList(
+    public InputParameterInterface[] getAddingAlreadySetDefinitionElementData() {
+        return new InputParameterInterface[] {
             new InputArgument("command", InputArgument.REQUIRED),
             new InputOption("quiet", "", InputOption.VALUE_NONE),
             new InputOption("query", "q", InputOption.VALUE_NONE)
-        );
+        };
     }
 
     @Test
@@ -702,7 +703,7 @@ public class ApplicationTest {
          */
         @Override
         protected InputDefinition getDefaultInputDefinition() {
-            return new InputDefinition(Arrays.<Object>asList(new InputOption("--custom", "-c", InputOption.VALUE_NONE, "Set the custom input definition.")));
+            return new InputDefinition(new InputParameterInterface[] {new InputOption("--custom", "-c", InputOption.VALUE_NONE, "Set the custom input definition.")});
         }
 
         /**

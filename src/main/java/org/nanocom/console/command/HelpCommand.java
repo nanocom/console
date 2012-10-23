@@ -11,6 +11,7 @@ import java.util.Arrays;
 import static org.apache.commons.lang3.SystemUtils.LINE_SEPARATOR;
 import org.nanocom.console.input.InputArgument;
 import org.nanocom.console.input.InputInterface;
+import org.nanocom.console.input.InputParameterInterface;
 import org.nanocom.console.output.OutputInterface;
 
 /**
@@ -30,9 +31,9 @@ public class HelpCommand extends Command {
         ignoreValidationErrors();
 
         setName("help");
-        setDefinition(Arrays.<Object>asList(
+        setDefinition(new InputParameterInterface[] {
             new InputArgument("command_name", InputArgument.OPTIONAL, "The command name", "help")
-        ));
+        });
         setDescription("Displays help for a command");
         setHelp("The <info>%command.name%</info> command displays help for a given command:" + LINE_SEPARATOR + LINE_SEPARATOR
                 + "  <info>java -jar %command.full_name% list</info>"

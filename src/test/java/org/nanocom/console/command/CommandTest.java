@@ -34,6 +34,7 @@ import org.nanocom.console.input.InputArgument;
 import org.nanocom.console.input.InputDefinition;
 import org.nanocom.console.input.InputInterface;
 import org.nanocom.console.input.InputOption;
+import org.nanocom.console.input.InputParameterInterface;
 import org.nanocom.console.input.StringInput;
 import org.nanocom.console.output.NullOutput;
 import org.nanocom.console.output.OutputInterface;
@@ -94,7 +95,7 @@ public class CommandTest {
         Command ret = command.setDefinition(definition);
         assertEquals("setDefinition() implements a fluent interface", command, ret);
         assertEquals("setDefinition() sets the current InputDefinition instance", definition, command.getDefinition());
-        command.setDefinition(Arrays.asList((Object) new InputArgument("foo"), new InputOption("bar")));
+        command.setDefinition(new InputParameterInterface[] {new InputArgument("foo"), new InputOption("bar")});
         assertTrue("setDefinition() also takes an array of InputArguments and InputOptions as an argument", command.getDefinition().hasArgument("foo"));
         assertTrue("setDefinition() also takes an array of InputArguments and InputOptions as an argument", command.getDefinition().hasOption("bar"));
         command.setDefinition(new InputDefinition());
@@ -205,7 +206,7 @@ public class CommandTest {
         application1.getDefinition().addOptions(Arrays.asList(new InputOption("bar")));
         Command command = new TestCommand();
         command.setApplication(application1);
-        InputDefinition definition = new InputDefinition(Arrays.asList((Object) new InputArgument("bar"), new InputOption("foo")));
+        InputDefinition definition = new InputDefinition(new InputParameterInterface[] {new InputArgument("bar"), new InputOption("foo")});
         command.setDefinition(definition);
 
         Class<Command> cls = Command.class;

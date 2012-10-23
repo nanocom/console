@@ -871,7 +871,7 @@ public class Application {
      * @return An InputDefinition instance
      */
     protected InputDefinition getDefaultInputDefinition() {
-        return new InputDefinition(Arrays.<Object>asList(
+        return new InputDefinition(new InputParameterInterface[] {
             new InputArgument("command", InputArgument.REQUIRED, "The command to execute"),
             new InputOption("--help",           "-h", InputOption.VALUE_NONE, "Display this help message."),
             new InputOption("--quiet",          "-q", InputOption.VALUE_NONE, "Do not output any message."),
@@ -880,7 +880,7 @@ public class Application {
             new InputOption("--ansi",           EMPTY,   InputOption.VALUE_NONE, "Force ANSI output."),
             new InputOption("--no-ansi",        EMPTY,   InputOption.VALUE_NONE, "Disable ANSI output."),
             new InputOption("--no-interaction", "-n", InputOption.VALUE_NONE, "Do not ask any interactive question.")
-        ));
+        });
     }
 
     /**

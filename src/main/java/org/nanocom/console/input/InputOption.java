@@ -17,7 +17,7 @@ import org.nanocom.console.exception.LogicException;
  *
  * @author Arnaud Kleinpeter <arnaud.kleinpeter at gmail dot com>
  */
-public class InputOption {
+public class InputOption implements InputParameterInterface {
 
     public static final int VALUE_NONE     = 1;
     public static final int VALUE_REQUIRED = 2;

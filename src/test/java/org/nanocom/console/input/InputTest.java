@@ -22,7 +22,7 @@ public class InputTest {
     public void testConstructor() {
         Map<String, String> foobar = new HashMap<String, String>();
         foobar.put("name", "foo");
-        ArrayInput input = new ArrayInput(foobar, new InputDefinition(Arrays.asList((Object) new InputArgument("name"))));
+        ArrayInput input = new ArrayInput(foobar, new InputDefinition(new InputParameterInterface[] {new InputArgument("name")}));
         assertEquals("Constructor takes a InputDefinition as an argument", "foo", input.getArgument("name"));
     }
 
@@ -30,7 +30,7 @@ public class InputTest {
     public void testOptions() {
         Map<String, String> foobar = new HashMap<String, String>();
         foobar.put("--name", "foo");
-        ArrayInput input = new ArrayInput(foobar, new InputDefinition(Arrays.asList((Object) new InputOption("name"))));
+        ArrayInput input = new ArrayInput(foobar, new InputDefinition(new InputParameterInterface[] {new InputOption("name")}));
         assertEquals("getOption() returns the value for the given option", "foo", input.getOption("name"));
 
         input.setOption("name", "bar");
@@ -41,7 +41,7 @@ public class InputTest {
 
         foobar.clear();
         foobar.put("--name", "foo");
-        input = new ArrayInput(foobar, new InputDefinition(Arrays.asList((Object) new InputOption("name"), new InputOption("bar", "", InputOption.VALUE_OPTIONAL, "", "default"))));
+        input = new ArrayInput(foobar, new InputDefinition(new InputParameterInterface[] {new InputOption("name"), new InputOption("bar", "", InputOption.VALUE_OPTIONAL, "", "default")}));
         assertEquals("getOption() returns the default value for optional options", "default", input.getOption("bar"));
         foobar.clear();
         foobar.put("name", "foo");
@@ -70,7 +70,7 @@ public class InputTest {
         Map<String, String> foobar = new HashMap<String, String>();
         foobar.put("name", "foo");
 
-        ArrayInput input = new ArrayInput(foobar, new InputDefinition(Arrays.asList((Object) new InputArgument("name"))));
+        ArrayInput input = new ArrayInput(foobar, new InputDefinition(new InputParameterInterface[] {new InputArgument("name")}));
         assertEquals("getArgument() returns the value for the given argument", "foo", input.getArgument("name"));
 
         input.setArgument("name", "bar");
@@ -82,7 +82,7 @@ public class InputTest {
         foobar.clear();
         foobar.put("name", "foo");
         foobar.put("bar", "default");
-        input = new ArrayInput(foobar, new InputDefinition(Arrays.asList((Object) new InputArgument("name"), new InputArgument("bar", InputArgument.OPTIONAL, "", "default"))));
+        input = new ArrayInput(foobar, new InputDefinition(new InputParameterInterface[] {new InputArgument("name"), new InputArgument("bar", InputArgument.OPTIONAL, "", "default")}));
         assertEquals("getArgument() returns the default value for optional arguments", "default", input.getArgument("bar"));
         assertEquals("getArguments() returns all argument values, even optional ones", foobar, input.getArguments());
 
@@ -107,7 +107,7 @@ public class InputTest {
     public void testValidate() {
         Map<String, String> foobar = new HashMap<String, String>();
         ArrayInput input = new ArrayInput(foobar);
-        input.bind(new InputDefinition(Arrays.asList((Object) new InputArgument("name", InputArgument.REQUIRED))));
+        input.bind(new InputDefinition(new InputParameterInterface[] {new InputArgument("name", InputArgument.REQUIRED)}));
 
         try {
             input.validate();
@@ -119,7 +119,7 @@ public class InputTest {
 
         foobar.put("name", "foo");
         input = new ArrayInput(foobar);
-        input.bind(new InputDefinition(Arrays.asList((Object) new InputArgument("name", InputArgument.REQUIRED))));
+        input.bind(new InputDefinition(new InputParameterInterface[] {new InputArgument("name", InputArgument.REQUIRED)}));
 
         try {
             input.validate();

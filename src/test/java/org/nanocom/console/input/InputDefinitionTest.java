@@ -22,8 +22,8 @@ import org.nanocom.console.exception.LogicException;
 
 public class InputDefinitionTest {
 
-    private Object foo;
-    private Object bar;
+    private InputParameterInterface foo;
+    private InputParameterInterface bar;
     private Object foo1;
     private Object foo2;
 
@@ -58,7 +58,7 @@ public class InputDefinitionTest {
         InputDefinition definition = new InputDefinition();
         assertEquals("Constructor creates a new InputDefinition object", new HashMap<String, InputArgument>(), definition.getArguments());
 
-        definition = new InputDefinition(Arrays.asList(foo, bar));
+        definition = new InputDefinition(new InputParameterInterface[] {foo, bar});
         Map<String, Object> foobar = new HashMap<String, Object>();
         foobar.put("foo", foo);
         foobar.put("bar", bar);
@@ -73,7 +73,7 @@ public class InputDefinitionTest {
         definition = new InputDefinition();
         assertEquals("Constructor creates a new InputDefinition object", new HashMap<String, InputOption>(), definition.getOptions());
 
-        definition = new InputDefinition(Arrays.asList(foo, bar));
+        definition = new InputDefinition(new InputParameterInterface[] {foo, bar});
         assertEquals("Constructor takes an array of InputOption objects as its first argument", foobar, definition.getOptions());
     }
 
@@ -200,20 +200,20 @@ public class InputDefinitionTest {
 
     @Test
     public void testGetArgumentDefaults() {
-        InputDefinition definition = new InputDefinition(Arrays.asList((Object)
+        InputDefinition definition = new InputDefinition(new InputParameterInterface[] {
             new InputArgument("foo1", InputArgument.OPTIONAL),
             new InputArgument("foo2", InputArgument.OPTIONAL, "", "default"),
             new InputArgument("foo3", InputArgument.OPTIONAL | InputArgument.IS_ARRAY)
-        ));
+        });
         Map<String, Object> foobar = new HashMap<String, Object>();
         foobar.put("foo1", null);
         foobar.put("foo2", "default");
         foobar.put("foo3", new ArrayList<Object>());
         assertEquals("getArgumentDefaults() return the default values for each argument", foobar, definition.getArgumentDefaults());
 
-        definition = new InputDefinition(Arrays.asList((Object)
+        definition = new InputDefinition(new InputParameterInterface[] {
             new InputArgument("foo4", InputArgument.OPTIONAL | InputArgument.IS_ARRAY, "", Arrays.asList(1, 2))
-        ));
+        });
         foobar = new HashMap<String, Object>();
         foobar.put("foo4", Arrays.asList(1, 2));
         assertEquals("getArgumentDefaults() return the default values for each argument", foobar, definition.getArgumentDefaults());
@@ -334,7 +334,7 @@ public class InputDefinitionTest {
 
     @Test
     public void testGetOptionDefaults() {
-        InputDefinition definition = new InputDefinition(Arrays.asList((Object)
+        InputDefinition definition = new InputDefinition(new InputParameterInterface[] {
             new InputOption("foo1", null, InputOption.VALUE_NONE),
             new InputOption("foo2", null, InputOption.VALUE_REQUIRED),
             new InputOption("foo3", null, InputOption.VALUE_REQUIRED, "", "default"),
@@ -342,7 +342,7 @@ public class InputDefinitionTest {
             new InputOption("foo5", null, InputOption.VALUE_OPTIONAL, "", "default"),
             new InputOption("foo6", null, InputOption.VALUE_OPTIONAL | InputOption.VALUE_IS_ARRAY),
             new InputOption("foo7", null, InputOption.VALUE_OPTIONAL | InputOption.VALUE_IS_ARRAY, "", Arrays.asList(1, 2))
-        ));
+        });
 
         Map<String, Object> defaults = new HashMap<String, Object>();
         defaults.put("foo1", false); // TODO was null before, but getOptionDefaults returns false
@@ -357,22 +357,22 @@ public class InputDefinitionTest {
 
     @Test
     public void testGetSynopsis() {
-        InputDefinition definition = new InputDefinition(Arrays.asList((Object) new InputOption("foo")));
+        InputDefinition definition = new InputDefinition(new InputParameterInterface[] {new InputOption("foo")});
         assertEquals("getSynopsis() returns a synopsis of arguments and options", "[--foo]", definition.getSynopsis());
-        definition = new InputDefinition(Arrays.asList((Object) new InputOption("foo", "f")));
+        definition = new InputDefinition(new InputParameterInterface[] {new InputOption("foo", "f")});
         assertEquals("getSynopsis() returns a synopsis of arguments and options", "[-f|--foo]", definition.getSynopsis());
-        definition = new InputDefinition(Arrays.asList((Object) new InputOption("foo", "f", InputOption.VALUE_REQUIRED)));
+        definition = new InputDefinition(new InputParameterInterface[] {new InputOption("foo", "f", InputOption.VALUE_REQUIRED)});
         assertEquals("getSynopsis() returns a synopsis of arguments and options", "[-f|--foo=\"...\"]", definition.getSynopsis());
-        definition = new InputDefinition(Arrays.asList((Object) new InputOption("foo", "f", InputOption.VALUE_OPTIONAL)));
+        definition = new InputDefinition(new InputParameterInterface[] {new InputOption("foo", "f", InputOption.VALUE_OPTIONAL)});
         assertEquals("getSynopsis() returns a synopsis of arguments and options", "[-f|--foo[=\"...\"]]", definition.getSynopsis());
 
-        definition = new InputDefinition(Arrays.asList((Object) new InputArgument("foo")));
+        definition = new InputDefinition(new InputParameterInterface[] {new InputArgument("foo")});
         assertEquals("getSynopsis() returns a synopsis of arguments and options", "[foo]", definition.getSynopsis());
-        definition = new InputDefinition(Arrays.asList((Object) new InputArgument("foo", InputArgument.REQUIRED)));
+        definition = new InputDefinition(new InputParameterInterface[] {new InputArgument("foo", InputArgument.REQUIRED)});
         assertEquals("getSynopsis() returns a synopsis of arguments and options", "foo", definition.getSynopsis());
-        definition = new InputDefinition(Arrays.asList((Object) new InputArgument("foo", InputArgument.IS_ARRAY)));
+        definition = new InputDefinition(new InputParameterInterface[] {new InputArgument("foo", InputArgument.IS_ARRAY)});
         assertEquals("getSynopsis() returns a synopsis of arguments and options", "[foo1] ... [fooN]", definition.getSynopsis());
-        definition = new InputDefinition(Arrays.asList((Object) new InputArgument("foo", InputArgument.REQUIRED | InputArgument.IS_ARRAY)));
+        definition = new InputDefinition(new InputParameterInterface[] {new InputArgument("foo", InputArgument.REQUIRED | InputArgument.IS_ARRAY)});
         assertEquals("getSynopsis() returns a synopsis of arguments and options", "foo1 ... [fooN]", definition.getSynopsis());
     }
 
@@ -381,7 +381,7 @@ public class InputDefinitionTest {
         Map<String, String> foobar = new HashMap<String, String>();
         foobar.put("foo", "bar");
 
-        InputDefinition definition = new InputDefinition(Arrays.asList((Object)
+        InputDefinition definition = new InputDefinition(new InputParameterInterface[] {
             new InputArgument("foo", InputArgument.OPTIONAL, "The foo argument"),
             new InputArgument("baz", InputArgument.OPTIONAL, "The baz argument", true),
             new InputArgument("bar", InputArgument.OPTIONAL | InputArgument.IS_ARRAY, "The bar argument", Arrays.asList("http://foo.com/")),
@@ -390,7 +390,7 @@ public class InputDefinitionTest {
             new InputOption("bar", "b", InputOption.VALUE_OPTIONAL, "The bar option", "bar"),
             new InputOption("qux", "", InputOption.VALUE_OPTIONAL | InputOption.VALUE_IS_ARRAY, "The qux option", Arrays.asList("http://foo.com/", "bar")),
             new InputOption("qux2", "", InputOption.VALUE_OPTIONAL | InputOption.VALUE_IS_ARRAY, "The qux2 option", foobar)
-        ));
+        });
 
         assertEquals("asText() returns a textual representation of the InputDefinition", getResource("definition_astext.txt"), definition.asText());
     }
