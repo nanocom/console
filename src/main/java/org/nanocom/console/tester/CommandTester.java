@@ -17,6 +17,8 @@ import org.nanocom.console.output.OutputInterface;
 import org.nanocom.console.output.OutputInterface.VerbosityLevel;
 
 /**
+ * Eases the testing of commands.
+ *
  * @author Arnaud Kleinpeter <arnaud.kleinpeter at gmail dot com>
  */
 public class CommandTester {

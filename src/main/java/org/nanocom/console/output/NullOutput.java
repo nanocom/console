@@ -7,8 +7,6 @@
 
 package org.nanocom.console.output;
 
-import org.nanocom.console.formatter.OutputFormatterInterface;
-
 /**
  * NullOutput suppresses all output.
  *
@@ -18,20 +16,8 @@ import org.nanocom.console.formatter.OutputFormatterInterface;
  */
 public class NullOutput extends Output {
 
-    public NullOutput(VerbosityLevel verbosity, boolean decorated, OutputFormatterInterface formatter) {
-        super(verbosity, decorated, formatter);
-    }
-
-    public NullOutput(VerbosityLevel verbosity, boolean decorated) {
-        this(verbosity, decorated, null);
-    }
-
-    public NullOutput(VerbosityLevel verbosity) {
-        this(verbosity, false);
-    }
-
     public NullOutput() {
-        super(VerbosityLevel.NORMAL);
+        super();
     }
 
     /**

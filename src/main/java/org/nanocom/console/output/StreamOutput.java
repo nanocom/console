@@ -32,7 +32,7 @@ public class StreamOutput extends Output {
     * Constructor.
     *
     * @param stream    A stream resource
-    * @param verbosity The verbosity level (VERBOSITY_QUIET, VERBOSITY_NORMAL, VERBOSITY_VERBOSE)
+    * @param verbosity The verbosity level (QUIET, NORMAL, VERBOSE)
     * @param decorated Whether to decorate messages or not (null for auto-guessing)
     * @param formatter Output formatter instance
     *
@@ -52,6 +52,31 @@ public class StreamOutput extends Output {
         init(verbosity, decorated, formatter);
     }
 
+   /**
+    * Constructor.
+    *
+    * @param stream    A stream resource
+    * @param verbosity The verbosity level (QUIET, NORMAL, VERBOSE)
+    * @param decorated Whether to decorate messages or not (null for auto-guessing)
+    *
+    * @throws IllegalArgumentException When first argument is not a real stream
+    */
+    public StreamOutput(PrintStream stream, VerbosityLevel verbosity, Boolean decorated) {
+        this(stream, verbosity, decorated, null);
+    }
+
+   /**
+    * Constructor.
+    *
+    * @param stream    A stream resource
+    * @param verbosity The verbosity level (QUIET, NORMAL, VERBOSE)
+    *
+    * @throws IllegalArgumentException When first argument is not a real stream
+    */
+    public StreamOutput(PrintStream stream, VerbosityLevel verbosity) {
+        this(stream, verbosity, null);
+    }
+
     /**
     * Constructor.
     *
@@ -60,7 +85,7 @@ public class StreamOutput extends Output {
     * @throws IllegalArgumentException When first argument is not a real stream
     */
     public StreamOutput(PrintStream stream) {
-        this(stream, VerbosityLevel.NORMAL, null, null);
+        this(stream, VerbosityLevel.NORMAL);
     }
 
     /**
@@ -99,7 +124,7 @@ public class StreamOutput extends Output {
      * Colorization is disabled if not supported by the stream:
      *
      *  -  windows without ansicon
-     *  -  non tty consoles (TODO Find a way to detect non-tty consoles)
+     *  -  non tty consoles
      *
      * @return true if the stream supports colorization, false otherwise
      */

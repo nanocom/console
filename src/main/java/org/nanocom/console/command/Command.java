@@ -162,7 +162,7 @@ public class Command extends Executable {
      * @return 0 if everything went fine, or an error code
      *
      * @throws LogicException When this abstract method is not implemented
-     * @see    setCode()
+     * @see    setCode(Executable)
      */
     @Override
     protected int execute(InputInterface input, OutputInterface output) {
@@ -200,8 +200,8 @@ public class Command extends Executable {
      * @param input  An InputInterface instance
      * @param output An OutputInterface instance
      *
-     * @see setCode()
-     * @see execute()
+     * @see #setCode(Executable)
+     * @see #execute(InputInterface, OutputInterface)
      */
     public int run(InputInterface input, OutputInterface output) {
         // Force the creation of the synopsis before the merge with the app definition
@@ -319,7 +319,7 @@ public class Command extends Executable {
      * Adds an argument.
      *
      * @param name         The argument name
-     * @param mode         The argument mode: InputArgument::REQUIRED or InputArgument::OPTIONAL
+     * @param mode         The argument mode
      * @param description  A description text
      * @param defaultValue The default value (for InputArgument::OPTIONAL mode only)
      */
@@ -332,7 +332,7 @@ public class Command extends Executable {
      * Adds an argument.
      *
      * @param name        The argument name
-     * @param mode        The argument mode: InputArgument.REQUIRED or InputArgument.OPTIONAL
+     * @param mode        The argument mode
      * @param description A description text
      */
     public Command addArgument(String name, int mode, String description) {
@@ -343,7 +343,7 @@ public class Command extends Executable {
      * Adds an argument.
      *
      * @param name The argument name
-     * @param mode The argument mode: InputArgument.REQUIRED or InputArgument.OPTIONAL
+     * @param mode The argument mode
      */
     public Command addArgument(String name, int mode) {
         return addArgument(name, mode, EMPTY, null);

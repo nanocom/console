@@ -22,7 +22,7 @@ public class ArgvInputTest {
 
     @Test
     public void testConstructor() throws NoSuchFieldException, IllegalAccessException {
-        ArgvInput input = new ArgvInput(new String[]{"foo"});
+        ArgsInput input = new ArgsInput(new String[]{"foo"});
         Class clazz = input.getClass();
         Field tokens = clazz.getDeclaredField("tokens");
         tokens.setAccessible(true);
@@ -31,7 +31,7 @@ public class ArgvInputTest {
 
     @Test
     public void testParser() {
-        ArgvInput input = new ArgvInput(new String[]{"foo"});
+        ArgsInput input = new ArgsInput(new String[]{"foo"});
         input.bind(new InputDefinition(new InputParameterInterface[] {new InputArgument("name")}));
         Map<String, Object> foobar = new HashMap<String, Object>();
         foobar.put("name", "foo");
@@ -40,24 +40,24 @@ public class ArgvInputTest {
         input.bind(new InputDefinition(new InputParameterInterface[] {new InputArgument("name")}));
         assertEquals("parse() is stateless", foobar, input.getArguments());
 
-        input = new ArgvInput(new String[]{"--foo"});
+        input = new ArgsInput(new String[]{"--foo"});
         input.bind(new InputDefinition(new InputParameterInterface[] {new InputOption("foo")}));
         foobar.clear();
         foobar.put("foo", true);
         assertEquals("parse() parses long options without a value", foobar, input.getOptions());
 
-        input = new ArgvInput(new String[]{"--foo=bar"});
+        input = new ArgsInput(new String[]{"--foo=bar"});
         input.bind(new InputDefinition(new InputParameterInterface[] {new InputOption("foo", "f", InputOption.VALUE_REQUIRED)}));
         foobar.clear();
         foobar.put("foo", "bar");
         assertEquals("parse() parses long options with a required value (with a = separator)", foobar, input.getOptions());
 
-        input = new ArgvInput(new String[]{"--foo", "bar"});
+        input = new ArgsInput(new String[]{"--foo", "bar"});
         input.bind(new InputDefinition(new InputParameterInterface[] {new InputOption("foo", "f", InputOption.VALUE_REQUIRED)}));
         assertEquals("parse() parses long options with a required value (with a space separator)", foobar, input.getOptions());
 
         try {
-            input = new ArgvInput(new String[]{"--foo"});
+            input = new ArgsInput(new String[]{"--foo"});
             input.bind(new InputDefinition(new InputParameterInterface[] {new InputOption("foo", "f", InputOption.VALUE_REQUIRED)}));
             fail("parse() throws a RuntimeException if no value is passed to an option when it is required");
         } catch (Exception e) {
@@ -65,23 +65,23 @@ public class ArgvInputTest {
             assertEquals("parse() throws a RuntimeException if no value is passed to an option when it is required", "The \"--foo\" option requires a value.", e.getMessage());
         }
 
-        input = new ArgvInput(new String[]{"-f"});
+        input = new ArgsInput(new String[]{"-f"});
         input.bind(new InputDefinition(new InputParameterInterface[] {new InputOption("foo", "f")}));
         foobar.clear();
         foobar.put("foo", true);
         assertEquals("parse() parses short options without a value", foobar, input.getOptions());
 
-        input = new ArgvInput(new String[]{"-fbar"});
+        input = new ArgsInput(new String[]{"-fbar"});
         input.bind(new InputDefinition(new InputParameterInterface[] {new InputOption("foo", "f", InputOption.VALUE_REQUIRED)}));
         foobar.clear();
         foobar.put("foo", "bar");
         assertEquals("parse() parses short options with a required value (with no separator)", foobar, input.getOptions());
 
-        input = new ArgvInput(new String[]{"-f", "bar"});
+        input = new ArgsInput(new String[]{"-f", "bar"});
         input.bind(new InputDefinition(new InputParameterInterface[] {new InputOption("foo", "f", InputOption.VALUE_REQUIRED)}));
         assertEquals("parse() parses short options with a required value (with a space separator)", foobar, input.getOptions());
 
-        input = new ArgvInput(new String[]{"-f", "-b", "foo"});
+        input = new ArgsInput(new String[]{"-f", "-b", "foo"});
         input.bind(new InputDefinition(new InputParameterInterface[] {new InputArgument("name"), new InputOption("foo", "f", InputOption.VALUE_OPTIONAL), new InputOption("bar", "b")}));
         foobar.clear();
         foobar.put("foo", null);
@@ -89,7 +89,7 @@ public class ArgvInputTest {
         assertEquals("parse() parses short options with an optional value which is not present", foobar, input.getOptions());
 
         try {
-            input = new ArgvInput(new String[]{"-f"});
+            input = new ArgsInput(new String[]{"-f"});
             input.bind(new InputDefinition(new InputParameterInterface[] {new InputOption("foo", "f", InputOption.VALUE_REQUIRED)}));
             fail("parse() throws a RuntimeException if no value is passed to an option when it is required");
         } catch (Exception e) {
@@ -98,7 +98,7 @@ public class ArgvInputTest {
         }
 
         try {
-            input = new ArgvInput(new String[]{"-ffoo"});
+            input = new ArgsInput(new String[]{"-ffoo"});
             input.bind(new InputDefinition(new InputParameterInterface[] {new InputOption("foo", "f", InputOption.VALUE_NONE)}));
             fail("parse() throws a RuntimeException if a value is passed to an option which does not take one");
         } catch (Exception e) {
@@ -107,7 +107,7 @@ public class ArgvInputTest {
         }
 
         try {
-            input = new ArgvInput(new String[]{"foo", "bar"});
+            input = new ArgsInput(new String[]{"foo", "bar"});
             input.bind(new InputDefinition());
             fail("parse() throws a RuntimeException if too many arguments are passed");
         } catch (Exception e) {
@@ -116,7 +116,7 @@ public class ArgvInputTest {
         }
 
         try {
-            input = new ArgvInput(new String[]{"--foo"});
+            input = new ArgsInput(new String[]{"--foo"});
             input.bind(new InputDefinition());
             fail("parse() throws a RuntimeException if an unknown long option is passed");
         } catch (Exception e) {
@@ -125,7 +125,7 @@ public class ArgvInputTest {
         }
 
         try {
-            input = new ArgvInput(new String[]{"-f"});
+            input = new ArgsInput(new String[]{"-f"});
             input.bind(new InputDefinition());
             fail("parse() throws a RuntimeException if an unknown short option is passed");
         } catch (Exception e) {
@@ -133,29 +133,29 @@ public class ArgvInputTest {
             assertEquals("parse() throws a RuntimeException if an unknown short option is passed", "The \"-f\" option does not exist.", e.getMessage());
         }
 
-        input = new ArgvInput(new String[]{"-fb"});
+        input = new ArgsInput(new String[]{"-fb"});
         input.bind(new InputDefinition(new InputParameterInterface[] {new InputOption("foo", "f"), new InputOption("bar", "b")}));
         foobar.clear();
         foobar.put("foo", true);
         foobar.put("bar", true);
         assertEquals("parse() parses short options when they are aggregated as a single one", foobar, input.getOptions());
 
-        input = new ArgvInput(new String[]{"-fb", "bar"});
+        input = new ArgsInput(new String[]{"-fb", "bar"});
         input.bind(new InputDefinition(new InputParameterInterface[] {new InputOption("foo", "f"), new InputOption("bar", "b", InputOption.VALUE_REQUIRED)}));
         foobar.clear();
         foobar.put("foo", true);
         foobar.put("bar", "bar");
         assertEquals("parse() parses short options when they are aggregated as a single one and the last one has a required value", foobar, input.getOptions());
 
-        input = new ArgvInput(new String[]{"-fb", "bar"});
+        input = new ArgsInput(new String[]{"-fb", "bar"});
         input.bind(new InputDefinition(new InputParameterInterface[] {new InputOption("foo", "f"), new InputOption("bar", "b", InputOption.VALUE_OPTIONAL)}));
         assertEquals("parse() parses short options when they are aggregated as a single one and the last one has an optional value", foobar, input.getOptions());
 
-        input = new ArgvInput(new String[]{"-fbbar"});
+        input = new ArgsInput(new String[]{"-fbbar"});
         input.bind(new InputDefinition(new InputParameterInterface[] {new InputOption("foo", "f"), new InputOption("bar", "b", InputOption.VALUE_OPTIONAL)}));
         assertEquals("parse() parses short options when they are aggregated as a single one and the last one has an optional value with no separator", foobar, input.getOptions());
 
-        input = new ArgvInput(new String[]{"-fbbar"});
+        input = new ArgsInput(new String[]{"-fbbar"});
         input.bind(new InputDefinition(new InputParameterInterface[] {new InputOption("foo", "f", InputOption.VALUE_OPTIONAL), new InputOption("bar", "b", InputOption.VALUE_OPTIONAL)}));
         foobar.clear();
         foobar.put("foo", "bbar");
@@ -163,7 +163,7 @@ public class ArgvInputTest {
         assertEquals("parse() parses short options when they are aggregated as a single one and one of them takes a value", foobar, input.getOptions());
 
         try {
-            input = new ArgvInput(new String[]{"foo", "bar", "baz", "bat"});
+            input = new ArgsInput(new String[]{"foo", "bar", "baz", "bat"});
             input.bind(new InputDefinition(new InputParameterInterface[] {new InputArgument("name", InputArgument.IS_ARRAY)}));
             foobar.clear();
             foobar.put("name", Arrays.asList("foo", "bar", "baz", "bat"));
@@ -172,14 +172,14 @@ public class ArgvInputTest {
             assertTrue("parse() parses array arguments", !"Too many arguments.".equals(e.getMessage()));
         }
 
-        input = new ArgvInput(new String[]{"--name=foo", "--name=bar", "--name=baz"});
+        input = new ArgsInput(new String[]{"--name=foo", "--name=bar", "--name=baz"});
         input.bind(new InputDefinition(new InputParameterInterface[] {new InputOption("name", null, InputOption.VALUE_OPTIONAL | InputOption.VALUE_IS_ARRAY)}));
         foobar.clear();
         foobar.put("name", Arrays.asList("foo", "bar", "baz"));
         assertEquals(foobar, input.getOptions());
 
         try {
-            input = new ArgvInput(new String[]{"-1"});
+            input = new ArgsInput(new String[]{"-1"});
             input.bind(new InputDefinition(new InputParameterInterface[] {new InputArgument("number")}));
             fail("parse() throws a RuntimeException if an unknown option is passed");
         } catch (Exception e) {
@@ -187,20 +187,20 @@ public class ArgvInputTest {
             assertEquals("parse() parses arguments with leading dashes as options without having encountered a double-dash sequence", "The \"-1\" option does not exist.", e.getMessage());
         }
 
-        input = new ArgvInput(new String[]{"--", "-1"});
+        input = new ArgsInput(new String[]{"--", "-1"});
         input.bind(new InputDefinition(new InputParameterInterface[] {new InputArgument("number")}));
         foobar.clear();
         foobar.put("number", "-1");
         assertEquals("parse() parses arguments with leading dashes as arguments after having encountered a double-dash sequence", foobar, input.getArguments());
 
-        input = new ArgvInput(new String[]{"-f", "bar", "--", "-1"});
+        input = new ArgsInput(new String[]{"-f", "bar", "--", "-1"});
         input.bind(new InputDefinition(new InputParameterInterface[] {new InputArgument("number"), new InputOption("foo", "f", InputOption.VALUE_OPTIONAL)}));
         assertEquals("parse() parses arguments with leading dashes as arguments after having encountered a double-dash sequence", foobar, input.getArguments());
         foobar.clear();
         foobar.put("foo", "bar");
         assertEquals("parse() parses arguments with leading dashes as options before having encountered a double-dash sequence", foobar, input.getOptions());
 
-        input = new ArgvInput(new String[]{"-f", "bar", EMPTY});
+        input = new ArgsInput(new String[]{"-f", "bar", EMPTY});
         input.bind(new InputDefinition(new InputParameterInterface[] {new InputArgument("empty"), new InputOption("foo", "f", InputOption.VALUE_OPTIONAL)}));
         foobar.clear();
         foobar.put("empty", EMPTY);
@@ -209,22 +209,22 @@ public class ArgvInputTest {
 
     @Test
     public void testGetFirstArgument() {
-        ArgvInput input = new ArgvInput(new String[]{"-fbbar"});
+        ArgsInput input = new ArgsInput(new String[]{"-fbbar"});
         assertEquals("getFirstArgument() returns the first argument from the raw input", null, input.getFirstArgument());
 
-        input = new ArgvInput(new String[]{"-fbbar", "foo"});
+        input = new ArgsInput(new String[]{"-fbbar", "foo"});
         assertEquals("getFirstArgument() returns the first argument from the raw input", "foo", input.getFirstArgument());
     }
 
     @Test
     public void testHasParameterOption() {
-        ArgvInput input = new ArgvInput(new String[]{"-f", "foo"});
+        ArgsInput input = new ArgsInput(new String[]{"-f", "foo"});
         assertTrue("hasParameterOption() returns true if the given short option is in the raw input", input.hasParameterOption("-f"));
 
-        input = new ArgvInput(new String[]{"--foo", "foo"});
+        input = new ArgsInput(new String[]{"--foo", "foo"});
         assertTrue("hasParameterOption() returns true if the given short option is in the raw input", input.hasParameterOption("--foo"));
 
-        input = new ArgvInput(new String[]{"foo"});
+        input = new ArgsInput(new String[]{"foo"});
         assertFalse("hasParameterOption() returns false if the given short option is not in the raw input", input.hasParameterOption("--foo"));
     }
 }

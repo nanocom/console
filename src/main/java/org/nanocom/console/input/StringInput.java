@@ -16,7 +16,7 @@ package org.nanocom.console.input;
  *
  * @author Arnaud Kleinpeter <arnaud.kleinpeter at gmail dot com>
  */
-public class StringInput extends ArgvInput {
+public class StringInput extends ArgsInput {
 
     // private final static String REGEX_STRING = "([^ ]+?)(?: |(?<!\\\\)\"|(?<!\\\\)\'|$)";
     // private final static String REGEX_QUOTED_STRING = "(?:\"([^\"\\\\]*(?:\\\\.[^\"\\\\]*)*)\"|\\'([^\'\\\\]*(?:\\\\.[^\'\\\\]*)*)\')";

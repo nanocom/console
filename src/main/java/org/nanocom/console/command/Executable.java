@@ -7,7 +7,6 @@
 
 package org.nanocom.console.command;
 
-import org.nanocom.console.exception.LogicException;
 import org.nanocom.console.input.InputInterface;
 import org.nanocom.console.output.OutputInterface;
 
@@ -26,7 +25,6 @@ public abstract class Executable {
      *
      * @return 0 if everything went fine, or an error code
      *
-     * @throws LogicException When this abstract method is not implemented
      * @see    Command#setCode(Executable)
      */
     protected abstract int execute(InputInterface input, OutputInterface output);

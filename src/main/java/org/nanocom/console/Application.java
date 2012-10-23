@@ -103,7 +103,7 @@ public class Application {
     /**
      * Runs the current application.
      *
-     * @param input  An Input instance
+     * @param input An Input instance
      *
      * @return 0 if everything went fine, or an error code
      *
@@ -125,7 +125,7 @@ public class Application {
      */
     public int run(InputInterface input, OutputInterface output) throws RuntimeException {
         if (null == input) {
-            input = new ArgvInput(new String[0]);
+            input = new ArgsInput(new String[0]);
         }
 
         if (null == output) {
@@ -828,7 +828,7 @@ public class Application {
         }
 
         // TODO
-        /*if (preg_match(\"{rows.(\d+);.columns.(\d+);}i\", this.getSttyColumns(), match)) {
+        /*if (preg_match(\"{rows.(\d+);.columns.(\d+);}i\", getSttyColumns(), match)) {
             return match[1];
         }*/
 

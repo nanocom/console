@@ -15,7 +15,7 @@ import java.util.Map;
 import static org.apache.commons.lang3.StringUtils.*;
 
 /**
- * ArgvInput represents an input coming from the CLI arguments.
+ * ArgsInput represents an input coming from the CLI arguments.
  *
  * Usage:
  *
@@ -32,7 +32,7 @@ import static org.apache.commons.lang3.StringUtils.*;
  *
  * @author Arnaud Kleinpeter <arnaud.kleinpeter at gmail dot com>
  */
-public class ArgvInput extends Input {
+public class ArgsInput extends Input {
 
     protected List<String> tokens;
     private List<String> parsed;
@@ -43,24 +43,23 @@ public class ArgvInput extends Input {
      * @param args       An array of parameters (in the args format)
      * @param definition An InputDefinition instance
      */
-    public ArgvInput(String[] args) {
-        this(args, null);
+    public ArgsInput(String[] args, InputDefinition definition) {
+        tokens = new ArrayList<String>();
+
+        if (null != args) {
+            tokens.addAll(Arrays.asList(args));
+        }
+
+        super.init(definition);
     }
 
     /**
      * Constructor.
      *
      * @param args       An array of parameters (in the args format)
-     * @param definition An InputDefinition instance
      */
-    public ArgvInput(String[] argv, InputDefinition definition) {
-        tokens = new ArrayList<String>();
-
-        if (null != argv) {
-            tokens.addAll(Arrays.asList(argv));
-        }
-
-        super.init(definition);
+    public ArgsInput(String[] args) {
+        this(args, null);
     }
 
     protected void setTokens(String[] tokens) {

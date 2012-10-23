@@ -8,7 +8,7 @@
 package org.nanocom.console.exception;
 
 /**
- * An exception used for errors of logic.
+ * An exception representing logic errors.
  *
  * @author Arnaud Kleinpeter <arnaud.kleinpeter at gmail dot com>
  */

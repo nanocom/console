@@ -28,7 +28,7 @@ public class ApplicationTester {
     /**
      * Constructor.
      *
-     * @param application An Application instance to test.
+     * @param application An Application instance to test
      */
     public ApplicationTester(Application application) {
         this.application = application;

@@ -31,7 +31,7 @@ import org.nanocom.console.fixtures.FooCommand;
 import org.nanocom.console.helper.FormatterHelper;
 import org.nanocom.console.helper.Helper;
 import org.nanocom.console.helper.HelperSet;
-import org.nanocom.console.input.ArgvInput;
+import org.nanocom.console.input.ArgsInput;
 import org.nanocom.console.input.ArrayInput;
 import org.nanocom.console.input.InputArgument;
 import org.nanocom.console.input.InputDefinition;
@@ -478,7 +478,7 @@ public class ApplicationTest {
         application.setCatchExceptions(false);
         Foo1Command command = new Foo1Command();
         application.add(command);
-        application.run(new ArgvInput(new String[]{"foo:bar1"}));
+        application.run(new ArgsInput(new String[]{"foo:bar1"}));
 
         assertEquals("run() creates a ConsoleOutput by default if none is given", ConsoleOutput.class, command.output.getClass());
 

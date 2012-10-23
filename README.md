@@ -2,7 +2,8 @@ Console Component
 =================
 
 Console eases the creation of beautiful and testable command line interfaces.
-It is a port from [Symfony2's Console component](https://github.com/symfony/symfony/tree/master/src/Symfony/Component/Console)
+
+It is a port from [Symfony2's Console component](https://github.com/symfony/symfony/tree/master/src/Symfony/Component/Console).
 
 The Application object manages the command-line application:
 
@@ -24,9 +25,9 @@ which returns a ``Command`` instance:
 
     console
         .register("ls")
-        .setDefinition(Arrays.asList(
+        .setDefinition(new InputParameterInterface[] {
             new InputArgument('dir', InputArgument.REQUIRED, "Directory name"),
-        ))
+        })
         .setDescription("Displays the files in the given directory")
         .setCode(new Executable() {
 
@@ -44,3 +45,11 @@ You can also register new commands via classes.
 The component provides a lot of features like output coloring, input and
 output abstractions (so that you can easily unit-test your commands),
 validation, automatic help messages, ...
+
+License
+-------
+
+The license of this package can be found in the "LICENSE" file.
+The MIT license allows you to do pretty much everything you want with this software.
+
+The original license of Symfony2's component can be found in the "ORIGINAL_LICENSE" file.

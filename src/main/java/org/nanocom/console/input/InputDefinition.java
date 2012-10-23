@@ -181,7 +181,7 @@ public class InputDefinition {
             throw new IllegalArgumentException(String.format("The \"%s\" argument does not exist.", position));
         }
 
-        // TODO Optimize this awful shit
+        // TODO Optimize this...
         List<InputArgument> arrayArguments = new ArrayList<InputArgument>(arguments.values());
 
         return arrayArguments.get(position);
