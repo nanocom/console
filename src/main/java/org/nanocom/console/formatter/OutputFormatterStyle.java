@@ -8,6 +8,7 @@
 package org.nanocom.console.formatter;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -76,8 +77,19 @@ public class OutputFormatterStyle implements OutputFormatterStyleInterface {
      * @param background The style background color name
      * @param options    The style options
      */
-    public OutputFormatterStyle(String foreground, String background, List<String> options) {
+    public OutputFormatterStyle(String foreground, String background, String[] options) {
         init(foreground, background, options);
+    }
+
+    /**
+     * Initializes output formatter style.
+     *
+     * @param foreground The style foreground color name
+     * @param background The style background color name
+     * @param options    The style options
+     */
+    public OutputFormatterStyle(String foreground, String background, Collection<String> options) {
+        this(foreground, background, options.toArray(new String[0]));
     }
 
     /**
@@ -87,7 +99,7 @@ public class OutputFormatterStyle implements OutputFormatterStyleInterface {
      * @param background The style background color name
      */
     public OutputFormatterStyle(String foreground, String background) {
-        init(foreground, background, new ArrayList<String>());
+        this(foreground, background, new String[0]);
     }
 
     /**
@@ -96,17 +108,17 @@ public class OutputFormatterStyle implements OutputFormatterStyleInterface {
      * @param foreground The style foreground color name
      */
     public OutputFormatterStyle(String foreground) {
-        init(foreground, null, new ArrayList<String>());
+        this(foreground, null);
     }
 
      /**
      * Initializes output formatter style.
      */
     public OutputFormatterStyle() {
-        init(null, null, new ArrayList<String>());
+        this(null);
     }
 
-    private void init(String foreground, String background, List<String> options) {
+    private void init(String foreground, String background, String[] options) {
         if (null != foreground) {
             setForeground(foreground);
         }
@@ -115,7 +127,7 @@ public class OutputFormatterStyle implements OutputFormatterStyleInterface {
             setBackground(background);
         }
 
-        if (null != options && options.size() > 0) {
+        if (null != options && options.length > 0) {
             setOptions(options);
         }
     }
@@ -230,7 +242,7 @@ public class OutputFormatterStyle implements OutputFormatterStyleInterface {
      * @param option
      */
     @Override
-    public void setOptions(List<String> options) {
+    public void setOptions(String[] options) {
         this.options = new ArrayList<Integer>();
 
         for (String option : options) {

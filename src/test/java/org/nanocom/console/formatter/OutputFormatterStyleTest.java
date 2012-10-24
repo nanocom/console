@@ -58,7 +58,7 @@ public class OutputFormatterStyleTest {
     public void testOptions() {
         OutputFormatterStyle style = new OutputFormatterStyle();
 
-        style.setOptions(Arrays.asList("reverse", "conceal"));
+        style.setOptions(new String[] {"reverse", "conceal"});
         assertEquals("\033[7;8mfoo\033[0m", style.apply("foo"));
 
         style.setOption("bold");
@@ -70,7 +70,7 @@ public class OutputFormatterStyleTest {
         style.setOption("bold");
         assertEquals("\033[8;1mfoo\033[0m", style.apply("foo"));
 
-        style.setOptions(Arrays.asList("bold"));
+        style.setOptions(new String[] {"bold"});
         assertEquals("\033[1mfoo\033[0m", style.apply("foo"));
     }
 }

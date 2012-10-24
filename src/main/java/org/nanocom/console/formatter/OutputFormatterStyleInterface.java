@@ -7,8 +7,6 @@
 
 package org.nanocom.console.formatter;
 
-import java.util.List;
-
 /**
  * Formatter style interface for defining styles.
  *
@@ -49,7 +47,7 @@ public interface OutputFormatterStyleInterface {
      *
      * @param options
      */
-    void setOptions(List<String> options);
+    void setOptions(String[] options);
 
     /**
      * Applies the style to a given text.
