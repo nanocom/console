@@ -19,25 +19,9 @@ public interface OutputInterface {
 
     public static enum VerbosityLevel {
 
-        QUIET(0),
-        NORMAL(1),
-        VERBOSE(2);
-
-        private int level;
-
-        VerbosityLevel(int level) {
-            this.level = level;
-        }
-
-        public static VerbosityLevel createFromInt(int number) {
-            for (VerbosityLevel value : values()) {
-                if (number == value.level) {
-                    return value;
-                }
-            }
-
-            return null;
-        }
+        QUIET,
+        NORMAL,
+        VERBOSE;
     }
 
     public static enum OutputType {
