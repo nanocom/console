@@ -3,7 +3,7 @@ Console Component
 
 Console eases the creation of beautiful and testable command line interfaces.
 
-It is a port from [Symfony2's Console component](https://github.com/symfony/Console),
+It is a port from [Symfony2's Console component](https://github.com/symfony/Console).
 
 The Application object manages the command-line application:
 
