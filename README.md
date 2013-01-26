@@ -3,14 +3,14 @@ Console Component
 
 Console eases the creation of beautiful and testable command line interfaces.
 
-It is a port from [Symfony2's Console component](https://github.com/symfony/symfony/tree/master/src/Symfony/Component/Console).
+It is a port from [Symfony2's Console component](https://github.com/symfony/Console),
 
 The Application object manages the command-line application:
 
     import org.nanocom.console.Application;
 
     console = new Application();
-    console.run();
+    console.run(new ArgsInput(args));
 
 The ``run()`` method parses the arguments and options passed on the command
 line and executes the right command.
