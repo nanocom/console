@@ -105,7 +105,7 @@ public class InputDefinition {
     }
 
     /**
-     * Adds an array of InputArgument objects.
+     * Adds a list of InputArgument objects.
      *
      * @param arguments An array of InputArgument objects
      */
