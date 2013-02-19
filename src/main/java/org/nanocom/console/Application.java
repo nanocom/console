@@ -757,7 +757,6 @@ public class Application {
 
             for (String line : splittedMessage) {
                 String[] lines2 = split(line, width - 4);
-
                 for (String line2 : lines2) {
                     lines.add(String.format("  %s  ", line2));
                     len = Math.max(line2.length() + 4, len);
@@ -819,12 +818,12 @@ public class Application {
     /**
      * Tries to figure out the terminal width in which this application runs.
      *
-     * @return
+     * @return The terminal width if found, null otherwise
      */
     protected Integer getTerminalWidth() {
         String ansicon = System.getenv("ANSICON");
-        if (IS_OS_WINDOWS && null != ansicon) {
-            return Integer.valueOf(ansicon.replaceAll("^(d+)x.*", "1"));
+        if (IS_OS_WINDOWS && null != ansicon && -1 < ansicon.indexOf('x')) {
+            return Integer.valueOf(ansicon.substring(0, ansicon.indexOf('x')));
         }
 
         // TODO
