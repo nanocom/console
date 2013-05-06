@@ -101,12 +101,12 @@ public class HelperSet {
      *
      * @throws IllegalArgumentException if the helper is not defined
      */
-    public HelperInterface get(String name) {
+    public <T extends HelperInterface> T get(String name) {
         if (!has(name)) {
             throw new IllegalArgumentException(String.format("The helper \"%s\" is not defined.", name));
         }
 
-        return helpers.get(name);
+        return (T) helpers.get(name);
     }
 
     /**

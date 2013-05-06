@@ -19,16 +19,12 @@ public interface OutputInterface {
 
     public static enum VerbosityLevel {
 
-        QUIET,
-        NORMAL,
-        VERBOSE;
+        QUIET, NORMAL, VERBOSE;
     }
 
     public static enum OutputType {
 
-        NORMAL,
-        RAW,
-        PLAIN;
+        NORMAL, RAW, PLAIN;
     }
 
     /**

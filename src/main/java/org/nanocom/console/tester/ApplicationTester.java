@@ -58,6 +58,7 @@ public class ApplicationTester {
         if (options.containsKey("decorated")) {
             output.setDecorated((Boolean) options.get("decorated"));
         }
+
         if (options.containsKey("verbosity")) {
             output.setVerbosity((VerbosityLevel) options.get("verbosity"));
         }

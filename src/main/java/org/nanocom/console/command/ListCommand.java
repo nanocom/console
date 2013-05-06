@@ -7,7 +7,6 @@
 
 package org.nanocom.console.command;
 
-import java.util.Arrays;
 import static org.apache.commons.lang3.SystemUtils.LINE_SEPARATOR;
 import org.nanocom.console.input.InputArgument;
 import org.nanocom.console.input.InputDefinition;
