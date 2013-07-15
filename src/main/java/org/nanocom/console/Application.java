@@ -1014,12 +1014,11 @@ public class Application {
      * @return A sorted set of similar string
      */
     private Set<String> findAlternatives(String name, Collection<String> collection, Map<String, List<String>> abbrevs) {
-        Map<String, Integer> alternatives = new LinkedHashMap<String, Integer>();
-
+        Map<Integer, String> alternatives = new TreeMap<Integer, String>();
         for (String item : collection) {
             int lev = getLevenshteinDistance(name, item);
             if (lev <= name.length() / 3 || item.contains(name)) {
-                alternatives.put(item, lev);
+                alternatives.put(lev, item);
             }
         }
 
@@ -1028,20 +1027,17 @@ public class Application {
                 int lev = getLevenshteinDistance(name, values.getKey());
                 if (lev <= name.length() / 3 || values.getKey().indexOf(name) > -1) {
                     for (String value : values.getValue()) {
-                        alternatives.put(value, lev);
+                        alternatives.put(lev, value);
                     }
                 }
             }
         }
 
-        //  TODO Sort alternatives by ascending distance
-
-        return alternatives.keySet();
+        return alternatives.values();
     }
 
     private String[] split(String string, int width) {
         List<String> strings = new ArrayList<String>();
-
         int offset = 0;
         while (offset < length(string) - 1) {
             strings.add(string.substring(offset, Math.min(offset + width, length(string))));
