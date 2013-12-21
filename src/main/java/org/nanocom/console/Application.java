@@ -509,7 +509,9 @@ public class Application {
             }
 
             if (abbrevs.get(part).size() > 1) {
-                throw new IllegalArgumentException(String.format("The namespace \"%s\" is ambiguous (%s).", namespace, getAbbreviationSuggestions(abbrevs.get(part))));
+                String abbreviationSuggestions = getAbbreviationSuggestions(abbrevs.get(part));
+
+                throw new IllegalArgumentException(String.format("The namespace \"%s\" is ambiguous (%s).", namespace, abbreviationSuggestions));
             }
 
             found.add(abbrevs.get(part).get(0));
@@ -572,7 +574,7 @@ public class Application {
 
         Map<String, List<String>> aliasesMap = getAbbreviations(aliases);
         if (!aliasesMap.containsKey(searchName)) {
-        	StringBuilder message = new StringBuilder();
+            StringBuilder message = new StringBuilder();
             message.append(String.format("Command \"%s\" is not defined.", name));
 
             Set<String> alternatives = findAlternativeCommands(searchName, abbrevs);
@@ -1014,11 +1016,14 @@ public class Application {
      * @return A sorted set of similar string
      */
     private Set<String> findAlternatives(String name, Collection<String> collection, Map<String, List<String>> abbrevs) {
-        Map<Integer, String> alternatives = new TreeMap<Integer, String>();
+        Map<Integer, List<String>> alternatives = new TreeMap<Integer, List<String>>();
         for (String item : collection) {
             int lev = getLevenshteinDistance(name, item);
             if (lev <= name.length() / 3 || item.contains(name)) {
-                alternatives.put(lev, item);
+                if (!alternatives.containsKey(lev)) {
+                    alternatives.put(lev, new ArrayList<String>());
+                }
+                alternatives.get(lev).add(item);
             }
         }
 
@@ -1027,23 +1032,38 @@ public class Application {
                 int lev = getLevenshteinDistance(name, values.getKey());
                 if (lev <= name.length() / 3 || values.getKey().indexOf(name) > -1) {
                     for (String value : values.getValue()) {
-                        alternatives.put(lev, value);
+                        if (!alternatives.containsKey(lev)) {
+                            alternatives.put(lev, new ArrayList<String>());
+                        }
+                        alternatives.get(lev).add(value);
                     }
                 }
             }
         }
 
-        return alternatives.values();
+        Set<String> result = new LinkedHashSet<String>(alternatives.size());
+        for (List<String> alt : alternatives.values()) {
+            result.addAll(alt);
+        }
+
+        return result;
     }
 
     private String[] split(String string, int width) {
+        int length = length(string);
         List<String> strings = new ArrayList<String>();
         int offset = 0;
-        while (offset < length(string) - 1) {
-            strings.add(string.substring(offset, Math.min(offset + width, length(string))));
+        while (offset < length - 1) {
+            strings.add(string.substring(offset, Math.min(offset + width, length)));
             offset += width;
         }
 
-        return strings.toArray(ArrayUtils.EMPTY_STRING_ARRAY);
+        String[] result = new String[strings.size()];
+        int i = 0;
+        for (String value : strings) {
+            result[i++] = value;
+        }
+
+        return result;
     }
 }

@@ -303,7 +303,7 @@ public class ApplicationTest {
             fail("find() throws an IllegalArgumentException if command does not exist, with alternatives");
         } catch (Exception e) {
             assertTrue("find() throws an IllegalArgumentException if command does not exist, with alternatives", e instanceof IllegalArgumentException);
-            assertTrue("find() throws an IllegalArgumentException if command does not exist, with alternatives", e.getMessage().contains("Did you mean one of these"));
+            assertTrue("find() throws an IllegalArgumentException if command does not exist, with alternatives", e.getMessage().contains("Did you mean one of these?"));
         }
     }
 
